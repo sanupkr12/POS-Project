@@ -50,10 +50,30 @@ public class BrandService {
 	@Transactional(rollbackOn  = ApiException.class)
 	public void update(int id, BrandPojo p) throws ApiException {
 		normalize(p);
+
+		if(dao.selectAny(p.getName(),p.getCategory()))
+		{
+			throw new ApiException("Brand already exist with given details");
+		}
+
 		BrandPojo ex = getCheck(id);
 		ex.setCategory(p.getCategory());
 		ex.setName(p.getName());
-		dao.update(ex);
+
+
+
+//		dao.update(ex);
+	}
+
+	@Transactional(rollbackOn = ApiException.class)
+	public BrandPojo get(String name,String category) throws ApiException{
+		BrandPojo p = dao.getBrand(name,category);
+		if(p==null)
+		{
+			throw new ApiException("Brand does not exist");
+		}
+
+		return p;
 	}
 
 	@Transactional
@@ -64,6 +84,8 @@ public class BrandService {
 		}
 		return p;
 	}
+
+
 
 	protected static void normalize(BrandPojo p) {
 		p.setName(StringUtil.toLowerCase(p.getName()));
