@@ -19,8 +19,11 @@ public class BrandDao extends AbstractDao {
 	private static String delete_id = "delete from BrandPojo p where id=:id";
 	private static String select_id = "select p from BrandPojo p where id=:id";
 	private static String select_all = "select p from BrandPojo p";
-	private static String check_duplicate = "select p from BrandPojo p where name=:name and category=:category";
-
+	private static String select_by_brand_and_category = "select p from BrandPojo p where name=:name and category=:category";
+	private static String select_category = "select distinct p.category from BrandPojo p";
+	private static String select_brand_list = "select distinct p.name from BrandPojo p";
+	private static String select_brand = "select p from BrandPojo p where name=:name";
+	private static String select_by_category = "select p from BrandPojo p where category=:category";
 	@PersistenceContext
 	private EntityManager em;
 
@@ -42,7 +45,7 @@ public class BrandDao extends AbstractDao {
 	}
 
 	public Boolean selectAny(String name,String Category){
-		TypedQuery<BrandPojo> query = getQuery(check_duplicate,BrandPojo.class);
+		TypedQuery<BrandPojo> query = getQuery(select_by_brand_and_category,BrandPojo.class);
 		query.setParameter("name",name);
 		query.setParameter("category",Category);
 
@@ -54,7 +57,7 @@ public class BrandDao extends AbstractDao {
 		return true;
 	}
 	public BrandPojo getBrand(String name,String Category){
-		TypedQuery<BrandPojo> query = getQuery(check_duplicate,BrandPojo.class);
+		TypedQuery<BrandPojo> query = getQuery(select_by_brand_and_category,BrandPojo.class);
 		query.setParameter("name",name);
 		query.setParameter("category",Category);
 
@@ -72,6 +75,59 @@ public class BrandDao extends AbstractDao {
 	public void update(BrandPojo p) {
 	}
 
+	public List<String> getCategory(){
+		TypedQuery<String> query =  getQuery(select_category, String.class);
 
+		return query.getResultList();
+	}
+
+	public List<String> getBrandList(){
+		TypedQuery<String> query = getQuery(select_brand_list,String.class);
+		return query.getResultList();
+	}
+
+	public List<BrandPojo> selectBrand(String category,String brand)
+	{
+		if(category.length()==0 && brand.length()==0)
+		{
+
+			return this.selectAll();
+		}
+		if(category.equals("all") && brand.equals("all"))
+		{
+			return this.selectAll();
+		}
+		else if(category.equals("all"))
+		{
+			if(brand.length()==0)
+			{
+				return this.selectAll();
+			}
+			else{
+				TypedQuery<BrandPojo> query = getQuery(select_brand,BrandPojo.class);
+				query.setParameter("name",brand);
+				return query.getResultList();
+			}
+
+		}
+		else if(brand.equals("all"))
+		{
+
+			if(category.length()==0)
+			{
+				return this.selectAll();
+			}
+
+			TypedQuery<BrandPojo> query = getQuery(select_by_category,BrandPojo.class);
+			query.setParameter("category",category);
+			return query.getResultList();
+		}
+		else{
+			TypedQuery<BrandPojo> query = getQuery(select_by_brand_and_category,BrandPojo.class);
+			query.setParameter("category",category);
+			query.setParameter("name",brand);
+			return query.getResultList();
+		}
+	}
 
 }

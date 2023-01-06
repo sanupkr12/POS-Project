@@ -1,0 +1,55 @@
+<!doctype html>
+
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="snippets.html :: name_head"></head>
+
+<body>
+
+<nav th:replace="snippets.html :: name_app_navbar"></nav>
+
+<div class="container">
+
+    <h3 style="text-align:center;margin:2rem">Brand Report</h3>
+    <form id="options-form">
+        <div class="row">
+
+            <div class="col-8">
+                <p>Category</p>
+                <select class="form-select form-select-lg mb-3 append-category" id="category" style="width:60%;
+    height:2.5rem;
+    padding:0.3rem;margin-bottom:2rem;"  aria-label=".form-select-lg example">
+                    <option selected>Select Category</option>
+
+                </select>
+                <p>Brand</p>
+                <select class="form-select form-select-lg mb-3 append-brand" id="brand" style="width:60%;
+    height:2.5rem;
+    padding:0.3rem;margin-bottom:2rem;" aria-label=".form-select-lg example">
+                    <option selected>Select Brand</option>
+
+
+                </select>
+
+            </div>
+
+
+            <div class="col-4" style="margin-top:5rem">
+                <button id="download-brand" class="btn btn-primary btn-lg">Generate Report</button>
+            </div>
+
+
+        </div>
+    </form>
+
+
+
+
+</div> <!-- Container end-->
+
+<footer th:replace="snippets.html :: name_footer"></footer>
+
+<script th:src="@{/static/brandReport.js}"/></script>
+</body>
+
+</html>

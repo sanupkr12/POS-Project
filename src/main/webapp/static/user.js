@@ -33,7 +33,9 @@ function getUserList(){
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayUserList(data);   
+
+	   		displayUserList(data);
+
 	   },
 	   error: handleAjaxError
 	});
@@ -55,16 +57,17 @@ function deleteUser(id){
 //UI DISPLAY METHODS
 
 function displayUserList(data){
-	console.log('Printing user data');
 	var $tbody = $('#user-table').find('tbody');
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button onclick="deleteUser(' + e.id + ')">delete</button>'
-		buttonHtml += ' <button onclick="displayEditUser(' + e.id + ')">edit</button>'
+		console.log(e);
+		var buttonHtml = '<button class="btn btn-outline-danger" onclick="deleteUser(' + e.id + ')">delete</button>&nbsp;| &nbsp;'
+		buttonHtml += ' <button class="btn btn-outline-dark" onclick="displayEditUser(' + e.id + ')">edit</button>'
 		var row = '<tr>'
 		+ '<td>' + e.id + '</td>'
 		+ '<td>' + e.email + '</td>'
+		+ '<td>' + e.role + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);

@@ -5,6 +5,7 @@ html {
 
 body {
 	margin-bottom: 60px; /* Margin bottom by footer height */
+
 }
 
 .footer {
@@ -20,4 +21,35 @@ body {
 
 .fas{
     font-size: 4rem;
+}
+
+
+table { box-shadow: 1px 3px 5px #999; }
+
+
+.btn:hover{
+    transform:scale(1.1,1.1);
+}
+
+
+.form-group{
+    margin-bottom:0.5rem;
+}
+
+.edit-form-label{
+    justify-content:left;
+}
+
+.disable{
+   opacity:0.1;
+}
+
+.report-icon{
+    font-size:2rem;
+}
+
+.option-select{
+    width:20rem;
+    height:2.5rem;
+    padding:0.3rem;
 }

@@ -43,6 +43,7 @@ public class AdminApiController {
 	@RequestMapping(path = "/api/admin/user", method = RequestMethod.GET)
 	public List<UserData> getAllUser() {
 		List<UserPojo> list = service.getAll();
+
 		List<UserData> list2 = new ArrayList<UserData>();
 		for (UserPojo p : list) {
 			list2.add(convert(p));

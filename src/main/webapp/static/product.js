@@ -12,6 +12,7 @@ function addProduct(event){
 	var $form = $("#product-form");
 	var json = toJson($form);
 
+
 	var url = getProductUrl();
 
 	$.ajax({
@@ -146,8 +147,8 @@ function displayProductList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button onclick="deleteProduct(' + e.id + ')">delete</button>'
-        		buttonHtml += '<button onclick="displayEditProduct(' + e.id + ')">edit</button>'
+		var buttonHtml = '<button class="btn btn-outline-danger" onclick="deleteProduct(' + e.id + ')">delete</button>&nbsp;| &nbsp;'
+        		buttonHtml += '<button class="btn btn-outline-dark" onclick="displayEditProduct(' + e.id + ')">edit</button>'
 		var row = '<tr>'
 		+ '<td>' + e.name + '</td>'
 		+ '<td>' + e.brandName + '</td>'

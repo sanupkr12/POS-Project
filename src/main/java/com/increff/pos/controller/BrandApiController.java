@@ -29,8 +29,6 @@ public class BrandApiController {
 	@ApiOperation(value = "Adds an Brand")
 	@RequestMapping(path = "/api/brand", method = RequestMethod.POST)
 	public void add(@RequestBody BrandForm form) throws ApiException {
-		System.out.println(form);
-		System.out.println(form.getName());
 		BrandPojo p = convert(form);
 		service.add(p);
 	}
@@ -66,6 +64,18 @@ public class BrandApiController {
 	public void update(@PathVariable int id, @RequestBody BrandForm f) throws ApiException {
 		BrandPojo p = convert(f);
 		service.update(id, p);
+	}
+
+	@ApiOperation(value="get All Category")
+	@RequestMapping(path="/api/brand/category",method = RequestMethod.GET)
+	public List<String> getCategoryList(){
+		return service.getCategory();
+	}
+
+	@ApiOperation(value="get All Category")
+	@RequestMapping(path="/api/brand/list",method = RequestMethod.GET)
+	public List<String> getBrandList(){
+		return service.getBrandList();
 	}
 	
 

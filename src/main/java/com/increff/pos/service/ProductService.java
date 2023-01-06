@@ -3,7 +3,6 @@ package com.increff.pos.service;
 import com.increff.pos.dao.ProductDao;
 import com.increff.pos.model.ProductData;
 import com.increff.pos.model.ProductForm;
-import com.increff.pos.model.ProductUpdateForm;
 import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.ProductPojo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class ProductService {
             throw new ApiException("Product with current barcode already exists");
         }
 
-
+        normalizeProduct(p);
 
         BrandPojo p1  = brandService.get(p.getBrandName(),p.getBrandCategory());
 
@@ -59,13 +58,6 @@ public class ProductService {
     @Transactional(rollbackOn = ApiException.class)
     public ProductData get(String barcode) throws ApiException{
         ProductPojo p = dao.select(barcode);
-        if(p==null)
-        {
-            throw new ApiException("No Product Found");
-        }
-
-
-
         return convert(p);
     }
 
@@ -80,6 +72,13 @@ public class ProductService {
 
 
         return convert(p);
+    }
+
+    public List<ProductPojo> getByBrandId(int brandId) throws ApiException {
+
+        List<ProductPojo> list = dao.selectByBrandId(brandId);
+
+        return list;
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -141,7 +140,26 @@ public class ProductService {
         return d;
     }
 
+    @Transactional
+    public boolean checkAny(String barcode){
+        ProductPojo p = dao.select(barcode);
 
+
+        if(p==null)
+        {
+            return false;
+        }
+
+
+        return true;
+    }
+
+
+    void normalizeProduct(ProductForm form){
+        form.setName(form.getName().toLowerCase().trim());
+        form.setBrandCategory(form.getBrandCategory().toLowerCase().trim());
+        form.setBrandName(form.getBrandName().toLowerCase().trim());
+    }
 
 
 }
