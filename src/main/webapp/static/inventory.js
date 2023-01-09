@@ -10,11 +10,6 @@ function addInventory(event){
 	var $form = $("#inventory-form");
 	var json = toJson($form);
 
-//	if(json.barcode=="" || !json.quantity)
-//	{
-//        alert("Barcode or Quantity cannot be empty");
-//        return;
-//	}
 
 	var url = getInventoryUrl();
 
@@ -222,6 +217,11 @@ function init(){
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
     $('#employeeFile').on('change', updateFileName)
+
+    $('#inventoryFile').on('change',function(){
+          var fileName = $(this).val();
+          $("#inventoryFileName").html(fileName);
+      })
 }
 
 $(document).ready(init);

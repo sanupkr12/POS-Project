@@ -5,6 +5,8 @@ import com.increff.pos.dao.OrderItemDao;
 import com.increff.pos.model.*;
 import com.increff.pos.pojo.OrderItemPojo;
 import com.increff.pos.pojo.OrderPojo;
+import com.increff.pos.spring.RestConfig;
+import com.increff.pos.util.FileUtil;
 
 import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.color.DeviceRgb;
@@ -22,10 +24,12 @@ import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 
 import javax.persistence.criteria.Order;
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -39,6 +43,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Stream;
+import java.util.Base64;
 
 @Service
 public class OrderService {
@@ -54,9 +59,12 @@ public class OrderService {
     @Autowired
     private OrderItemDao orderItemDao;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(List<OrderForm> orderList) throws ApiException, ParseException {
+    public void add(List<OrderForm> orderList) throws ApiException, ParseException, DocumentException, FileNotFoundException {
 
         for(OrderForm form:orderList){
 
@@ -76,7 +84,7 @@ public class OrderService {
         p.setDate(getCurrentUtcTime());
 
         orderDao.insert(p);
-
+        List<OrderItemPojo> itemList = new ArrayList<>();
 
         for(OrderForm form:orderList){
 
@@ -101,14 +109,45 @@ public class OrderService {
 
 
             orderItemDao.insert(itemPojo);
+
             inventoryService.updateWithOrder(form);
         }
-
-
-
+        //generateInvoice(p.getId());
+        printInvoice(p.getId());
 
     }
 
+    public void printInvoice(int orderId) throws ApiException {
+        try {
+            System.out.println("hello from 9000");
+            final String url = "http://localhost:8000/invoice/";
+
+            List<OrderItemData> list = get(orderId);
+            System.out.println(list);
+
+            String base64Str = restTemplate.postForObject(url, list, String.class);
+
+
+            File dir = FileUtil.createDirectory("invoiceFiles");
+            File bill = new File("invoiceFiles/bill" + String.valueOf(orderId) + ".pdf");
+
+            byte[] decodedPdf = Base64.getDecoder().decode(base64Str);
+
+
+            FileOutputStream outputStream = new FileOutputStream(bill);
+
+            outputStream.write(decodedPdf);
+
+            outputStream.flush();
+
+            outputStream.getFD().sync();
+
+            outputStream.close();
+        }
+        catch (Exception e) {
+            throw new ApiException(e.getMessage());
+        }
+    }
 
 
     public List<OrderItemData> get(int id) throws ApiException {

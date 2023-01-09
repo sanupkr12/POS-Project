@@ -226,6 +226,8 @@ function init(){
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
     $('#productFile').on('change', updateFileName)
+
+
 }
 
 $(document).ready(init);

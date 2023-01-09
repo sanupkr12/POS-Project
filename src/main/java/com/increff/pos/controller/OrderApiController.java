@@ -23,7 +23,7 @@ public class OrderApiController {
 
     @ApiOperation(value="creating an order")
     @RequestMapping(path="/api/order",method = RequestMethod.POST)
-    public void create(@RequestBody List<OrderForm> form) throws ParseException, ApiException {
+    public void create(@RequestBody List<OrderForm> form) throws ParseException, ApiException, DocumentException, FileNotFoundException {
         service.add(form);
     }
 

@@ -87,7 +87,7 @@ function addOrder(event){
            },
     	   success: function(response) {
     	   		alert("Order Successfully placed");
-    	   		location.reload();
+
     	   },
     	   error: handleAjaxError
     	});
