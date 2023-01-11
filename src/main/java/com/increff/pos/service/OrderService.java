@@ -119,17 +119,17 @@ public class OrderService {
 
     public void printInvoice(int orderId) throws ApiException {
         try {
-            System.out.println("hello from 9000");
+
             final String url = "http://localhost:8000/invoice/";
 
             List<OrderItemData> list = get(orderId);
-            System.out.println(list);
+
 
             String base64Str = restTemplate.postForObject(url, list, String.class);
 
 
             File dir = FileUtil.createDirectory("invoiceFiles");
-            File bill = new File("invoiceFiles/bill" + String.valueOf(orderId) + ".pdf");
+            File bill = new File("/home/sanupkumar/Downloads/invoiceFiles/bill" + String.valueOf(orderId) + ".pdf");
 
             byte[] decodedPdf = Base64.getDecoder().decode(base64Str);
 

@@ -10,11 +10,12 @@ function addBrand(event){
 	var $form = $("#brand-form");
 	var json = toJson($form);
 
-	if(json.name=="" || json.category=="")
-	{
-	    alert("Brand Name or Category cannot be empty");
-	    return;
-	}
+    if(json.name==="" || json.category==="")
+    {
+        alert("Brand name or category cannot be empty");
+        return;
+    }
+
 	var url = getBrandUrl();
 
 	$.ajax({
@@ -25,6 +26,7 @@ function addBrand(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
+	   $('#create-brand-modal').modal('toggle');
 	   		getBrandList();  
 	   },
 	   error: handleAjaxError
@@ -151,8 +153,9 @@ function displayBrandList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button class="btn btn-outline-danger" onclick="deleteBrand(' + e.id + ')">delete</button>&nbsp;| &nbsp;'
-		buttonHtml += ' <button class="btn btn-outline-dark" onclick="displayEditBrand(' + e.id + ')">edit</button>'
+		var buttonHtml = ' <button class="btn btn-outline-dark" onclick="displayEditBrand(' + e.id + ')">edit</button>&nbsp;';
+		buttonHtml += '<button class="btn btn-outline-danger" onclick="deleteBrand(' + e.id + ')">delete</button>'
+
 		var row = '<tr>'
 		+ '<td>' + e.id + '</td>'
 		+ '<td>' + e.name + '</td>'
@@ -202,26 +205,39 @@ function updateFileName(){
 
 function displayUploadData(){
  	resetUploadDialog(); 	
-	$('#upload-Brand-modal').modal('toggle');
+	$('#upload-brand-modal').modal('toggle');
 }
 
 function displayBrand(data){
-	$("#Brand-edit-form input[name=name]").val(data.name);	
-	$("#Brand-edit-form input[name=age]").val(data.age);	
-	$("#Brand-edit-form input[name=id]").val(data.id);	
-	$('#edit-Brand-modal').modal('toggle');
+	$("#brand-edit-form input[name=name]").val(data.name);
+	$("#brand-edit-form input[name=age]").val(data.age);
+	$("#brand-edit-form input[name=id]").val(data.id);
+	$('#edit-brand-modal').modal('toggle');
+}
+
+function createBrand(){
+    $("#brand-form input[name=name]").val('');
+    $("#brand-form input[name=category]").val('');
+    $('#create-brand-modal').modal('toggle');
 }
 
 
 //INITIALIZATION CODE
 function init(){
-	$('#add-Brand').click(addBrand);
 	$('#update-Brand').click(updateBrand);
 	$('#refresh-data').click(getBrandList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
-    $('#BrandFile').on('change', updateFileName)
+    $('#BrandFile').on('change', updateFileName);
+    $('#add-brand').click(createBrand);
+    $('#create-brand').click(addBrand);
+    $('#brandFile').on('change',function(){
+        var fileName = $(this).val();
+        $('#brandFileName').html(fileName);
+    });
+
+
 }
 
 $(document).ready(init);

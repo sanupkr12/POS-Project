@@ -59,7 +59,7 @@ public class OrderApiController {
     @ApiOperation(value="generate invoice")
     @RequestMapping(path="/api/order/invoice/{id}",method=RequestMethod.PUT)
     public void invoice(@PathVariable int id) throws ApiException, FileNotFoundException, DocumentException {
-        service.generateInvoice(id);
+        service.printInvoice(id);
     }
 
     @ApiOperation(value="get Invoice data")

@@ -9,7 +9,7 @@ var update_id = 0;
 //BUTTON ACTIONS
 function addProduct(event){
 	//Set the values to update
-	var $form = $("#product-form");
+	var $form = $("#product-create-form");
 	var json = toJson($form);
 
 
@@ -23,6 +23,7 @@ function addProduct(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
+	        $('#create-product-modal').modal('toggle');
 	   		getProductList();  
 	   },
 	   error: handleAjaxError
@@ -147,8 +148,9 @@ function displayProductList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button class="btn btn-outline-danger" onclick="deleteProduct(' + e.id + ')">delete</button>&nbsp;| &nbsp;'
-        		buttonHtml += '<button class="btn btn-outline-dark" onclick="displayEditProduct(' + e.id + ')">edit</button>'
+		var buttonHtml = '<button class="btn btn-outline-dark" onclick="displayEditProduct(' + e.id + ')">edit</button>&nbsp;';
+		buttonHtml += '<button class="btn btn-outline-danger" onclick="deleteProduct(' + e.id + ')">delete</button>'
+
 		var row = '<tr>'
 		+ '<td>' + e.name + '</td>'
 		+ '<td>' + e.brandName + '</td>'
@@ -216,6 +218,14 @@ function displayProduct(data){
 	$('#edit-product-modal').modal('toggle');
 }
 
+function createProduct(){
+    $("#product-create-form input[name=name]").val("");
+    	$("#product-create-form input[name=barcode]").val("");
+    	$("#product-create-form input[name=brandName]").val("");
+    	$("#product-create-form input[name=brandCategory]").val("");
+    	$("#product-create-form input[name=mrp]").val("");
+    	$('#create-product-modal').modal('toggle');
+}
 
 //INITIALIZATION CODE
 function init(){
@@ -225,7 +235,8 @@ function init(){
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
-    $('#productFile').on('change', updateFileName)
+    $('#productFile').on('change', updateFileName);
+    $('#create-product').click(createProduct);
 
 
 }

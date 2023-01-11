@@ -16,7 +16,7 @@ public class InfoData implements Serializable {
 	private String email;
 
 	public InfoData() {
-		message = "No message";
+		message = "";
 		email = "No email";
 	}
 	

@@ -15,7 +15,9 @@ function toJson($form){
 
 function handleAjaxError(response){
 	var response = JSON.parse(response.responseText);
-	alert(response.message);
+	$(".toast-body").html(response.message);
+	$(".message").html("Error");
+	$(".toast").toast("show");
 }
 
 function readFileData(file, callback){

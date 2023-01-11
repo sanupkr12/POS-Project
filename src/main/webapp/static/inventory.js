@@ -7,7 +7,7 @@ function getInventoryUrl(){
 //BUTTON ACTIONS
 function addInventory(event){
 	//Set the values to update
-	var $form = $("#inventory-form");
+	var $form = $("#inventory-create-form");
 	var json = toJson($form);
 
 
@@ -21,6 +21,7 @@ function addInventory(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
+	        $("#create-inventory-modal").modal('toggle');
 	   		getInventoryList();
 	   },
 	   error: handleAjaxError
@@ -147,8 +148,9 @@ function displayInventoryList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button class="btn btn-outline-danger" onclick="deleteInventory(' +  "'" + e.barcode + "'" + ')">delete</button>&nbsp;| &nbsp;'
-		buttonHtml += ' <button class="btn btn-outline-dark" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')">edit</button>'
+		var buttonHtml = ' <button class="btn btn-outline-dark" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')">edit</button>&nbsp;';
+		buttonHtml += '<button class="btn btn-outline-danger" onclick="deleteInventory(' +  "'" + e.barcode + "'" + ')">delete</button>'
+
 		var row = '<tr>'
 		+ '<td>' + e.barcode + '</td>'
 		+ '<td>' + e.name + '</td>'
@@ -207,6 +209,12 @@ function displayInventory(data){
 	$('#edit-inventory-modal').modal('toggle');
 }
 
+function createInventory(){
+    $("#inventory-create-form input[name=barcode]").val("");
+    $("#inventory-create-form input[name=quantity]").val(0);
+    $("#create-inventory-modal").modal('toggle');
+}
+
 
 //INITIALIZATION CODE
 function init(){
@@ -216,7 +224,8 @@ function init(){
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
-    $('#employeeFile').on('change', updateFileName)
+    $('#employeeFile').on('change', updateFileName);
+    $("#create-inventory").click(createInventory);
 
     $('#inventoryFile').on('change',function(){
           var fileName = $(this).val();

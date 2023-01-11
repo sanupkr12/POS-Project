@@ -36,7 +36,12 @@
        <li class="nav-item">
         <a class="btn btn-info" th:href="@{/site/login}">Login</a>
       </li>
+      &nbsp;&nbsp;
+      <li class="nav-item">
+        <a class="btn btn-info" th:href="@{/site/signup}">Signup</a>
+      </li>
     </ul>
+
  
   </div>
 </nav>
@@ -78,7 +83,7 @@
     <ul class="navbar-nav ml-auto">
 	    <li class="navbar-text">
 	    	[[${info.getEmail()}]]
-	    	&nbsp;&gt;&nbsp;
+            &nbsp;&nbsp;
 	    </li>
 	    <li class="nav-item">
 	    	<a class="nav-link" th:href="@{/session/logout}">Logout</a>
@@ -87,6 +92,8 @@
     
         
   </div>
+
+
 </nav>
 
 <footer class="footer  mt-1" th:fragment="name_footer">

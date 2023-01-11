@@ -21,30 +21,30 @@ function removeElement(ind){
     document.getElementById("index-" + ind).remove();
 }
 
-
-document.querySelector("#add-btn").addEventListener('click',function(e){
-        e.preventDefault();
-        var formHtml = `<div class="row" id=${"index-"+index} style="margin:2rem 0rem">
-                                <div class="col-sm-3 form-group" style="padding-left:0rem">
-                                <label for=${"barcode-" + index} class="form-label">Barcode</label>
-                                <input type="text" name="barcode" id=${"barcode-" + index} class="form-control" placeholder="Enter Barcode">
-                                </div>
-                                <div class="col-sm-3 form-group" >
-                                        <label for=${"barcode-" + index} class="form-label">Quantity</label>
-                                        <input type="number" name="quantity" id=${"quantity-" + index} class="form-control" placeholder="Enter Quantity">
-                                        </div>
-                                        <div class="col-sm-3 form-group" >
-                                                <label for=${"barcode-" + index} class="form-label">Selling Price</label>
-                                                <input type="number" name="sellingPrice" id=${"price-" + index} class="form-control" placeholder="Enter Selling Price">
-                                                </div>
-                                        <div class="col-sm-3">
-                                                                                       <button id="remove-btn" onclick=${"removeElement(" + index + ")"} type="button" class="btn btn-warning" style="margin-top:1.5rem;"> &nbsp; - &nbsp; </button></div>
-                                </div>
-                                               `;
-
-        orderForm.appendChild(getElementFromString(formHtml));
-        index+=1;
- });
+//
+//document.querySelector("#add-btn").addEventListener('click',function(e){
+//        e.preventDefault();
+//        var formHtml = `<div class="row" id=${"index-"+index} style="margin:2rem 0rem">
+//                                <div class="col-sm-3 form-group" style="padding-left:0rem">
+//                                <label for=${"barcode-" + index} class="form-label">Barcode</label>
+//                                <input type="text" name="barcode" id=${"barcode-" + index} class="form-control" placeholder="Enter Barcode">
+//                                </div>
+//                                <div class="col-sm-3 form-group" >
+//                                        <label for=${"barcode-" + index} class="form-label">Quantity</label>
+//                                        <input type="number" name="quantity" id=${"quantity-" + index} class="form-control" placeholder="Enter Quantity">
+//                                        </div>
+//                                        <div class="col-sm-3 form-group" >
+//                                                <label for=${"barcode-" + index} class="form-label">Selling Price</label>
+//                                                <input type="number" name="sellingPrice" id=${"price-" + index} class="form-control" placeholder="Enter Selling Price">
+//                                                </div>
+//                                        <div class="col-sm-3">
+//                                                                                       <button id="remove-btn" onclick=${"removeElement(" + index + ")"} type="button" class="btn btn-warning" style="margin-top:1.5rem;"> &nbsp; - &nbsp; </button></div>
+//                                </div>
+//                                               `;
+//
+//        orderForm.appendChild(getElementFromString(formHtml));
+//        index+=1;
+// });
 
 
 
@@ -52,18 +52,16 @@ document.querySelector("#add-btn").addEventListener('click',function(e){
 
 function addOrder(event){
     var orderItems = [];
+    let orderList = document.querySelectorAll('.items');
 
-    for(var i=1;i<index;i++)
+    for(var i=0;i<orderList.length;i++)
     {
+        let item = orderList[i];
 
-        var barcode = $(`${"#barcode-" + i}`).val();
-        var quantity = $(`${"#quantity-" + i}`).val();
-        var price = $(`${"#price-" + i}`).val();
+        var barcode = item.querySelector(".new-barcode").innerText;
+        var quantity =  parseInt(item.querySelector(".new-quantity").innerText);
+        var price = parseInt(item.querySelector(".new-sellingPrice").innerText);
 
-        if(!barcode)
-        {
-            continue;
-        }
         var orderItem = {};
         orderItem["barcode"] = barcode;
         orderItem["quantity"] = quantity;
@@ -74,7 +72,7 @@ function addOrder(event){
 
     var json = JSON.stringify(orderItems);
 
-
+    console.log(json);
 
     var url = getOrderUrl();
 
@@ -86,7 +84,9 @@ function addOrder(event){
            	'Content-Type': 'application/json'
            },
     	   success: function(response) {
+    	        $('#create-order-modal').modal('toggle');
     	   		alert("Order Successfully placed");
+    	   		location.reload();
 
     	   },
     	   error: handleAjaxError
@@ -151,25 +151,82 @@ function getOrder(){
 
 }
 
+
+function createOrder(){
+    $('#order-create-form input[name=barcode]').val("");
+    $('#order-create-form input[name=quantity]').val("");
+    $('#create-order-modal').modal('toggle');
+}
+
+function displayOrderItems(){
+    var $tbody = $('#orderItemTable').find('tbody');
+    	$tbody.empty();
+    	for(var i=0;i<OrderItems.length;i++){
+    		var e = data[i];
+    		var buttonHtml = ' <button class="btn btn-outline-dark" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')">edit</button>&nbsp;';
+    		buttonHtml += '<button class="btn btn-outline-danger" onclick="deleteInventory(' +  "'" + e.barcode + "'" + ')">delete</button>'
+
+    		var row = '<tr>'
+    		+ '<td>' + e.barcode + '</td>'
+    		+ '<td>' + e.name + '</td>'
+    		+ '<td>'  + e.quantity + '</td>'
+    		+ '<td>' + buttonHtml + '</td>'
+    		+ '</tr>';
+            $tbody.append(row);
+    	}
+}
+
+function removeFromModal(e){
+    e.target.parentElement.parentElement.remove();
+}
+
+
+function addToOrderList(event){
+    event.preventDefault();
+    var barcode = $('#order-create-form input[name=barcode]').val();
+    var quantity = $('#order-create-form input[name=quantity]').val();
+    var sellingPrice = $('#order-create-form input[name=sellingPrice]').val();
+
+    if(barcode==='' || quantity==='' || sellingPrice===0)
+    {
+       alert('Invalid Data Entry');
+    }
+
+    var $tbody = $('#orderItemTable').find('tbody');
+
+    var buttonHtml = '<button class="btn btn-outline-danger" onclick=removeFromModal(event)>delete</button>&nbsp;'
+        		var row = '<tr class="items">'
+        		+ '<td class="new-barcode">' + barcode + '</td>'
+        		+ '<td class="new-quantity">' + quantity + '</td>'
+        		+ '<td class="new-sellingPrice">' + sellingPrice + '</td>'
+        		+ '<td>' + buttonHtml + '</td>'
+        		+ '</tr>';
+    $tbody.append(row);
+
+
+}
+
 function init(){
         $("#add-order").click(addOrder);
-        var formHtml = `<div class="row" id=${"index-"+index} style="margin:2rem 0rem;">
-        <div class="col-sm-3 form-group" style="padding-left:0rem">
-        <label for=${"barcode-" + index} class="form-label">Barcode</label>
-        <input type="text" name="barcode" id=${"barcode-" + index} class="form-control" placeholder="Enter Barcode">
-        </div>
-        <div class="col-sm-3 form-group" >
-                <label for=${"barcode-" + index} class="form-label">Quantity</label>
-                <input type="number" name="quantity" id=${"quantity-" + index} class="form-control" placeholder="Enter Quantity">
-                </div>
-                <div class="col-sm-3 form-group">
-                        <label for=${"barcode-" + index} class="form-label">Selling Price</label>
-                        <input type="number" name="sellingPrice" id=${"price-" + index} class="form-control" placeholder="Enter Selling Price">
-                        </div>
-        </div>`;
-        orderForm.appendChild(getElementFromString(formHtml));
-        index+=1;
+//        var formHtml = `<div class="row" id=${"index-"+index} style="margin:2rem 0rem;">
+//        <div class="col-sm-3 form-group" style="padding-left:0rem">
+//        <label for=${"barcode-" + index} class="form-label">Barcode</label>
+//        <input type="text" name="barcode" id=${"barcode-" + index} class="form-control" placeholder="Enter Barcode">
+//        </div>
+//        <div class="col-sm-3 form-group" >
+//                <label for=${"barcode-" + index} class="form-label">Quantity</label>
+//                <input type="number" name="quantity" id=${"quantity-" + index} class="form-control" placeholder="Enter Quantity">
+//                </div>
+//                <div class="col-sm-3 form-group">
+//                        <label for=${"barcode-" + index} class="form-label">Selling Price</label>
+//                        <input type="number" name="sellingPrice" id=${"price-" + index} class="form-control" placeholder="Enter Selling Price">
+//                        </div>
+//        </div>`;
+//        orderForm.appendChild(getElementFromString(formHtml));
+
         getOrder();
+        $('#create-order').click(createOrder);
+        $('#addToOrderList').click(addToOrderList);
 
 
 }
