@@ -11,7 +11,7 @@ public class SiteUiController extends AbstractUiController {
 	@RequestMapping(value = "")
 	public ModelAndView index() {
 
-		return mav("index.html");
+		return mav("login.html");
 	}
 
 	@RequestMapping(value = "/site/login")
@@ -22,6 +22,7 @@ public class SiteUiController extends AbstractUiController {
 
 	@RequestMapping(value="/site/signup")
 	public ModelAndView signup(){
+
 		return mav("signup.html");
 	}
 

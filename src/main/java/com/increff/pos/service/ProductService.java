@@ -1,6 +1,7 @@
 package com.increff.pos.service;
 
 import com.increff.pos.dao.ProductDao;
+import com.increff.pos.model.InventoryForm;
 import com.increff.pos.model.ProductData;
 import com.increff.pos.model.ProductForm;
 import com.increff.pos.pojo.BrandPojo;
@@ -20,6 +21,10 @@ public class ProductService {
     @Autowired
     private BrandService brandService;
 
+    @Autowired
+    private InventoryService inventoryService;
+
+
     @Transactional(rollbackOn = ApiException.class)
     public void add(ProductForm p) throws ApiException{
         if(dao.checkAny(p.getBarcode()))
@@ -38,7 +43,14 @@ public class ProductService {
         prod.setMrp(p.getMrp());
 
 
+
+
         dao.insert(prod);
+
+        InventoryForm inventoryForm = new InventoryForm();
+        inventoryForm.setBarcode(p.getBarcode());
+        inventoryForm.setQuantity(0);
+        inventoryService.create(inventoryForm);
 
 
     }

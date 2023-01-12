@@ -149,7 +149,9 @@ function generateInvoice(){
                            	'Content-Type': 'application/json'
                            },
                     	   success: function(data) {
-                    	        alert("Invoice Generated");
+                    	        $(".toast-body").html("Invoice Generated");
+                                $(".message").html("success");
+                                $(".toast").toast("show");
                     	   		handleEditOrder();
 
                     	   },

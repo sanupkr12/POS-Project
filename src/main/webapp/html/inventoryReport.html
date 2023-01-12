@@ -14,31 +14,40 @@
     <form id="options-form">
         <div class="row">
 
-            <div class="col-8">
-                <p>Category</p>
-                <select class="form-select form-select-lg mb-3 append-category" id="category" style="width:60%;
+            <div class="col-4">
+                <div style="display:flex;justify-content:space-between">
+                    <label class="form-label" for="category">Category</label>
+                    <select class="form-control form-select form-select-lg mb-3 append-category" id="category" style="width:60%;
     height:2.5rem;
     padding:0.3rem;margin-bottom:2rem;"  aria-label=".form-select-lg example">
-                    <option selected>Select Category</option>
+                        <option selected>Select Category</option>
 
-                </select>
-                <p>Brand</p>
-                <select class="form-select form-select-lg mb-3 append-brand" id="brand" style="width:60%;
+                    </select>
+
+                </div>
+
+
+                <div style="display:flex;justify-content:space-between">
+                    <label class="form-label" for="brand">Brand</label>
+                    <select class="form-control form-select form-select-lg mb-3 append-brand" id="brand" style="width:60%;
     height:2.5rem;
     padding:0.3rem;margin-bottom:2rem;" aria-label=".form-select-lg example">
-                    <option selected>Select Brand</option>
+                        <option selected>Select Brand</option>
 
 
-                </select>
+                    </select>
+                </div>
+
 
             </div>
 
 
 
 
-        <div class="col-4" style="margin-top:5rem">
-            <button id="download-inventory" class="btn btn-primary btn-lg">Generate Report</button>
-        </div>
+
+            <div class="col-8" style="display:flex;align-items:center;justify-content:center" >
+                <button id="download-inventory" class="btn btn-primary btn-lg">Generate Report</button>
+            </div>
 
 
         </div>

@@ -21,30 +21,6 @@ function removeElement(ind){
     document.getElementById("index-" + ind).remove();
 }
 
-//
-//document.querySelector("#add-btn").addEventListener('click',function(e){
-//        e.preventDefault();
-//        var formHtml = `<div class="row" id=${"index-"+index} style="margin:2rem 0rem">
-//                                <div class="col-sm-3 form-group" style="padding-left:0rem">
-//                                <label for=${"barcode-" + index} class="form-label">Barcode</label>
-//                                <input type="text" name="barcode" id=${"barcode-" + index} class="form-control" placeholder="Enter Barcode">
-//                                </div>
-//                                <div class="col-sm-3 form-group" >
-//                                        <label for=${"barcode-" + index} class="form-label">Quantity</label>
-//                                        <input type="number" name="quantity" id=${"quantity-" + index} class="form-control" placeholder="Enter Quantity">
-//                                        </div>
-//                                        <div class="col-sm-3 form-group" >
-//                                                <label for=${"barcode-" + index} class="form-label">Selling Price</label>
-//                                                <input type="number" name="sellingPrice" id=${"price-" + index} class="form-control" placeholder="Enter Selling Price">
-//                                                </div>
-//                                        <div class="col-sm-3">
-//                                                                                       <button id="remove-btn" onclick=${"removeElement(" + index + ")"} type="button" class="btn btn-warning" style="margin-top:1.5rem;"> &nbsp; - &nbsp; </button></div>
-//                                </div>
-//                                               `;
-//
-//        orderForm.appendChild(getElementFromString(formHtml));
-//        index+=1;
-// });
 
 
 
@@ -85,11 +61,17 @@ function addOrder(event){
            },
     	   success: function(response) {
     	        $('#create-order-modal').modal('toggle');
-    	   		alert("Order Successfully placed");
-    	   		location.reload();
+
+    	   		    $.notify("Order Placed Successfully","success");
+
+                    getOrder();
+
 
     	   },
-    	   error: handleAjaxError
+    	   error: function(response){
+
+                  	        handleAjaxError(response);
+                  	   }
     	});
 
 
@@ -202,27 +184,16 @@ function addToOrderList(event){
         		+ '<td>' + buttonHtml + '</td>'
         		+ '</tr>';
     $tbody.append(row);
+    $('#order-create-form input[name=barcode]').val("");
+    $('#order-create-form input[name=quantity]').val("");
+    $('#order-create-form input[name=sellingPrice]').val("");
 
 
 }
 
 function init(){
         $("#add-order").click(addOrder);
-//        var formHtml = `<div class="row" id=${"index-"+index} style="margin:2rem 0rem;">
-//        <div class="col-sm-3 form-group" style="padding-left:0rem">
-//        <label for=${"barcode-" + index} class="form-label">Barcode</label>
-//        <input type="text" name="barcode" id=${"barcode-" + index} class="form-control" placeholder="Enter Barcode">
-//        </div>
-//        <div class="col-sm-3 form-group" >
-//                <label for=${"barcode-" + index} class="form-label">Quantity</label>
-//                <input type="number" name="quantity" id=${"quantity-" + index} class="form-control" placeholder="Enter Quantity">
-//                </div>
-//                <div class="col-sm-3 form-group">
-//                        <label for=${"barcode-" + index} class="form-label">Selling Price</label>
-//                        <input type="number" name="sellingPrice" id=${"price-" + index} class="form-control" placeholder="Enter Selling Price">
-//                        </div>
-//        </div>`;
-//        orderForm.appendChild(getElementFromString(formHtml));
+
 
         getOrder();
         $('#create-order').click(createOrder);

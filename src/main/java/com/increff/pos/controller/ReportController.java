@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.util.List;
 
 @Api
@@ -43,8 +44,14 @@ public class ReportController {
 
     @ApiOperation(value="Generate Sales Report")
     @RequestMapping(path = "/api/report/sales",method = RequestMethod.POST)
-    public void generateBrand(@RequestBody SalesReportForm salesReportForm) throws ApiException, FileNotFoundException {
+    public void generateSales(@RequestBody SalesReportForm salesReportForm) throws ApiException, FileNotFoundException {
         reportService.getSales(salesReportForm);
+    }
+
+    @ApiOperation(value="Generate Per Day Sales Report")
+    @RequestMapping(path = "/api/report/daySales",method = RequestMethod.POST)
+    public void generateDaySales() throws ApiException, FileNotFoundException, ParseException {
+        reportService.getDaySales();
     }
 
 

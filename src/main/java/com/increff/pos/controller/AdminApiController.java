@@ -3,6 +3,7 @@ package com.increff.pos.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,28 @@ public class AdminApiController {
 	@ApiOperation(value = "Adds a user")
 	@RequestMapping(path = "/api/admin/user", method = RequestMethod.POST)
 	public void addUser(@RequestBody UserForm form) throws ApiException {
+
+		if(form.getEmail().equals(""))
+		{
+			throw new ApiException("Email cannot be empty");
+		}
+
+		if(form.getPassword().equals(""))
+		{
+			throw new ApiException("Password cannot be empty");
+		}
+
+		if(!EmailValidator.getInstance().isValid(form.getEmail()))
+		{
+			throw new ApiException("Invalid Email Address");
+		}
+
+		if(form.getRole().equals("") || (!form.getRole().equals("admin") && !form.getRole().equals("operator")))
+		{
+			throw new ApiException("Invalid Role");
+		}
+
+
 		UserPojo p = convert(form);
 		service.add(p);
 	}

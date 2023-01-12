@@ -1,12 +1,10 @@
 package com.increff.pos.service;
 
 
+import com.increff.pos.dao.DaySalesDao;
 import com.increff.pos.dao.InventoryDao;
 import com.increff.pos.model.*;
-import com.increff.pos.pojo.BrandPojo;
-import com.increff.pos.pojo.InventoryPojo;
-import com.increff.pos.pojo.OrderItemPojo;
-import com.increff.pos.pojo.ProductPojo;
+import com.increff.pos.pojo.*;
 import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.color.DeviceRgb;
 import com.itextpdf.kernel.geom.PageSize;
@@ -18,13 +16,21 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.datetime.DateFormatter;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class ReportService {
@@ -39,6 +45,9 @@ public class ReportService {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private DaySalesDao dao;
 
     public void getInventory(InventoryReportForm inventoryReportForm) throws ApiException, FileNotFoundException {
         List<InventoryData> data =  inventoryService.get(inventoryReportForm);
@@ -159,6 +168,46 @@ public class ReportService {
 
     }
 
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional(rollbackOn = ApiException.class)
+    public void getDaySales() throws ApiException, ParseException {
+        List<OrderData> orderList = orderService.getAll();
+        LocalDate currentDate = LocalDate.now(ZoneOffset.UTC);
+
+        int orderCount = 0;
+        int orderItemCount = 0;
+        double revenue = 0;
+
+        for(OrderData data:orderList)
+        {
+            LocalDate orderDate = data.getDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate();
+            if(orderDate.equals(currentDate))
+            {
+                orderCount+=1;
+
+
+                List<OrderItemData> itemList =  orderService.get(data.getId());
+
+               for(OrderItemData item:itemList)
+               {
+                   orderItemCount+=1;
+                   revenue += item.getTotal();
+               }
+            }
+        }
+
+        System.out.println(orderItemCount);
+        DaySalesPojo p = new DaySalesPojo();
+
+        p.setDate(new Date());
+        p.setOrderCount(orderCount);
+        p.setItemCount(orderItemCount);
+        p.setRevenue(revenue);
+
+        dao.insert(p);
+
+    }
+
     public void getBrand(BrandReportForm brandReportForm) throws FileNotFoundException, ApiException {
         List<BrandPojo> data =  brandService.getBrand(brandReportForm);
 
@@ -199,6 +248,27 @@ public class ReportService {
         document.add(infoTable);
 
         document.close();
+    }
+
+    public static Date getCurrentUtcTime() throws ParseException {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
+
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        SimpleDateFormat ldf = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
+
+        Date d1 = null;
+        try {
+
+            d1 = ldf.parse( sdf.format(new Date()) );
+        }
+        catch (java.text.ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+        }
+        return d1;
     }
 
 

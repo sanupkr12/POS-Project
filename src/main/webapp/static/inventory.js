@@ -22,9 +22,13 @@ function addInventory(event){
        },
 	   success: function(response) {
 	        $("#create-inventory-modal").modal('toggle');
+	        $.notify("Inventory has been added successfully","success");
 	   		getInventoryList();
 	   },
-	   error: handleAjaxError
+	   error: function(response){
+
+              	        handleAjaxError(response);
+              	   }
 	});
 
 	return false;
@@ -50,6 +54,7 @@ function updateInventory(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
+	        $.notify("Inventory has been updated successfully","success");
 	   		getInventoryList();
 	   },
 	   error: handleAjaxError
@@ -144,20 +149,23 @@ function downloadErrors(){
 //UI DISPLAY METHODS
 
 function displayInventoryList(data){
+    var sno = 1;
 	var $tbody = $('#inventory-table').find('tbody');
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
 		var buttonHtml = ' <button class="btn btn-outline-dark" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')">edit</button>&nbsp;';
-		buttonHtml += '<button class="btn btn-outline-danger" onclick="deleteInventory(' +  "'" + e.barcode + "'" + ')">delete</button>'
+
 
 		var row = '<tr>'
+		+ '<td>' + sno + '</td>'
 		+ '<td>' + e.barcode + '</td>'
 		+ '<td>' + e.name + '</td>'
 		+ '<td>'  + e.quantity + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
+        sno+=1;
 	}
 }
 

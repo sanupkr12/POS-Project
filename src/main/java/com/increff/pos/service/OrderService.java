@@ -88,9 +88,16 @@ public class OrderService {
 
         for(OrderForm form:orderList){
 
+            if(form.getBarcode().equals(""))
+            {
+                throw new ApiException("Barcode cannot be empty");
+            }
+
+
             OrderItemPojo itemPojo = new OrderItemPojo();
             ProductData data = productService.get(form.getBarcode());
             itemPojo.setOrderId(p.getId());
+
             if(form.getQuantity()<=0)
             {
                 throw new ApiException("Quantity cannot be negative");
@@ -117,10 +124,13 @@ public class OrderService {
 
     }
 
+    @Transactional(rollbackOn = ApiException.class)
     public void printInvoice(int orderId) throws ApiException {
         try {
 
             final String url = "http://localhost:8000/invoice/";
+
+            OrderPojo p = orderDao.get(orderId);
 
             List<OrderItemData> list = get(orderId);
 
@@ -143,6 +153,8 @@ public class OrderService {
             outputStream.getFD().sync();
 
             outputStream.close();
+
+            p.setInvoiceGenerated(true);
         }
         catch (Exception e) {
             throw new ApiException(e.getMessage());

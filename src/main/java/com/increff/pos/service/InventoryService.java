@@ -89,7 +89,7 @@ public class InventoryService {
             throw new ApiException("Inventory already exists");
         }
 
-        if(form.getQuantity()<=0)
+        if(form.getQuantity()<0)
         {
             throw new ApiException("Quantity cannot be less than zero");
         }

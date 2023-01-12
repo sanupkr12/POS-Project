@@ -31,6 +31,25 @@ public class ProductApiController {
     @RequestMapping(path = "/api/product", method = RequestMethod.POST)
     public void add(@RequestBody ProductForm form) throws ApiException {
 
+        if(form.getName().equals(""))
+        {
+            throw new ApiException("Product Name cannot be empty");
+        }
+        if(form.getBarcode().equals(""))
+        {
+            throw new ApiException("Barcode  cannot be empty");
+        }
+
+        if(form.getBrandName().equals(""))
+        {
+            throw new ApiException("Brand Name cannot be empty");
+        }
+
+        if(form.getMrp()<=0)
+        {
+            throw new ApiException("Price cannot be negative");
+        }
+
         service.add(form);
     }
 
@@ -58,8 +77,27 @@ public class ProductApiController {
 
     @ApiOperation(value = "Updates an Product")
     @RequestMapping(path = "/api/product/{id}", method = RequestMethod.PUT)
-    public void update(@RequestBody ProductForm f,@PathVariable int id) throws ApiException {
-        service.update(f,id);
+    public void update(@RequestBody ProductForm form,@PathVariable int id) throws ApiException {
+        if(form.getName().equals(""))
+        {
+            throw new ApiException("Product Name cannot be empty");
+        }
+        if(form.getBarcode().equals(""))
+        {
+            throw new ApiException("Barcode  cannot be empty");
+        }
+
+        if(form.getBrandName().equals(""))
+        {
+            throw new ApiException("Brand Name cannot be empty");
+        }
+
+        if(form.getMrp()<=0)
+        {
+            throw new ApiException("Price cannot be negative");
+        }
+
+        service.update(form,id);
     }
 
 

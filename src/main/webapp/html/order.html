@@ -12,49 +12,12 @@
 
   <h3 style="text-align:center;margin:2rem">Order</h3>
 
-  <!-- Top row with form-->
-<!--  <div class="row">-->
-<!--    <div class="col-12">-->
-<!--      <form class="form-inline" id="order-form" >-->
-<!--        <div id="inputOrder">-->
-
-<!--        </div>-->
-
-<!--      </form>-->
-<!--    </div>-->
-<!--      <div  class="col-12">-->
-<!--        <button id="add-btn" type="button" class="btn btn-warning" style="margin-right: 8px;"> &nbsp; + &nbsp; </button>-->
-<!--        <button type="button" class="btn btn-primary" id="add-order">Add</button>-->
-<!--        &nbsp;-->
-<!--        <button type="button" class="btn btn-primary" id="refresh-data">Refresh</button>-->
-<!--        &nbsp;-->
-<!--        <button type="button" class="btn btn-primary" id="upload-data">Upload</button>-->
-<!--      </div>-->
-
-<!--  </div>-->
 
   <button type="button" class="btn btn-outline-success" id="create-order">Add</button>
   &nbsp;
-  <button type="button" class="btn btn-primary" id="refresh-data">Refresh</button>
-  &nbsp;
-  <button type="button" class="btn btn-primary" id="upload-data">Upload</button>
 
-  <div aria-live="polite" aria-atomic="true" style=" position: relative; min-height: 100px;">
-    <div style="position: absolute; top: -50px; right: 0px">
-      <div class="toast" data-autohide="false">
-        <div class="toast-header">
 
-          <strong class="mr-auto">Bootstrap</strong>
-          <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="toast-body">
-          Toast to display messages
-        </div>
-      </div>
-    </div>
-  </div>
+
 
   <div class="modal" tabindex="-1" role="dialog" id="create-order-modal">
     <div class="modal-dialog" role="document">
@@ -81,7 +44,7 @@
               <label for="inputSellingPrice">Selling Price</label>
               <input id="inputSellingPrice" type="number" class="form-control" name="sellingPrice" placeholder="Enter Selling Price">
             </div>
-              <button id="addToOrderList" class="btn btn-primary btn-lg">+</button>
+              <button id="addToOrderList" style="margin-bottom:1rem;" class="btn btn-warning btn-lg">+</button>
 
 
             <table class="table table-striped" id="orderItemTable">
@@ -99,19 +62,7 @@
 
 
             </table>
-<!--            <div class="form-group">-->
-<!--              <label  class="col-sm-2 col-form-label">Barcode</label>-->
-<!--              <div class="col-sm-10">-->
 
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="form-group">-->
-<!--              <label class="col-sm-2 col-form-label">Quantity</label>-->
-<!--              <div class="col-sm-10">-->
-
-<!--              </div>-->
-<!--            </div>-->
-<!--            <input type="hidden" name="id" >-->
           </form>
         </div>
         <div class="modal-footer">
@@ -143,24 +94,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>1</td>
-          <td>Romil Jain</td>
-          <td>30</td>
-          <td>Edit | Delete</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Rajul Jain</td>
-          <td>31</td>
-          <td>Edit | Delete</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Anaisha Jain</td>
-          <td>7</td>
-          <td>Edit | Delete</td>
-        </tr>
+
         </tbody>
       </table>
 

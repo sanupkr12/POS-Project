@@ -10,6 +10,7 @@ import com.increff.pos.service.UserService;
 import com.increff.pos.util.SecurityUtil;
 import com.increff.pos.util.UserPrincipal;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -44,6 +45,18 @@ public class SignupController {
     @ApiOperation(value = "Signs up a user")
     @RequestMapping(path = "/session/signup", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ModelAndView Signup(HttpServletRequest req, SignupForm form) throws ApiException {
+
+        if(!EmailValidator.getInstance().isValid(form.getEmail()))
+        {
+            throw new ApiException("Invalid Email Address");
+        }
+
+        if(!form.getPassword().equals(form.getConfirmPassword()))
+        {
+            info.setMessage("password does not match with confirm password");
+            return new ModelAndView("redirect:/site/signup");
+        }
+
         UserPojo p = service.get(form.getEmail());
         info.setMessage("");
 

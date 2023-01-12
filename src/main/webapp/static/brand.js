@@ -10,11 +10,6 @@ function addBrand(event){
 	var $form = $("#brand-form");
 	var json = toJson($form);
 
-    if(json.name==="" || json.category==="")
-    {
-        alert("Brand name or category cannot be empty");
-        return;
-    }
 
 	var url = getBrandUrl();
 
@@ -26,10 +21,14 @@ function addBrand(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   $('#create-brand-modal').modal('toggle');
+	        $('#create-brand-modal').modal('toggle');
+	        $.notify("Brand has been added successfully","success");
 	   		getBrandList();  
 	   },
-	   error: handleAjaxError
+	   error: function(response){
+
+	        handleAjaxError(response);
+	   }
 	});
 
 	return false;
@@ -53,6 +52,7 @@ function updateBrand(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
+	        $.notify("Brand has been updated successfully","success");
 	   		getBrandList();   
 	   },
 	   error: handleAjaxError
@@ -151,18 +151,20 @@ function downloadErrors(){
 function displayBrandList(data){
 	var $tbody = $('#Brand-table').find('tbody');
 	$tbody.empty();
+	var j=1;
 	for(var i in data){
 		var e = data[i];
 		var buttonHtml = ' <button class="btn btn-outline-dark" onclick="displayEditBrand(' + e.id + ')">edit</button>&nbsp;';
-		buttonHtml += '<button class="btn btn-outline-danger" onclick="deleteBrand(' + e.id + ')">delete</button>'
+
 
 		var row = '<tr>'
-		+ '<td>' + e.id + '</td>'
+		+ '<td>' + j + '</td>'
 		+ '<td>' + e.name + '</td>'
 		+ '<td>'  + e.category + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
+        j+=1;
 	}
 }
 

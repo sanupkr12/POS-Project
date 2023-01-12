@@ -23,6 +23,15 @@ public class InventoryApiController {
     @RequestMapping(path="/api/inventory",method = RequestMethod.POST)
     public void create(@RequestBody InventoryForm form) throws ApiException {
 
+        if(form.getBarcode().equals(""))
+        {
+            throw new ApiException("Barcode cannot be empty");
+        }
+
+        if(form.getQuantity()<0)
+        {
+            throw new ApiException("Quantity cannot be negative");
+        }
 
         service.create(form);
 

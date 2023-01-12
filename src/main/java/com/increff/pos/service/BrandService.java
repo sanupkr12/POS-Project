@@ -29,6 +29,8 @@ public class BrandService {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void add(BrandPojo p) throws ApiException {
+
+
 		normalize(p);
 
 		if(dao.selectAny(p.getName(),p.getCategory()))

@@ -29,6 +29,13 @@ public class BrandApiController {
 	@ApiOperation(value = "Adds an Brand")
 	@RequestMapping(path = "/api/brand", method = RequestMethod.POST)
 	public void add(@RequestBody BrandForm form) throws ApiException {
+
+		if(form.getName().equals("") || form.getCategory().equals(""))
+		{
+			throw new ApiException("Name or Category cannot be empty");
+		}
+
+
 		BrandPojo p = convert(form);
 		service.add(p);
 	}

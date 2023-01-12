@@ -24,9 +24,13 @@ function addProduct(event){
        },	   
 	   success: function(response) {
 	        $('#create-product-modal').modal('toggle');
+	        $.notify("Product has been added successfully","success");
 	   		getProductList();  
 	   },
-	   error: handleAjaxError
+	   error: function(response){
+
+              	        handleAjaxError(response);
+           }
 	});
 
 	return false;
@@ -49,6 +53,7 @@ function updateProduct(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
+	        $.notify("Product has been updated successfully","success");
 	   		getProductList();   
 	   },
 	   error: handleAjaxError
@@ -143,15 +148,15 @@ function downloadErrors(){
 //UI DISPLAY METHODS
 
 function displayProductList(data){
-
+    var sno = 1;
 	var $tbody = $('#product-table').find('tbody');
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
 		var buttonHtml = '<button class="btn btn-outline-dark" onclick="displayEditProduct(' + e.id + ')">edit</button>&nbsp;';
-		buttonHtml += '<button class="btn btn-outline-danger" onclick="deleteProduct(' + e.id + ')">delete</button>'
 
 		var row = '<tr>'
+		+ '<td>' + sno + '</td>'
 		+ '<td>' + e.name + '</td>'
 		+ '<td>' + e.brandName + '</td>'
 		+ '<td>' + e.brandCategory + '</td>'
@@ -160,6 +165,7 @@ function displayProductList(data){
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
+        sno+=1;
 	}
 }
 
