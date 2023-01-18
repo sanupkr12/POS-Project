@@ -1,0 +1,48 @@
+<!doctype html>
+
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="snippets.html :: name_head"></head>
+
+<body>
+
+<nav th:replace="snippets.html :: name_app_navbar"></nav>
+
+<div class="container">
+
+  <h3 style="text-align:center;margin:2rem">Day Sales Report</h3>
+
+
+  <div class="row">
+
+    <!-- Table -->
+    <div class="col-12">
+      <table class="table table-striped" id="display-daySales-table">
+        <thead class="thead-dark">
+        <tr>
+          <th scope="col">S No.</th>
+          <th scope="col">Date</th>
+          <th scope="col">Order Count</th>
+          <th scope="col">Item Count</th>
+          <th scope="col">Revenue</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+
+
+
+</div> <!-- Container end-->
+
+<footer th:replace="snippets.html :: name_footer"></footer>
+
+<script th:src="@{/static/daySalesReport.js}"/></script>
+</body>
+
+</html>

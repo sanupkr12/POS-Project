@@ -13,7 +13,7 @@
     <h3 style="text-align:center;margin:2rem">Product</h3>
 
 
-    <button type="button" class="btn btn-outline-success" id="create-product">Add</button>
+    <button type="button" class="btn btn-primary" id="create-product">Create</button>
     &nbsp;
     &nbsp;
     <button type="button" class="btn btn-primary" th:if="${info.getRole() == 'admin'}" id="upload-data">Upload</button>
@@ -24,7 +24,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Product</h5>
+                    <h5 class="modal-title">Create Product</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -172,7 +172,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Upload Employee</h5>
+                    <h5 class="modal-title">Upload Product</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

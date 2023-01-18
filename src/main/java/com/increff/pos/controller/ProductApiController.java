@@ -3,6 +3,7 @@ package com.increff.pos.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.increff.pos.dto.ProductDto;
 import com.increff.pos.model.*;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.ProductService;
@@ -25,32 +26,12 @@ import io.swagger.annotations.ApiOperation;
 public class ProductApiController {
 
     @Autowired
-    private ProductService service;
+    private ProductDto dto;
 
     @ApiOperation(value = "Adds a Product")
     @RequestMapping(path = "/api/product", method = RequestMethod.POST)
     public void add(@RequestBody ProductForm form) throws ApiException {
-
-        if(form.getName().equals(""))
-        {
-            throw new ApiException("Product Name cannot be empty");
-        }
-        if(form.getBarcode().equals(""))
-        {
-            throw new ApiException("Barcode  cannot be empty");
-        }
-
-        if(form.getBrandName().equals(""))
-        {
-            throw new ApiException("Brand Name cannot be empty");
-        }
-
-        if(form.getMrp()<=0)
-        {
-            throw new ApiException("Price cannot be negative");
-        }
-
-        service.add(form);
+        dto.add(form);
     }
 
 
@@ -58,46 +39,25 @@ public class ProductApiController {
     @RequestMapping(path = "/api/product/{id}", method = RequestMethod.DELETE)
     // /api/1
     public void delete(@PathVariable int id) throws ApiException {
-        service.delete(id);
+        dto.delete(id);
     }
 
     @ApiOperation(value = "Gets a Product by Id")
     @RequestMapping(path = "/api/product/{id}", method = RequestMethod.GET)
     public ProductData get(@PathVariable int id) throws ApiException {
-
-        return service.get(id);
+        return dto.get(id);
     }
 
     @ApiOperation(value = "Gets list of all Product")
     @RequestMapping(path = "/api/product", method = RequestMethod.GET)
     public List<ProductData> getAll() throws ApiException{
-
-        return service.get();
+        return dto.get();
     }
 
     @ApiOperation(value = "Updates an Product")
     @RequestMapping(path = "/api/product/{id}", method = RequestMethod.PUT)
     public void update(@RequestBody ProductForm form,@PathVariable int id) throws ApiException {
-        if(form.getName().equals(""))
-        {
-            throw new ApiException("Product Name cannot be empty");
-        }
-        if(form.getBarcode().equals(""))
-        {
-            throw new ApiException("Barcode  cannot be empty");
-        }
-
-        if(form.getBrandName().equals(""))
-        {
-            throw new ApiException("Brand Name cannot be empty");
-        }
-
-        if(form.getMrp()<=0)
-        {
-            throw new ApiException("Price cannot be negative");
-        }
-
-        service.update(form,id);
+        dto.update(form,id);
     }
 
 

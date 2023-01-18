@@ -11,7 +11,7 @@ function getCurrentUrl(){
 
 
 function init(){
-
+$("#report-link").addClass('active');
 
 }
 

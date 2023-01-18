@@ -15,7 +15,9 @@ function toJson($form){
 
 function handleAjaxError(response){
 	var response = JSON.parse(response.responseText);
-	$.notify(response.message,'error');
+	$.notify.defaults( {clickToHide:true,autoHide:false} );
+
+	$.notify(response.message + " ❌️",'error');
 }
 
 function readFileData(file, callback){
@@ -52,3 +54,5 @@ function writeFileData(arr){
     tempLink.setAttribute('download', 'download.tsv');
     tempLink.click(); 
 }
+
+

@@ -6,7 +6,7 @@ function getCurrentUrl(){
 
 
 function downloadBrand(event){
-event.preventDefault();
+    event.preventDefault();
     var category = $("#category").val();
     var brand = $("#brand").val();
 
@@ -38,12 +38,31 @@ event.preventDefault();
                	'Content-Type': 'application/json'
                },
         	   success: function(response) {
-        	            alert("Brand Report successfully downloaded");
+        	            displayBrandList(response);
+
         	   },
         	   error: handleAjaxError
 
     });
     return false;
+}
+
+function displayBrandList(data){
+	var $tbody = $('#display-brand-table').find('tbody');
+	$tbody.empty();
+	var j=1;
+	for(var i in data){
+		var e = data[i];
+
+
+		var row = '<tr>'
+		+ '<td>' + j + '</td>'
+		+ '<td>' + e.name + '</td>'
+		+ '<td>'  + e.category + '</td>'
+		+ '</tr>';
+        $tbody.append(row);
+        j+=1;
+	}
 }
 
 function fillCategoryOptionUtil(data){
@@ -69,7 +88,7 @@ function fillCategoryOption(){
 
         },
         success:function(data){
-            console.log(data);
+
             fillCategoryOptionUtil(data);
         }
     })
@@ -99,10 +118,80 @@ function fillBrandOption(){
 
         },
         success:function(data){
-            console.log(data);
+
             fillBrandOptionUtil(data);
         }
     })
+}
+
+function getBrandByCategory(event){
+    var category = event.target.value;
+
+
+    var brand = $("#brand").val();
+
+    if(brand!=='Select Brand')
+    {
+        return;
+    }
+
+    $.ajax({
+         url:$("meta[name=baseUrl]").attr("content") + "/api/brand/category/" + category,
+                type:'GET',
+                headers:{
+                    'Content-type':'application/json'
+
+                },
+                success:function(data){
+                    var brandOption = $(".append-brand");
+                    brandOption[0].innerHTML = "";
+
+                    brandOption.append(`<option selected>Select Brand</option>`);
+
+                         for(var i=0;i<data.length;i++)
+                         {
+                            brandOption.append(`<option val="${data[i]}">${data[i]}</option>`);
+                         }
+                }
+
+    })
+
+}
+
+
+function getCategoryByBrand(event){
+
+    var brand = event.target.value;
+
+    var category = $("#category").val();
+
+    if(category!=='Select Category')
+    {
+        return;
+    }
+
+
+
+    $.ajax({
+         url:$("meta[name=baseUrl]").attr("content") + "/api/brand/list/" + brand,
+                type:'GET',
+                headers:{
+                    'Content-type':'application/json'
+
+                },
+                success:function(data){
+                    var categoryOption = $(".append-category");
+                                        categoryOption[0].innerHTML = "";
+
+                                        categoryOption.append(`<option selected>Select Category</option>`);
+                                             for(var i=0;i<data.length;i++)
+                                             {
+                                                categoryOption.append(`<option val="${data[i]}">${data[i]}</option>`);
+                                             }
+                }
+
+    })
+
 }
 
 
@@ -110,7 +199,8 @@ function init(){
     $("#download-brand").click(downloadBrand);
     fillCategoryOption();
     fillBrandOption();
-
+    $("#category").on('change',getBrandByCategory);
+    $("#brand").on('change',getCategoryByBrand);
 
 }
 

@@ -12,22 +12,25 @@
 
     <h3 style="text-align:center;margin:2rem">Report</h3>
 
-    <!-- Top row with form-->
-    <div style="width:65%;height:10rem;margin:12rem auto;">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div >
-                <a th:href="@{/ui/report/inventory}" title="Inventory" style="text-decoration:none"> <i class="fa fa-list-alt" style="font-size:4rem;"></i> </a>
-                <p style="text-align:center">Inventory</p>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:2rem;" class="row">
+            <div class="col-3 icon" style="text-align:center">
+                <a th:href="@{/ui/report/inventory}" title="Inventory" style="text-decoration:none;color:black;"> <img style="width:40% ;height:100% ;padding-bottom:2rem;padding-top:2rem;" th:src="@{/static/checklists.png}"> <p style="text-align:center">Inventory</p></a>
+
             </div>
-            <div>
-                <a th:href="@{/ui/report/brand}" title="Brand" style="text-decoration:none"> <i class="fa fa-bar-chart" style="font-size:4rem;"></i> </a>
-                <p style="text-align:center">Brand</p>
+            <div class="col-3 icon" style="text-align:center">
+                <a th:href="@{/ui/report/brand}" title="Brand" style="text-decoration:none;color:black;"> <img style="width:40% ;height:100% ;padding-bottom:2rem;padding-top:2rem;" th:src="@{/static/brandReport.png}">  <p style="text-align:center">Brand</p></a>
+
             </div>
-            <div>
-                <a th:href="@{/ui/report/sales}" title="Sales" style="text-decoration:none"> <i class="fa fa-line-chart" style="font-size:4rem;"></i> </a>
-                <p style="text-align:center">Sales</p>
+            <div class="col-3 icon" style="text-align:center">
+                <a th:href="@{/ui/report/sales}" title="Sales" style="text-decoration:none;color:black;"> <img style="width:40% ;height:100% ;padding-bottom:2rem;padding-top:2rem;" th:src="@{/static/increase.png}">  <p style="text-align:center">Sales</p></a>
+
             </div>
-        </div>
+            <div  class="col-3 icon" style="text-align:center">
+                <a th:href="@{/ui/report/daySales}" title="Sales" style="text-decoration:none;color:black;"> <img style="width:40% ;height:100% ;padding-bottom:2rem;padding-top:2rem;" th:src="@{/static/calendar.png}">  <p style="text-align:center">Day Sales</p></a>
+
+            </div>
+
     </div>
 
 

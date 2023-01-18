@@ -153,7 +153,7 @@ function displayProductList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button class="btn btn-outline-dark" onclick="displayEditProduct(' + e.id + ')">edit</button>&nbsp;';
+		var buttonHtml = '<button style="padding:0.5rem;border-radius:0.3rem;" class="fa fa-edit fa-lg" onclick="displayEditProduct(' + e.id + ')"></button>&nbsp;';
 
 		var row = '<tr>'
 		+ '<td>' + sno + '</td>'
@@ -235,6 +235,7 @@ function createProduct(){
 
 //INITIALIZATION CODE
 function init(){
+    $("#product-link").addClass('active');
 	$('#add-product').click(addProduct);
 	$('#update-product').click(updateProduct);
 	$('#refresh-data').click(getProductList);

@@ -154,7 +154,7 @@ function displayBrandList(data){
 	var j=1;
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = ' <button class="btn btn-outline-dark" onclick="displayEditBrand(' + e.id + ')">edit</button>&nbsp;';
+		var buttonHtml = ' <button style="padding:0.5rem;border-radius:0.3rem;" class="fa fa-edit fa-lg" onclick="displayEditBrand(' + e.id + ')"></button>&nbsp;';
 
 
 		var row = '<tr>'
@@ -226,6 +226,7 @@ function createBrand(){
 
 //INITIALIZATION CODE
 function init(){
+    $("#brand-link").addClass('active');
 	$('#update-Brand').click(updateBrand);
 	$('#refresh-data').click(getBrandList);
 	$('#upload-data').click(displayUploadData);

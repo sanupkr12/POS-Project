@@ -48,7 +48,7 @@ function addOrder(event){
 
     var json = JSON.stringify(orderItems);
 
-    console.log(json);
+
 
     var url = getOrderUrl();
 
@@ -94,7 +94,7 @@ function displayOrders(data){
     	for(var i in data){
     		var e = data[i];
     		var dateUTC = new Date(e.date);
-            var dateUTC = dateUTC.getTime()
+            var dateUTC = dateUTC.getTime();
             var dateIST = new Date(dateUTC);
             dateIST.setHours(dateIST.getHours() + 5);
             dateIST.setMinutes(dateIST.getMinutes() + 30);
@@ -174,24 +174,39 @@ function addToOrderList(event){
        alert('Invalid Data Entry');
     }
 
-    var $tbody = $('#orderItemTable').find('tbody');
+    var ele = document.querySelector(`#barcode-${barcode}`);
 
-    var buttonHtml = '<button class="btn btn-outline-danger" onclick=removeFromModal(event)>delete</button>&nbsp;'
+
+
+    if(!ele)
+    {
+
+    var $tbody = $('#orderItemTable').find('tbody');
+    var buttonHtml = '<button style="padding:0.5rem;border-radius:0.3rem;" class="fa fa-sharp fa-solid fa-trash" onclick=removeFromModal(event)></button>&nbsp;'
         		var row = '<tr class="items">'
         		+ '<td class="new-barcode">' + barcode + '</td>'
-        		+ '<td class="new-quantity">' + quantity + '</td>'
+        		+ '<td class="new-quantity" id="barcode-' + barcode + '">' + quantity + '</td>'
         		+ '<td class="new-sellingPrice">' + sellingPrice + '</td>'
         		+ '<td>' + buttonHtml + '</td>'
         		+ '</tr>';
     $tbody.append(row);
-    $('#order-create-form input[name=barcode]').val("");
-    $('#order-create-form input[name=quantity]').val("");
-    $('#order-create-form input[name=sellingPrice]').val("");
 
+
+    }
+    else{
+
+        var prevQuantity = parseInt(ele.innerText);
+        ele.innerHTML = prevQuantity + parseInt(quantity);
+    }
+
+     $('#order-create-form input[name=barcode]').val("");
+        $('#order-create-form input[name=quantity]').val("");
+        $('#order-create-form input[name=sellingPrice]').val("");
 
 }
 
 function init(){
+$("#order-link").addClass('active');
         $("#add-order").click(addOrder);
 
 

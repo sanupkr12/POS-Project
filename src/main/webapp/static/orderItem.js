@@ -69,7 +69,7 @@ function displayOrders(data){
             dateIST.setHours(dateIST.getHours() + 5);
             dateIST.setMinutes(dateIST.getMinutes() + 30);
 
-            var buttonHtml = '<button class="btn btn-outline-dark edit-btn" onclick="displayEditOrderItem(' + e.itemId + ')">Edit</button>'
+            var buttonHtml = '<button style="padding:0.5rem" class="fa fa-edit fa-lg edit-btn" onclick="displayEditOrderItem(' + e.itemId + ')"></button>'
     		var row ='<tr>'
     		+ '<td>' + e.id + '</td>'
     		+ '<td>' + e.barcode + '</td>'

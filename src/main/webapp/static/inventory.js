@@ -154,7 +154,7 @@ function displayInventoryList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = ' <button class="btn btn-outline-dark" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')">edit</button>&nbsp;';
+		var buttonHtml = ' <button style="padding:0.5rem;border-radius:0.3rem;" class="fa fa-edit fa-lg" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')"></button>&nbsp;';
 
 
 		var row = '<tr>'
@@ -224,8 +224,11 @@ function createInventory(){
 }
 
 
+
+
 //INITIALIZATION CODE
 function init(){
+$("#inventory-link").addClass('active');
 	$('#add-inventory').click(addInventory);
 	$('#update-inventory').click(updateInventory);
 	$('#refresh-data').click(getInventoryList);

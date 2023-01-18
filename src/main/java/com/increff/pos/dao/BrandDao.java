@@ -88,35 +88,32 @@ public class BrandDao extends AbstractDao {
 
 	public List<BrandPojo> selectBrand(String category,String brand)
 	{
-		if(category.length()==0 && brand.length()==0)
+		if(category.length()==0)
 		{
-
-			return this.selectAll();
+			category = "all";
 		}
+
+		if(brand.length()==0)
+		{
+			brand = "all";
+		}
+
+
 		if(category.equals("all") && brand.equals("all"))
 		{
 			return this.selectAll();
 		}
 		else if(category.equals("all"))
 		{
-			if(brand.length()==0)
-			{
-				return this.selectAll();
-			}
-			else{
+
 				TypedQuery<BrandPojo> query = getQuery(select_brand,BrandPojo.class);
 				query.setParameter("name",brand);
 				return query.getResultList();
-			}
 
 		}
 		else if(brand.equals("all"))
 		{
 
-			if(category.length()==0)
-			{
-				return this.selectAll();
-			}
 
 			TypedQuery<BrandPojo> query = getQuery(select_by_category,BrandPojo.class);
 			query.setParameter("category",category);

@@ -18,7 +18,7 @@ public class InfoData implements Serializable {
 
 	public InfoData() {
 		message = "";
-		email = "No email";
+		email = "";
 		role="operator";
 	}
 

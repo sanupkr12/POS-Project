@@ -14,41 +14,64 @@
     <form class="form" id="options-form">
         <div class="row">
 
-            <div class="col-4">
+            <div class="col-5">
                 <div style="display:flex;justify-content:space-between">
-                    <label class="form-label" for="category">Category</label>
-                    <select class="form-control form-select form-select-lg mb-3 append-category" id="category" style="width:60%;
-    height:2.5rem;
-    padding:0.3rem;margin-bottom:2rem;"  aria-label=".form-select-lg example">
+                    <label class="form-label" style="margin-top:0.5rem" for="category">Category</label>
+                    <select class="form-control form-select form-select-lg mb-3 append-category" id="category" style="
+    padding:0.3rem;margin-bottom:2rem;margin-left:2rem"  aria-label=".form-select-lg example">
                         <option selected>Select Category</option>
 
                     </select>
-
                 </div>
-
-
+            </div>
+            <div class="col-2"></div>
+            <div class="col-5">
                 <div style="display:flex;justify-content:space-between">
-                    <label class="form-label" for="brand">Brand</label>
-                    <select class="form-control form-select form-select-lg mb-3 append-brand" id="brand" style="width:60%;
-    height:2.5rem;
-    padding:0.3rem;margin-bottom:2rem;" aria-label=".form-select-lg example">
+                    <label class="form-label" style="margin-top:0.5rem" for="brand">Brand</label>
+                    <select class="form-control form-select form-select-lg mb-3 append-brand" id="brand" style="
+    padding:0.3rem;margin-bottom:2rem;margin-left:2rem" aria-label=".form-select-lg example">
                         <option selected>Select Brand</option>
 
 
                     </select>
                 </div>
+                </div>
 
 
-            </div>
 
 
-            <div class="col-8" style="display:flex;align-items:center;justify-content:center">
-                <button id="download-brand" class="btn btn-primary btn-lg">Generate Report</button>
+
+
+
+
+            <div class="col-12" style="text-align:center;display:flex;align-items:center;justify-content:center;margin:1rem 0 2rem 0">
+                <button id="download-brand" class="btn btn-primary btn-md">Generate Report</button>
             </div>
 
 
         </div>
     </form>
+
+    <div class="row">
+
+        <!-- Table -->
+        <div class="col-12">
+            <table class="table table-striped" id="display-brand-table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">S No.</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Category</th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
 
 
 

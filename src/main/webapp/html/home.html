@@ -13,16 +13,32 @@
 <h3 style="text-align:center;margin:2rem">Home</h3>
 
  <!-- Top row with form-->
-<div style="width:65%;height:10rem;margin:12rem auto;">
-<div style="text-align:center;width:65%;height:5rem;margin:12rem auto;">
-	 <div style="display:inline;margin-right:5rem">
-	 	<a th:href="@{/ui/brand}" title="Brands" style="text-decoration:none"> <i class="fas fa-users"></i></a>
+<div class="container">
+<div class="row">
+	 <div class="col-4 icon" style="text-align:center;">
+	 	<a th:href="@{/ui/brand}" title="Brands"  style="text-decoration:none;color:black"> <img style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;"  th:src="@{/static/brand.png}"><p>Brand</p></a>
 
 	 </div>	
-	 <div style="display:inline;margin-left:3rem">
-	 	<a th:href="@{/ui/admin}" title="Admin" style="text-decoration:none"> <i class="fas fa-cog"></i></a>
+	 <div class="col-4 icon" style="text-align:center;">
+	 	<a th:href="@{/ui/admin}" title="Admin" style="text-decoration:none;color:black"> <img  style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/admin.png}"><p>Admin</p></a>
 
 	 </div>
+	<div class="col-4 icon" style="text-align:center;">
+		<a th:href="@{/ui/inventory}" title="Inventory" style="text-decoration:none;color:black"> <img style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/management.png}"><p>Inventory</p></a>
+
+	</div>
+	<div class="col-4 icon" style="text-align:center;">
+		<a th:href="@{/ui/products}" title="Product" style="text-decoration:none;color:black"> <img style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/products.png}"><p>Product</p></a>
+
+	</div>
+	<div class="col-4 icon" style="text-align:center;">
+		<a th:href="@{/ui/order}" title="Order" style="text-decoration:none;color:black"> <img style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/checkout.png}"><p>Order</p></a>
+
+	</div>
+	<div class="col-4 icon" style="text-align:center;">
+		<a th:href="@{/ui/report}" title="Report" style="text-decoration:none;color:black"> <img  style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/report.png}"><p>Report</p></a>
+
+	</div>
 	</div>
 </div> 
 
@@ -32,7 +48,17 @@
 
 <footer th:replace="snippets.html :: name_footer"></footer>
 
+<script>
 
+	$("#home-link").addClass('active');
+	$("#report-link").hide();
+	$("#order-link").hide();
+	$("#inventory-link").hide();
+	$("#product-link").hide();
+	$("#admin-link").hide();
+	$("#brand-link").hide();
+	$("#home-link").hide();
+</script>
 </body>	
 
 </html>

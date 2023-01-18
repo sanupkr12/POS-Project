@@ -5,10 +5,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import com.increff.pos.model.BrandReportForm;
-import com.increff.pos.model.InventoryReportForm;
-import com.increff.pos.model.ProductData;
-import com.increff.pos.model.SalesReportForm;
+import com.increff.pos.model.*;
 import com.increff.pos.pojo.ProductPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -24,14 +21,8 @@ public class BrandService {
 	@Autowired
 	private BrandDao dao;
 
-	@Autowired
-	private ProductService productService;
-
 	@Transactional(rollbackOn = ApiException.class)
 	public void add(BrandPojo p) throws ApiException {
-
-
-		normalize(p);
 
 		if(dao.selectAny(p.getName(),p.getCategory()))
 		{
@@ -63,7 +54,6 @@ public class BrandService {
 
 	@Transactional(rollbackOn  = ApiException.class)
 	public void update(int id, BrandPojo p) throws ApiException {
-		normalize(p);
 
 		if(dao.selectAny(p.getName(),p.getCategory()))
 		{
@@ -109,31 +99,13 @@ public class BrandService {
 
 
 
-	public List<String> get(InventoryReportForm form) throws ApiException {
+	public List<BrandPojo> get(InventoryReportForm form) throws ApiException {
 		List<BrandPojo> list = dao.selectBrand(form.getCategory(),form.getBrand());
-		List<String> barcodeList = new ArrayList<>();
-
-
-		for(BrandPojo p:list)
-		{
-
-
-			List<ProductPojo> productList = productService.getByBrandId(p.getId());
-
-			for(ProductPojo d:productList)
-			{
-
-				barcodeList.add(d.getBarcode());
-			}
-		}
-
-
-		return barcodeList;
+		return list;
 	}
 
 	public List<BrandPojo> getBrand(BrandReportForm form) throws ApiException {
 		List<BrandPojo> list = dao.selectBrand(form.getCategory(),form.getBrand());
-
 		return list;
 	}
 
@@ -143,11 +115,16 @@ public class BrandService {
 		return list;
 	}
 
+	public List<BrandPojo> getBrandByCategory(String category){
+		List<BrandPojo> brandList = dao.selectAll();
 
-
-
-	protected static void normalize(BrandPojo p) {
-		p.setCategory(p.getCategory().trim().toLowerCase());
-		p.setName(p.getName().toLowerCase().trim());
+		return brandList;
 	}
+
+	public List<BrandPojo> getCategoryByBrand(String brand){
+		List<BrandPojo> brandList = dao.selectAll();
+		return brandList;
+
+	}
+
 }

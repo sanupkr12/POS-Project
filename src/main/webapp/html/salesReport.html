@@ -13,53 +13,73 @@
     <h3 style="text-align:center;margin:2rem">Sales Report</h3>
     <form class="form" id="options-form">
         <div class="row">
-
-            <div class="col-8">
-                <div class="row">
-                    <div class="col-4">
-
-                        <p>Start Date</p>
-                        <input type="date" id="start-date" placeholder="Start Date">
+                    <div class="col-5">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+                        <label class="form-label" style="margin-top:0.5rem" for="category">Start Date</label>
+                        <input type="date" class="form-control" id="start-date" style="width:70%" placeholder="Start Date">
+                            </div>
                     </div>
-                    <div class="col-8">
-                        <p>End Date</p>
-                        <input type="date" id="end-date" placeholder="End Date">
-
+                    <div class="col-2"></div>
+                    <div class="col-5">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+                        <label class="form-label" style="margin-top:0.5rem" for="category">End Date</label>
+                        <input type="date"  class="form-control" id="end-date" style="width:70%" placeholder="End Date">
+                        </div>
                     </div>
+                <div class="col-5">
+                    <div style="display:flex;justify-content:space-between">
+                        <label class="form-label" style="margin-top:0.5rem" for="category">Category</label>
+                        <select class="form-control form-select form-select-lg mb-3 append-category" id="category" style="
+    padding:0.3rem;margin-bottom:2rem;margin-left:2rem;width:70%"  aria-label=".form-select-lg example">
+                            <option selected>Select Category</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-5">
+                    <div style="display:flex;justify-content:space-between">
+                        <label class="form-label" style="margin-top:0.5rem" for="brand">Brand</label>
+                        <select class="form-control form-select form-select-lg mb-3 append-brand" id="brand" style="
+    padding:0.3rem;margin-bottom:2rem;margin-left:2rem;width:70%" aria-label=".form-select-lg example">
+                            <option selected>Select Brand</option>
 
 
-
-
-
+                        </select>
+                    </div>
                 </div>
 
-
-                <p style="margin-top:2rem">Category</p>
-                <select class="form-select form-select-lg mb-3 append-category" id="category" style="width:60%;
-    height:2.5rem;
-    padding:0.3rem;margin-bottom:2rem;"  aria-label=".form-select-lg example">
-                    <option selected>Select Category</option>
-
-                </select>
-                <p>Brand</p>
-                <select class="form-select form-select-lg mb-3 append-brand" id="brand" style="width:60%;
-    height:2.5rem;
-    padding:0.3rem;margin-bottom:2rem;" aria-label=".form-select-lg example">
-                    <option selected>Select Brand</option>
-
-
-                </select>
-
             </div>
 
 
-            <div class="col-4" style="margin-top:5rem">
-                <button id="download-sales" class="btn btn-primary btn-lg">Generate Report</button>
+            <div class="col-12" style="text-align:center;display:flex;align-items:center;justify-content:center;margin:1rem 0 2rem 0">
+                <button id="download-sales" class="btn btn-primary btn-md">Generate Report</button>
             </div>
 
 
-        </div>
+
     </form>
+<div class="row">
+    <div class="col-12">
+        <table class="table table-striped" id="display-sales-table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">S No.</th>
+                <th scope="col">Name</th>
+                <th scope="col">Barcode</th>
+                <th scope="col">quantity</th>
+                <th scope="col">Total</th>
+                <th scope="col">Date</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
 
 
 

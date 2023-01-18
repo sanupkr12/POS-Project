@@ -3,6 +3,10 @@ package com.increff.pos.service;
 
 import com.increff.pos.dao.DaySalesDao;
 import com.increff.pos.dao.InventoryDao;
+import com.increff.pos.dto.BrandDto;
+import com.increff.pos.dto.InventoryDto;
+import com.increff.pos.dto.OrderDto;
+import com.increff.pos.dto.ProductDto;
 import com.increff.pos.model.*;
 import com.increff.pos.pojo.*;
 import com.itextpdf.kernel.color.Color;
@@ -35,134 +39,166 @@ import java.util.TimeZone;
 @Service
 public class ReportService {
     @Autowired
-    private InventoryService inventoryService;
+    private InventoryDto inventoryDto;
 
     @Autowired
-    private BrandService brandService;
+    private ProductDto productDto;
 
     @Autowired
-    private ProductService productService;
+    private BrandDto brandDto;
 
     @Autowired
-    private OrderService orderService;
+    private OrderDto orderDto;
 
     @Autowired
     private DaySalesDao dao;
 
-    public void getInventory(InventoryReportForm inventoryReportForm) throws ApiException, FileNotFoundException {
-        List<InventoryData> data =  inventoryService.get(inventoryReportForm);
-        String fileName = "inventory-report" + new Date().getTime() + ".pdf";
+    public List<InventoryData> getInventory(InventoryReportForm inventoryReportForm) throws ApiException, FileNotFoundException {
+        List<InventoryData> data =  inventoryDto.get(inventoryReportForm);
 
-        PdfWriter writer = new PdfWriter(fileName);
-        PdfDocument pdfDocument = new PdfDocument(writer);
-        Document document = new Document(pdfDocument);
-
-        pdfDocument.setDefaultPageSize(PageSize.A4);
-
-        float []titleTableWidth = {560f};
-        Table table = new Table(titleTableWidth);
-
-        table.addCell(new Cell().add("Inventory Report").setBorder(Border.NO_BORDER)).setBackgroundColor(new DeviceRgb(1,32,77)).setFontSize(30f).setTextAlignment(TextAlignment.CENTER).setFontColor(Color.WHITE);
-
-        document.add(table);
-
-        float []infoTableWidth = {80f,200f,200f,80f};
-        Table infoTable = new Table(infoTableWidth);
-        infoTable.setMarginTop(50f);
-
-        infoTable.addCell(new Cell().add("ID").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
-        infoTable.addCell(new Cell().add("Barcode").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
-        infoTable.addCell(new Cell().add("Product Name").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
-        infoTable.addCell(new Cell().add("Quantity").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
-
-
-
-        for (InventoryData d:data){
-            infoTable.addCell(new Cell().add(String.valueOf(d.getId())));
-            infoTable.addCell(new Cell().add(d.getBarcode()));
-            infoTable.addCell(new Cell().add(d.getName()));
-            infoTable.addCell(new Cell().add(String.valueOf(d.getQuantity())));
-        }
-
-        document.add(infoTable);
-
-        document.close();
+        return data;
+//        String fileName = "inventory-report" + new Date().getTime() + ".pdf";
+//
+//        PdfWriter writer = new PdfWriter(fileName);
+//        PdfDocument pdfDocument = new PdfDocument(writer);
+//        Document document = new Document(pdfDocument);
+//
+//        pdfDocument.setDefaultPageSize(PageSize.A4);
+//
+//        float []titleTableWidth = {560f};
+//        Table table = new Table(titleTableWidth);
+//
+//        table.addCell(new Cell().add("Inventory Report").setBorder(Border.NO_BORDER)).setBackgroundColor(new DeviceRgb(1,32,77)).setFontSize(30f).setTextAlignment(TextAlignment.CENTER).setFontColor(Color.WHITE);
+//
+//        document.add(table);
+//
+//        float []infoTableWidth = {80f,200f,200f,80f};
+//        Table infoTable = new Table(infoTableWidth);
+//        infoTable.setMarginTop(50f);
+//
+//        infoTable.addCell(new Cell().add("ID").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
+//        infoTable.addCell(new Cell().add("Barcode").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
+//        infoTable.addCell(new Cell().add("Product Name").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
+//        infoTable.addCell(new Cell().add("Quantity").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
+//
+//
+//
+//        for (InventoryData d:data){
+//            infoTable.addCell(new Cell().add(String.valueOf(d.getId())));
+//            infoTable.addCell(new Cell().add(d.getBarcode()));
+//            infoTable.addCell(new Cell().add(d.getName()));
+//            infoTable.addCell(new Cell().add(String.valueOf(d.getQuantity())));
+//        }
+//
+//        document.add(infoTable);
+//
+//        document.close();
 
     }
 
-    public void getSales(SalesReportForm salesReportForm) throws ApiException, FileNotFoundException {
-        List<BrandPojo> data =  brandService.getSales(salesReportForm);
+    public List<OrderItemData> getSales(SalesReportForm salesReportForm) throws ApiException, FileNotFoundException {
+
+        if(salesReportForm.getStartDate()==null)
+        {
+
+            Date date = new Date();
+            date.setTime(1000);
+            salesReportForm.setStartDate(date);
+        }
+
+        if(salesReportForm.getEndDate()==null)
+        {
+            Date date = new Date();
+            salesReportForm.setEndDate(new Date(date.getTime() + 1000 * 60 * 60 * 24));
+        }
+
+        LocalDate startDate = salesReportForm.getStartDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate();
+
+        LocalDate endDate = salesReportForm.getEndDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate();
+
+        List<BrandPojo> data =  brandDto.getSales(salesReportForm);
         List<OrderItemData> list = new ArrayList<>();
         for(BrandPojo p:data)
         {
-            List<ProductPojo> d = productService.getByBrandId(p.getId());
+            List<ProductPojo> d = productDto.getByBrandId(p.getId());
 
             for(ProductPojo productPojo:d)
             {
-                List<OrderItemData> itemList = orderService.getByProductId(productPojo.getId());
+                List<OrderItemData> itemList = orderDto.getByProductId(productPojo.getId());
+
 
                 for(OrderItemData item:itemList)
                 {
-                    list.add(item);
+                    LocalDate date = item.getDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate();
+
+                    if(date.compareTo(startDate)>0 && date.compareTo(endDate)<0)
+                    {
+
+                        list.add(item);
+                    }
+
+
                 }
             }
         }
 
-        String fileName = "Sales-report" + new Date().getTime() + ".pdf";
+        return list;
 
-        PdfWriter writer = new PdfWriter(fileName);
-        PdfDocument pdfDocument = new PdfDocument(writer);
-        Document document = new Document(pdfDocument);
-
-        pdfDocument.setDefaultPageSize(PageSize.A4);
-
-        float []titleTableWidth = {560f};
-        Table table = new Table(titleTableWidth);
-
-        table.addCell(new Cell().add("Sales Report").setBorder(Border.NO_BORDER)).setBackgroundColor(new DeviceRgb(1,32,77)).setFontSize(30f).setTextAlignment(TextAlignment.CENTER).setFontColor(Color.WHITE);
-
-        document.add(table);
-
-        float []dateTableWidth = {100f,180f,100f,180f};
-        Table dateTable = new Table(dateTableWidth);
-
-        dateTable.setMarginTop(50f);
-
-        dateTable.addCell(new Cell().add("Start Date: "));
-        dateTable.addCell(new Cell().add(salesReportForm.getStartDate().toString()));
-        dateTable.addCell(new Cell().add("End Date: "));
-        dateTable.addCell(new Cell().add(salesReportForm.getEndDate().toString()));
-
-        document.add(dateTable);
-
-
-        float []infoTableWidth = {40f,200f,60f,180f,80f};
-        Table infoTable = new Table(infoTableWidth);
-
-        infoTable.setMarginTop(50f);
-
-        infoTable.addCell(new Cell().add("ID").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
-        infoTable.addCell(new Cell().add("Product Name").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
-        infoTable.addCell(new Cell().add("Quantity").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
-        infoTable.addCell(new Cell().add("Date").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
-        infoTable.addCell(new Cell().add("Total").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
-
-
-        double totalCost = 0;
-        for (OrderItemData d:list){
-            infoTable.addCell(new Cell().add(String.valueOf(d.getId())));
-            infoTable.addCell(new Cell().add(d.getProductName()));
-            infoTable.addCell(new Cell().add(String.valueOf(d.getQuantity())));
-            infoTable.addCell(new Cell().add(String.valueOf(d.getDate())));
-            infoTable.addCell(new Cell().add(String.valueOf(d.getTotal())));
-            totalCost+=d.getTotal();
-        }
-
-        infoTable.addCell(new Cell(0,4).add("Total Sales").setTextAlignment(TextAlignment.CENTER));
-        infoTable.addCell(new Cell().add(String.valueOf(totalCost)));
-        document.add(infoTable);
-
-        document.close();
+//        String fileName = "Sales-report" + new Date().getTime() + ".pdf";
+//
+//        PdfWriter writer = new PdfWriter(fileName);
+//        PdfDocument pdfDocument = new PdfDocument(writer);
+//        Document document = new Document(pdfDocument);
+//
+//        pdfDocument.setDefaultPageSize(PageSize.A4);
+//
+//        float []titleTableWidth = {560f};
+//        Table table = new Table(titleTableWidth);
+//
+//        table.addCell(new Cell().add("Sales Report").setBorder(Border.NO_BORDER)).setBackgroundColor(new DeviceRgb(1,32,77)).setFontSize(30f).setTextAlignment(TextAlignment.CENTER).setFontColor(Color.WHITE);
+//
+//        document.add(table);
+//
+//        float []dateTableWidth = {100f,180f,100f,180f};
+//        Table dateTable = new Table(dateTableWidth);
+//
+//        dateTable.setMarginTop(50f);
+//
+//        dateTable.addCell(new Cell().add("Start Date: "));
+//        dateTable.addCell(new Cell().add(salesReportForm.getStartDate().toString()));
+//        dateTable.addCell(new Cell().add("End Date: "));
+//        dateTable.addCell(new Cell().add(salesReportForm.getEndDate().toString()));
+//
+//        document.add(dateTable);
+//
+//
+//        float []infoTableWidth = {40f,200f,60f,180f,80f};
+//        Table infoTable = new Table(infoTableWidth);
+//
+//        infoTable.setMarginTop(50f);
+//
+//        infoTable.addCell(new Cell().add("ID").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
+//        infoTable.addCell(new Cell().add("Product Name").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
+//        infoTable.addCell(new Cell().add("Quantity").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
+//        infoTable.addCell(new Cell().add("Date").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
+//        infoTable.addCell(new Cell().add("Total").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
+//
+//
+//        double totalCost = 0;
+//        for (OrderItemData d:list){
+//            infoTable.addCell(new Cell().add(String.valueOf(d.getId())));
+//            infoTable.addCell(new Cell().add(d.getProductName()));
+//            infoTable.addCell(new Cell().add(String.valueOf(d.getQuantity())));
+//            infoTable.addCell(new Cell().add(String.valueOf(d.getDate())));
+//            infoTable.addCell(new Cell().add(String.valueOf(d.getTotal())));
+//            totalCost+=d.getTotal();
+//        }
+//
+//        infoTable.addCell(new Cell(0,4).add("Total Sales").setTextAlignment(TextAlignment.CENTER));
+//        infoTable.addCell(new Cell().add(String.valueOf(totalCost)));
+//        document.add(infoTable);
+//
+//        document.close();
 
 
 
@@ -171,7 +207,7 @@ public class ReportService {
     @Scheduled(cron = "0 0 0 * * ?")
     @Transactional(rollbackOn = ApiException.class)
     public void getDaySales() throws ApiException, ParseException {
-        List<OrderData> orderList = orderService.getAll();
+        List<OrderData> orderList = orderDto.getAll();
         LocalDate currentDate = LocalDate.now(ZoneOffset.UTC);
 
         int orderCount = 0;
@@ -186,7 +222,7 @@ public class ReportService {
                 orderCount+=1;
 
 
-                List<OrderItemData> itemList =  orderService.get(data.getId());
+                List<OrderItemData> itemList =  orderDto.get(data.getId());
 
                for(OrderItemData item:itemList)
                {
@@ -196,7 +232,7 @@ public class ReportService {
             }
         }
 
-        System.out.println(orderItemCount);
+
         DaySalesPojo p = new DaySalesPojo();
 
         p.setDate(new Date());
@@ -208,46 +244,62 @@ public class ReportService {
 
     }
 
-    public void getBrand(BrandReportForm brandReportForm) throws FileNotFoundException, ApiException {
-        List<BrandPojo> data =  brandService.getBrand(brandReportForm);
+    public List<DaySalesData> getDaySalesInfo(){
 
+        List<DaySalesPojo> list = dao.get();
+        List<DaySalesData> data = new ArrayList<>();
 
-        String fileName = "Brand-report" + new Date().getTime() + ".pdf";
-
-        PdfWriter writer = new PdfWriter(fileName);
-        PdfDocument pdfDocument = new PdfDocument(writer);
-        Document document = new Document(pdfDocument);
-
-        pdfDocument.setDefaultPageSize(PageSize.A4);
-
-        float []titleTableWidth = {560f};
-        Table table = new Table(titleTableWidth);
-
-        table.addCell(new Cell().add("Brand Report").setBorder(Border.NO_BORDER)).setBackgroundColor(new DeviceRgb(1,32,77)).setFontSize(30f).setTextAlignment(TextAlignment.CENTER).setFontColor(Color.WHITE);
-
-        document.add(table);
-
-        float []infoTableWidth = {100f,230f,230f};
-        Table infoTable = new Table(infoTableWidth);
-
-        infoTable.setMarginTop(50f);
-
-        infoTable.addCell(new Cell().add("ID").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
-        infoTable.addCell(new Cell().add("Brand").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
-        infoTable.addCell(new Cell().add("Category").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
-
-
-
-
-        for (BrandPojo d:data){
-            infoTable.addCell(new Cell().add(String.valueOf(d.getId())));
-            infoTable.addCell(new Cell().add(d.getName()));
-            infoTable.addCell(new Cell().add(String.valueOf(d.getCategory())));
+        for (DaySalesPojo p:list)
+        {
+            data.add(convert(p));
         }
 
-        document.add(infoTable);
+        return data;
 
-        document.close();
+    }
+
+    public List<BrandData> getBrand(BrandReportForm brandReportForm) throws FileNotFoundException, ApiException {
+        List<BrandData> data =  brandDto.getBrand(brandReportForm);
+
+        return data;
+
+//
+//        String fileName = "Brand-report" + new Date().getTime() + ".pdf";
+//
+//        PdfWriter writer = new PdfWriter(fileName);
+//        PdfDocument pdfDocument = new PdfDocument(writer);
+//        Document document = new Document(pdfDocument);
+//
+//        pdfDocument.setDefaultPageSize(PageSize.A4);
+//
+//        float []titleTableWidth = {560f};
+//        Table table = new Table(titleTableWidth);
+//
+//        table.addCell(new Cell().add("Brand Report").setBorder(Border.NO_BORDER)).setBackgroundColor(new DeviceRgb(1,32,77)).setFontSize(30f).setTextAlignment(TextAlignment.CENTER).setFontColor(Color.WHITE);
+//
+//        document.add(table);
+//
+//        float []infoTableWidth = {100f,230f,230f};
+//        Table infoTable = new Table(infoTableWidth);
+//
+//        infoTable.setMarginTop(50f);
+//
+//        infoTable.addCell(new Cell().add("ID").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
+//        infoTable.addCell(new Cell().add("Brand").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
+//        infoTable.addCell(new Cell().add("Category").setBackgroundColor(Color.BLACK).setFontColor(Color.WHITE));
+//
+//
+//
+//
+//        for (BrandPojo d:data){
+//            infoTable.addCell(new Cell().add(String.valueOf(d.getId())));
+//            infoTable.addCell(new Cell().add(d.getName()));
+//            infoTable.addCell(new Cell().add(String.valueOf(d.getCategory())));
+//        }
+//
+//        document.add(infoTable);
+//
+//        document.close();
     }
 
     public static Date getCurrentUtcTime() throws ParseException {
@@ -269,6 +321,17 @@ public class ReportService {
 
         }
         return d1;
+    }
+
+    public DaySalesData convert(DaySalesPojo p)
+    {
+        DaySalesData data = new DaySalesData();
+        data.setDate(p.getDate());
+        data.setItemCount(p.getItemCount());
+        data.setRevenue(p.getRevenue());
+        data.setOrderCount(p.getOrderCount());
+
+        return data;
     }
 
 

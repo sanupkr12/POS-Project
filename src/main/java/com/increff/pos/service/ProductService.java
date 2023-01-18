@@ -18,40 +18,16 @@ import java.util.List;
 public class ProductService {
     @Autowired
     private ProductDao dao;
-    @Autowired
-    private BrandService brandService;
-
-    @Autowired
-    private InventoryService inventoryService;
 
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(ProductForm p) throws ApiException{
-        if(dao.checkAny(p.getBarcode()))
+    public void add(ProductPojo prod) throws ApiException{
+        if(dao.checkAny(prod.getBarcode()))
         {
             throw new ApiException("Product with current barcode already exists");
         }
 
-        normalizeProduct(p);
-
-        BrandPojo p1  = brandService.get(p.getBrandName(),p.getBrandCategory());
-
-        ProductPojo prod = new ProductPojo();
-        prod.setBarcode(p.getBarcode());
-        prod.setBrandId(p1.getId());
-        prod.setName(p.getName());
-        prod.setMrp(p.getMrp());
-
-
-
-
         dao.insert(prod);
-
-        InventoryForm inventoryForm = new InventoryForm();
-        inventoryForm.setBarcode(p.getBarcode());
-        inventoryForm.setQuantity(0);
-        inventoryService.create(inventoryForm);
-
 
     }
 
@@ -68,23 +44,15 @@ public class ProductService {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public ProductData get(String barcode) throws ApiException{
-        ProductPojo p = dao.select(barcode);
-        return convert(p);
+    public ProductPojo get(String barcode) throws ApiException{
+        return dao.select(barcode);
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public ProductData get(int id) throws ApiException{
-        ProductPojo p = dao.selectById(id);
-        if(p==null)
-        {
-            throw new ApiException("No Product Found");
-        }
-
-
-
-        return convert(p);
+    public ProductPojo get(int id) throws ApiException{
+        return dao.selectById(id);
     }
+
 
     public List<ProductPojo> getByBrandId(int brandId) throws ApiException {
 
@@ -94,63 +62,27 @@ public class ProductService {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public List<ProductData> get() throws ApiException{
+    public List<ProductPojo> get() throws ApiException{
         List<ProductPojo> p = dao.selectAll();
-
-        if(p==null)
-        {
-            throw new ApiException("No Product Found");
-        }
-
-        List<ProductData> list = new ArrayList<ProductData>();
-
-        for(ProductPojo p1:p){
-            list.add(convert(p1));
-        }
-
-        return list;
+        return p;
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public void update(ProductForm p,int id) throws ApiException{
+    public void update(ProductForm p,int id,int brandId) throws ApiException{
         ProductPojo prod = dao.selectById(id);
-
 
         if(prod==null)
         {
             throw new ApiException("No Product Found with current barcode");
         }
 
-        BrandPojo b = brandService.get(p.getBrandName(),p.getBrandCategory());
-
-        if(b==null)
-        {
-            throw new ApiException("No brand exist with current details");
-        }
-
-
         prod.setName(p.getName());
         prod.setMrp(p.getMrp());
         prod.setBarcode(p.getBarcode());
-        prod.setBrandId(b.getId());
+        prod.setBrandId(brandId);
 
     }
 
-    @Transactional
-    ProductData convert(ProductPojo p) throws ApiException{
-        BrandPojo b = brandService.get(p.getBrandId());
-
-        ProductData d = new ProductData();
-
-        d.setId(p.getId());
-        d.setName(p.getName());
-        d.setMrp(p.getMrp());
-        d.setBrandName(b.getName());
-        d.setBrandCategory(b.getCategory());
-        d.setBarcode(p.getBarcode());
-
-        return d;
-    }
 
     @Transactional
     public boolean checkAny(String barcode){
@@ -166,12 +98,6 @@ public class ProductService {
         return true;
     }
 
-
-    void normalizeProduct(ProductForm form){
-        form.setName(form.getName().toLowerCase().trim());
-        form.setBrandCategory(form.getBrandCategory().toLowerCase().trim());
-        form.setBrandName(form.getBrandName().toLowerCase().trim());
-    }
 
 
 }

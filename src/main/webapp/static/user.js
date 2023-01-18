@@ -62,11 +62,11 @@ function displayUserList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		console.log(e);
-		var buttonHtml = ' <button class="btn btn-outline-dark" onclick="displayEditUser(' + e.id + ')">edit</button>&nbsp;';
-		buttonHtml += '<button class="btn btn-outline-danger" onclick="deleteUser(' + e.id + ')">delete</button> '
 
-		var row = '<tr>'
+		var buttonHtml = '<button style="padding:0.5rem;border-radius:0.3rem;" class="fa fa-edit fa-lg" onclick="displayEditUser(' + e.id + ')"></button>&nbsp;&nbsp;&nbsp; '
+		buttonHtml+='<button style="padding:0.5rem;border-radius:0.3rem;" class="fa fa-trash" onclick="deleteUser(' + e.id + ')"></button>';
+
+        var row = '<tr>'
 		+ '<td>' + e.id + '</td>'
 		+ '<td>' + e.email + '</td>'
 		+ '<td>' + e.role + '</td>'
@@ -86,6 +86,7 @@ function createUser(){
 
 //INITIALIZATION CODE
 function init(){
+$("#admin-link").addClass('active');
 	$('#add-user').click(addUser);
 	$('#refresh-data').click(getUserList);
 	$('#create-user').click(createUser);

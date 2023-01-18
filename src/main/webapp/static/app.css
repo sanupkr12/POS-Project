@@ -53,3 +53,7 @@ table { box-shadow: 1px 3px 5px #999; }
     height:2.5rem;
     padding:0.3rem;
 }
+
+.icon:hover{
+    background-color:#E3F6FF;
+}
