@@ -1,6 +1,7 @@
 package com.increff.pos.controller;
 
 
+import com.increff.pos.dto.ReportDto;
 import com.increff.pos.model.*;
 import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.service.ApiException;
@@ -22,7 +23,7 @@ import java.util.List;
 public class ReportController {
 
     @Autowired
-    private ReportService reportService;
+    private ReportDto reportDto;
 
 
 
@@ -30,26 +31,26 @@ public class ReportController {
     @RequestMapping(path = "/api/report/inventory",method = RequestMethod.POST)
     public List<InventoryData> generateInventory(@RequestBody InventoryReportForm inventoryReportForm) throws ApiException, FileNotFoundException {
 
-        return reportService.getInventory(inventoryReportForm);
+        return reportDto.getInventory(inventoryReportForm);
     }
 
     @ApiOperation(value="Generate Brand Report")
     @RequestMapping(path = "/api/report/brand",method = RequestMethod.POST)
     public List<BrandData> generateBrand(@RequestBody BrandReportForm brandReportForm) throws ApiException, FileNotFoundException {
-        return reportService.getBrand(brandReportForm);
+        return reportDto.getBrand(brandReportForm);
     }
 
 
     @ApiOperation(value="Generate Sales Report")
     @RequestMapping(path = "/api/report/sales",method = RequestMethod.POST)
     public List<OrderItemData> generateSales(@RequestBody SalesReportForm salesReportForm) throws ApiException, FileNotFoundException {
-        return reportService.getSales(salesReportForm);
+        return reportDto.getSales(salesReportForm);
     }
 
     @ApiOperation(value="Generate Per Day Sales Report")
     @RequestMapping(path = "/api/report/daySales",method = RequestMethod.GET)
     public List<DaySalesData> generateDaySales() throws ApiException, FileNotFoundException, ParseException {
-        return reportService.getDaySalesInfo();
+        return reportDto.getDaySalesInfo();
     }
 
 

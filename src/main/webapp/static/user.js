@@ -63,8 +63,8 @@ function displayUserList(data){
 	for(var i in data){
 		var e = data[i];
 
-		var buttonHtml = '<button style="padding:0.5rem;border-radius:0.3rem;" class="fa fa-edit fa-lg" onclick="displayEditUser(' + e.id + ')"></button>&nbsp;&nbsp;&nbsp; '
-		buttonHtml+='<button style="padding:0.5rem;border-radius:0.3rem;" class="fa fa-trash" onclick="deleteUser(' + e.id + ')"></button>';
+		var buttonHtml = '<button style="padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditUser(' + e.id + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;&nbsp;&nbsp; '
+		buttonHtml+='<button style="padding:0.5rem;border-radius:0.3rem;" title="Delete" onclick="deleteUser(' + e.id + ')"><i class="fa fa-trash fa-lg"></i></button>';
 
         var row = '<tr>'
 		+ '<td>' + e.id + '</td>'

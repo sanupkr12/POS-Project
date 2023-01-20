@@ -8,6 +8,7 @@ import com.increff.pos.service.BrandService;
 import com.increff.pos.service.InventoryService;
 import com.increff.pos.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -21,10 +22,33 @@ public class InventoryDto {
     private InventoryService service;
 
     @Autowired
-    private ProductDto productDto;
+    private ProductService productService;
 
     @Autowired
-    private BrandDto brandDto;
+    private BrandService brandService;
+
+    public InventoryData create(InventoryForm form) throws ApiException {
+
+
+        if(form.getBarcode().equals(""))
+        {
+            throw new ApiException("Barcode cannot be empty");
+        }
+
+        if(form.getQuantity()<0)
+        {
+            throw new ApiException("Quantity cannot be negative");
+        }
+
+        if(!productService.checkAny(form.getBarcode()))
+        {
+            throw new ApiException("No Product exists with current barcode");
+        }
+
+        normalizeInventory(form);
+
+        return convert(service.create(form));
+    }
 
 
     public InventoryData get(String barcode) throws ApiException {
@@ -49,7 +73,7 @@ public class InventoryDto {
 
     public List<InventoryData> get(InventoryReportForm inventoryReportForm) throws ApiException {
 
-        List<String> barcodeList = brandDto.get(inventoryReportForm);
+        List<String> barcodeList = brandService.get(inventoryReportForm);
 
         List<InventoryPojo> list = service.get(barcodeList);
 
@@ -65,9 +89,10 @@ public class InventoryDto {
     }
 
 
-    public void create(InventoryForm form) throws ApiException {
 
 
+
+    public InventoryData update (InventoryForm form) throws ApiException{
         if(form.getBarcode().equals(""))
         {
             throw new ApiException("Barcode cannot be empty");
@@ -78,78 +103,22 @@ public class InventoryDto {
             throw new ApiException("Quantity cannot be negative");
         }
 
-        if(!productDto.checkAny(form.getBarcode()))
+        if(!productService.checkAny(form.getBarcode()))
         {
             throw new ApiException("No Product exists with current barcode");
         }
 
-        if(form.getQuantity()<0)
-        {
-            throw new ApiException("Quantity cannot be less than zero");
-        }
-
-        normalizeInventory(form);
-        service.create(form);
-    }
-
-
-    public void update (InventoryForm form) throws ApiException{
-        if(form.getBarcode().equals(""))
-        {
-            throw new ApiException("Barcode cannot be empty");
-        }
-
-        if(form.getQuantity()<0)
-        {
-            throw new ApiException("Quantity cannot be negative");
-        }
-
-        if(!productDto.checkAny(form.getBarcode()))
-        {
-            throw new ApiException("No Product exists with current barcode");
-        }
-
-        service.update(form);
+        return convert(service.update(form));
     }
 
 
 
 
-
-    public void updateWithOrder (OrderForm form) throws ApiException{
-        if(!productDto.checkAny(form.getBarcode()))
-        {
-            throw new ApiException("No Product exists with current barcode");
-        }
-
-        service.updateWithOrder(form);
-
-    }
-
-    public boolean checkForInsufficientInventory(OrderForm form) throws ApiException {
-        InventoryPojo p1 = service.get(form.getBarcode());
-
-        int orgQuantity = p1.getQuantity();
-        int newQuantity = form.getQuantity();
-
-
-        if(newQuantity<=orgQuantity)
-        {
-            return false;
-        }
-        else{
-            return true;
-        }
-
-
-    }
 
     public InventoryData convert(InventoryPojo p) throws ApiException {
         InventoryData data = new InventoryData();
 
-
-
-        ProductData d = productDto.get(p.getBarcode());
+        ProductData d = productService.get(p.getBarcode());
 
 
         data.setId(p.getId());
@@ -169,7 +138,7 @@ public class InventoryDto {
         return p;
     }
 
-    private void normalizeInventory(InventoryForm form){
+    protected void normalizeInventory(InventoryForm form){
         form.setBarcode(form.getBarcode().trim());
     }
 

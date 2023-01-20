@@ -98,8 +98,8 @@ function displayOrders(data){
             var dateIST = new Date(dateUTC);
             dateIST.setHours(dateIST.getHours() + 5);
             dateIST.setMinutes(dateIST.getMinutes() + 30);
-//            var buttonHtml = '<button onclick="getOrderItem(' + e.id + ')">Details</button>'
-               var buttonHtml = '<a href="http://localhost:9000/pos/ui/order/' + e.id + '">Details</a>'
+//
+               var buttonHtml = '<a title="Details" href="http://localhost:9000/pos/ui/order/' + e.id + '"><i class="fa fa-regular fa-circle-info"></i></a>'
     		var row ='<tr>'
     		+ '<td>' + e.id + '</td>'
     		+ '<td>' + dateIST + '</td>'

@@ -46,6 +46,7 @@ public class UserDto {
 
         normalize(p);
         service.add(p);
+
     }
 
     @Transactional(rollbackOn = ApiException.class)

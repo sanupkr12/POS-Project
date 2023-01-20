@@ -37,11 +37,9 @@ import java.util.*;
 
 @Component
 public class OrderDto {
-    @Autowired
-    private ProductDto productDto;
 
     @Autowired
-    private InventoryDto inventoryDto;
+    private InventoryService inventoryService;
 
     @Autowired
     private OrderService service;
@@ -55,11 +53,7 @@ public class OrderDto {
 
         for(OrderForm form:orderList){
 
-
-            ProductData data = productDto.get(form.getBarcode());
-
-
-            if(inventoryDto.checkForInsufficientInventory(form))
+            if(inventoryService.checkForInsufficientInventory(form))
             {
                 throw new ApiException("Insufficient Inventory");
             }
@@ -115,20 +109,6 @@ public class OrderDto {
 
     }
 
-    public List<OrderData> getAll(){
-
-        List<OrderPojo> list = service.getAll();
-
-        List<OrderData> data = new ArrayList<>();
-
-        for(OrderPojo p:list){
-            data.add(convert(p));
-        }
-
-        return data;
-
-
-    }
 
     public OrderItemData getByItemId(int id) throws ApiException {
         return service.getByItemId(id);
@@ -155,6 +135,9 @@ public class OrderDto {
         return data;
     }
 
+    public List<OrderData> getAll(){
+       return service.getAll();
+    }
 
     public OrderData convert(OrderPojo p){
         List<OrderItemPojo> itemPojo = service.getOrderItemByOrderId(p.getId());

@@ -103,6 +103,7 @@ function processData(){
 }
 
 function readFileDataCallback(results){
+
 	fileData = results.data;
 	uploadRows();
 }
@@ -125,7 +126,7 @@ function uploadRows(){
 	//Make ajax call
 	$.ajax({
 	   url: url,
-	   type: 'POST',
+	   type: 'PUT',
 	   data: json,
 	   headers: {
        	'Content-Type': 'application/json'
@@ -154,7 +155,7 @@ function displayInventoryList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = ' <button style="padding:0.5rem;border-radius:0.3rem;" class="fa fa-edit fa-lg" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')"></button>&nbsp;';
+		var buttonHtml = ' <button style="padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
 
 
 		var row = '<tr>'

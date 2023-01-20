@@ -25,14 +25,14 @@ public class ProductDto {
     private ProductService service;
 
     @Autowired
-    private BrandDto brandDto;
+    private BrandService brandService;
 
     @Autowired
-    private InventoryDto inventoryDto;
+    private InventoryService inventoryService;
 
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(ProductForm p) throws ApiException{
+    public ProductData add(ProductForm p) throws ApiException{
         if(p.getName().equals(""))
         {
             throw new ApiException("Product Name cannot be empty");
@@ -54,7 +54,7 @@ public class ProductDto {
 
         normalizeProduct(p);
 
-        BrandPojo p1  = brandDto.get(p.getBrandName(),p.getBrandCategory());
+        BrandPojo p1  = brandService.get(p.getBrandName(),p.getBrandCategory());
 
         ProductPojo prod = new ProductPojo();
         prod.setBarcode(p.getBarcode());
@@ -62,15 +62,15 @@ public class ProductDto {
         prod.setName(p.getName());
         prod.setMrp(p.getMrp());
 
-        service.add(prod);
+        ProductPojo pojo = service.add(prod);
 
 
         InventoryForm inventoryForm = new InventoryForm();
         inventoryForm.setBarcode(p.getBarcode());
         inventoryForm.setQuantity(0);
-        inventoryDto.create(inventoryForm);
+        inventoryService.create(inventoryForm);
 
-
+        return convert(pojo);
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -78,11 +78,6 @@ public class ProductDto {
         service.delete(id);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
-    public ProductData get(String barcode) throws ApiException{
-        ProductPojo p = service.get(barcode);
-        return convert(p);
-    }
 
     @Transactional(rollbackOn = ApiException.class)
     public ProductData get(int id) throws ApiException{
@@ -120,7 +115,7 @@ public class ProductDto {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public void update(ProductForm p,int id) throws ApiException{
+    public ProductData update(ProductForm p,int id) throws ApiException{
         if(p.getName().equals(""))
         {
             throw new ApiException("Product Name cannot be empty");
@@ -140,24 +135,20 @@ public class ProductDto {
             throw new ApiException("Price cannot be negative");
         }
 
-        BrandPojo b = brandDto.get(p.getBrandName(),p.getBrandCategory());
+        BrandPojo b = brandService.get(p.getBrandName(),p.getBrandCategory());
 
         if(b==null)
         {
             throw new ApiException("No brand exist with current details");
         }
 
-        service.update(p,id,b.getId());
+        return convert(service.update(p,id,b.getId()));
     }
 
-    @Transactional
-    public boolean checkAny(String barcode){
-        return service.checkAny(barcode);
-    }
 
     @Transactional
     ProductData convert(ProductPojo p) throws ApiException{
-        BrandData b = brandDto.get(p.getBrandId());
+        BrandPojo b = brandService.get(p.getBrandId());
 
         ProductData d = new ProductData();
 
@@ -172,7 +163,7 @@ public class ProductDto {
     }
 
 
-    void normalizeProduct(ProductForm form){
+    protected void normalizeProduct(ProductForm form){
         form.setName(form.getName().toLowerCase().trim());
         form.setBrandCategory(form.getBrandCategory().toLowerCase().trim());
         form.setBrandName(form.getBrandName().toLowerCase().trim());

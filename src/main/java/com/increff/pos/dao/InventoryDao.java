@@ -68,6 +68,7 @@ public class InventoryDao extends AbstractDao{
     public void insert(InventoryPojo p){
 
         em.persist(p);
+
     }
 
     @Transactional

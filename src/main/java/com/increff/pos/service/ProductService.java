@@ -19,15 +19,20 @@ public class ProductService {
     @Autowired
     private ProductDao dao;
 
+    @Autowired
+    private BrandService brandService;
+
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(ProductPojo prod) throws ApiException{
+    public ProductPojo add(ProductPojo prod) throws ApiException{
         if(dao.checkAny(prod.getBarcode()))
         {
             throw new ApiException("Product with current barcode already exists");
         }
 
         dao.insert(prod);
+
+        return prod;
 
     }
 
@@ -43,10 +48,6 @@ public class ProductService {
         dao.deleteProduct(id);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
-    public ProductPojo get(String barcode) throws ApiException{
-        return dao.select(barcode);
-    }
 
     @Transactional(rollbackOn = ApiException.class)
     public ProductPojo get(int id) throws ApiException{
@@ -68,7 +69,13 @@ public class ProductService {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public void update(ProductForm p,int id,int brandId) throws ApiException{
+    public ProductData get(String barcode) throws ApiException{
+        ProductPojo p = dao.select(barcode);
+        return convert(p);
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public ProductPojo update(ProductForm p,int id,int brandId) throws ApiException{
         ProductPojo prod = dao.selectById(id);
 
         if(prod==null)
@@ -81,6 +88,24 @@ public class ProductService {
         prod.setBarcode(p.getBarcode());
         prod.setBrandId(brandId);
 
+        return prod;
+
+    }
+
+    @Transactional
+    ProductData convert(ProductPojo p) throws ApiException{
+        BrandPojo b = brandService.get(p.getBrandId());
+
+        ProductData d = new ProductData();
+
+        d.setId(p.getId());
+        d.setName(p.getName());
+        d.setMrp(p.getMrp());
+        d.setBrandName(b.getName());
+        d.setBrandCategory(b.getCategory());
+        d.setBarcode(p.getBarcode());
+
+        return d;
     }
 
 

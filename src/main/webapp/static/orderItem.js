@@ -69,7 +69,7 @@ function displayOrders(data){
             dateIST.setHours(dateIST.getHours() + 5);
             dateIST.setMinutes(dateIST.getMinutes() + 30);
 
-            var buttonHtml = '<button style="padding:0.5rem" class="fa fa-edit fa-lg edit-btn" onclick="displayEditOrderItem(' + e.itemId + ')"></button>'
+            var buttonHtml = '<button style="padding:0.5rem" class="edit-btn" onclick="displayEditOrderItem(' + e.itemId + ')"><i class="fa fa-edit fa-lg"></i></button>'
     		var row ='<tr>'
     		+ '<td>' + e.id + '</td>'
     		+ '<td>' + e.barcode + '</td>'
@@ -162,6 +162,7 @@ function generateInvoice(){
 
 function init(){
      getOrder();
+     handleEditOrder();
      $("#update-order-item").click(updateOrderItem);
      $("#invoice").click(generateInvoice);
         setTimeout(handleEditOrder, 100);

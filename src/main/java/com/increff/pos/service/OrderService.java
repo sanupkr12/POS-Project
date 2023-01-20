@@ -5,8 +5,10 @@ import com.increff.pos.dao.OrderItemDao;
 import com.increff.pos.dto.InventoryDto;
 import com.increff.pos.dto.ProductDto;
 import com.increff.pos.model.*;
+import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.OrderItemPojo;
 import com.increff.pos.pojo.OrderPojo;
+import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.spring.RestConfig;
 import com.increff.pos.util.FileUtil;
 
@@ -51,10 +53,10 @@ import java.util.Base64;
 public class OrderService {
 
     @Autowired
-    private ProductDto productDto;
+    private ProductService productService;
 
     @Autowired
-    private InventoryDto inventoryDto;
+    private InventoryService inventoryService;
 
     @Autowired
     private OrderDao orderDao;
@@ -71,10 +73,10 @@ public class OrderService {
         for(OrderForm form:orderList){
 
 
-            ProductData data = productDto.get(form.getBarcode());
+            ProductData data = productService.get(form.getBarcode());
 
 
-            if(inventoryDto.checkForInsufficientInventory(form))
+            if(inventoryService.checkForInsufficientInventory(form))
             {
                 throw new ApiException("Insufficient Inventory");
             }
@@ -98,7 +100,7 @@ public class OrderService {
 
 
             OrderItemPojo itemPojo = new OrderItemPojo();
-            ProductData data = productDto.get(form.getBarcode());
+            ProductData data = productService.get(form.getBarcode());
             itemPojo.setOrderId(p.getId());
 
             if(form.getQuantity()<=0)
@@ -120,7 +122,7 @@ public class OrderService {
 
             orderItemDao.insert(itemPojo);
 
-            inventoryDto.updateWithOrder(form);
+            inventoryService.updateWithOrder(form);
         }
 
 
@@ -140,14 +142,6 @@ public class OrderService {
             list.add(convert(item,p.getDate()));
         }
 
-        return list;
-
-    }
-
-    @Transactional(rollbackOn = ApiException.class)
-    public List<OrderPojo> getAll(){
-
-        List<OrderPojo> list = orderDao.get();
         return list;
 
     }
@@ -182,6 +176,21 @@ public class OrderService {
         return data;
     }
 
+    public List<OrderData> getAll(){
+
+        List<OrderPojo> list = orderDao.get();
+
+        List<OrderData> data = new ArrayList<>();
+
+        for(OrderPojo p:list){
+            data.add(convert(p));
+        }
+
+        return data;
+
+
+    }
+
 
     @Transactional(rollbackOn = ApiException.class)
     public void update(EditOrderForm form, int id) throws ApiException, ParseException {
@@ -208,7 +217,7 @@ public class OrderService {
 
 
 
-        inventoryDto.update(inventoryForm);
+        inventoryService.update(inventoryForm);
 
 
         int newQuantity = form.getQuantity();
@@ -218,14 +227,14 @@ public class OrderService {
         orderForm.setQuantity(newQuantity);
         orderForm.setBarcode(barcode);
 
-        if(inventoryDto.checkForInsufficientInventory(orderForm))
+        if(inventoryService.checkForInsufficientInventory(orderForm))
         {
             throw new ApiException("Insufficient Inventory");
         }
 
 
         p.setQuantity(newQuantity);
-        inventoryDto.updateWithOrder(orderForm);
+        inventoryService.updateWithOrder(orderForm);
 
         orderPojo.setDate(getCurrentUtcTime());
 
@@ -252,7 +261,7 @@ public class OrderService {
         OrderItemData data = new OrderItemData();
         data.setId(p.getOrderId());
 
-        ProductData d = productDto.get(p.getProductId());
+        ProductPojo d = productService.get(p.getProductId());
 
 
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -287,6 +296,24 @@ public class OrderService {
 
         }
         return d1;
+    }
+
+    public OrderData convert(OrderPojo p){
+        List<OrderItemPojo> itemPojo = getOrderItemByOrderId(p.getId());
+
+        double totalCost = 0;
+
+        for(OrderItemPojo item:itemPojo){
+            totalCost+=(item.getSellingPrice()*item.getQuantity());
+        }
+
+        OrderData data = new OrderData();
+        data.setId(p.getId());
+        data.setDate(p.getDate());
+        data.setTotal(totalCost);
+
+        return data;
+
     }
 
 

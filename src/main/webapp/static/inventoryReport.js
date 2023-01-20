@@ -130,6 +130,13 @@ function getBrandByCategory(event){
 
     var brand = $("#brand").val();
 
+    if(category==='Select Category' && brand==='Select Brand')
+        {
+            fillBrandOption();
+            fillCategoryOption();
+            return;
+        }
+
             if(brand!=='Select Brand')
             {
                 return;
@@ -164,6 +171,13 @@ function getCategoryByBrand(event){
     var brand = event.target.value;
 
     var category = $("#category").val();
+
+    if(category==='Select Category' && brand==='Select Brand')
+        {
+            fillBrandOption();
+            fillCategoryOption();
+            return;
+        }
 
         if(category!=='Select Category')
         {

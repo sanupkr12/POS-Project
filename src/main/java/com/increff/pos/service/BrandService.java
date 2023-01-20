@@ -21,8 +21,11 @@ public class BrandService {
 	@Autowired
 	private BrandDao dao;
 
+	@Autowired
+	private ProductService productService;
+
 	@Transactional(rollbackOn = ApiException.class)
-	public void add(BrandPojo p) throws ApiException {
+	public BrandPojo add(BrandPojo p) throws ApiException {
 
 		if(dao.selectAny(p.getName(),p.getCategory()))
 		{
@@ -35,6 +38,8 @@ public class BrandService {
 
 
 		dao.insert(p);
+
+		return p;
 	}
 
 	@Transactional
@@ -53,7 +58,7 @@ public class BrandService {
 	}
 
 	@Transactional(rollbackOn  = ApiException.class)
-	public void update(int id, BrandPojo p) throws ApiException {
+	public BrandPojo update(int id, BrandPojo p) throws ApiException {
 
 		if(dao.selectAny(p.getName(),p.getCategory()))
 		{
@@ -64,9 +69,9 @@ public class BrandService {
 		ex.setCategory(p.getCategory());
 		ex.setName(p.getName());
 
-
-
 //		dao.update(ex);
+		return ex;
+
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
@@ -99,14 +104,26 @@ public class BrandService {
 
 
 
-	public List<BrandPojo> get(InventoryReportForm form) throws ApiException {
+	public List<String> get(InventoryReportForm form) throws ApiException {
 		List<BrandPojo> list = dao.selectBrand(form.getCategory(),form.getBrand());
-		return list;
-	}
+		List<String> barcodeList = new ArrayList<>();
 
-	public List<BrandPojo> getBrand(BrandReportForm form) throws ApiException {
-		List<BrandPojo> list = dao.selectBrand(form.getCategory(),form.getBrand());
-		return list;
+
+		for(BrandPojo p:list)
+		{
+
+
+			List<ProductPojo> productList = productService.getByBrandId(p.getId());
+
+			for(ProductPojo d:productList)
+			{
+
+				barcodeList.add(d.getBarcode());
+			}
+		}
+
+		return barcodeList;
+
 	}
 
 	public List<BrandPojo> getSales(SalesReportForm form) throws ApiException {
@@ -125,6 +142,28 @@ public class BrandService {
 		List<BrandPojo> brandList = dao.selectAll();
 		return brandList;
 
+	}
+	public List<BrandData> getBrand(BrandReportForm form) throws ApiException {
+		List<BrandPojo> list = dao.selectBrand(form.getCategory(),form.getBrand());
+
+		List<BrandData> data = new ArrayList<>();
+
+		for(BrandPojo p:list)
+		{
+			data.add(convert(p));
+		}
+
+
+		return data;
+
+	}
+
+	private static BrandData convert(BrandPojo p) {
+		BrandData d = new BrandData();
+		d.setCategory(p.getCategory());
+		d.setName(p.getName());
+		d.setId(p.getId());
+		return d;
 	}
 
 }

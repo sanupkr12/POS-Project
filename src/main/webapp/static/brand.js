@@ -94,8 +94,9 @@ var processCount = 0;
 
 
 function processData(){
-	var file = $('#BrandFile')[0].files[0];
-	console.log(file);
+
+	var file = $('#brandFile')[0].files[0];
+
 	readFileData(file, readFileDataCallback);
 }
 
@@ -121,6 +122,8 @@ function uploadRows(){
 	var json = JSON.stringify(row);
 
 	var url = getBrandUrl();
+	console.log(json);
+
 
 	//Make ajax call
 	$.ajax({
@@ -154,7 +157,7 @@ function displayBrandList(data){
 	var j=1;
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = ' <button style="padding:0.5rem;border-radius:0.3rem;" class="fa fa-edit fa-lg" onclick="displayEditBrand(' + e.id + ')"></button>&nbsp;';
+		var buttonHtml = ' <button style="padding:0.5rem;border-radius:0.3rem;" title="Edit"  onclick="displayEditBrand(' + e.id + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
 
 
 		var row = '<tr>'

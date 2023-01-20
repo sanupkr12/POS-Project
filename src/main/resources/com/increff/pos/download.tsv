@@ -1,2 +1,0 @@
-name	brandName	brandCategory	barcode	mrp	error
-MacBook Pro M2	apple	phone	a10003	159999	{"message":"Product with current barcode already exists"}

@@ -18,6 +18,13 @@ public class InventoryService {
     @Autowired
     private InventoryDao dao;
 
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private BrandService brandService;
+
+
     @Transactional
     public InventoryPojo get(String barcode) throws ApiException {
 
@@ -49,19 +56,22 @@ public class InventoryService {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public void create(InventoryForm form) throws ApiException {
+    public InventoryPojo create(InventoryForm form) throws ApiException {
 
         if(dao.select(form.getBarcode())!=null)
         {
             throw new ApiException("Inventory already exists");
         }
 
+        InventoryPojo p = convert(form);
+        dao.insert(p);
 
-        dao.insert(convert(form));
+
+        return p;
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public void update (InventoryForm form) throws ApiException{
+    public InventoryPojo update (InventoryForm form) throws ApiException{
 
 
         if(dao.select(form.getBarcode())==null)
@@ -71,21 +81,27 @@ public class InventoryService {
 
 
 
-
-
         InventoryPojo p1 = dao.select(form.getBarcode());
 
         int newQuantity = p1.getQuantity() + form.getQuantity();
         p1.setQuantity(newQuantity);
+
+        return p1;
 
 
 
     }
 
 
+
+
     @Transactional(rollbackOn = ApiException.class)
     public void updateWithOrder (OrderForm form) throws ApiException{
 
+        if(!productService.checkAny(form.getBarcode()))
+        {
+            throw new ApiException("No Product exists with current barcode");
+        }
 
         if(dao.select(form.getBarcode())==null)
         {
@@ -103,6 +119,57 @@ public class InventoryService {
 
     }
 
+    public boolean checkForInsufficientInventory(OrderForm form) throws ApiException {
+        InventoryPojo p1 = get(form.getBarcode());
+
+        int orgQuantity = p1.getQuantity();
+        int newQuantity = form.getQuantity();
+
+
+        if(newQuantity<=orgQuantity)
+        {
+            return false;
+        }
+        else{
+            return true;
+        }
+
+
+    }
+
+    public List<InventoryData> get(InventoryReportForm inventoryReportForm) throws ApiException {
+
+        List<String> barcodeList = brandService.get(inventoryReportForm);
+
+        List<InventoryPojo> list = get(barcodeList);
+
+        List<InventoryData> inventoryList = new ArrayList<>();
+
+        for(InventoryPojo p:list)
+        {
+            inventoryList.add(convert(p));
+
+        }
+
+        return inventoryList;
+    }
+
+    public InventoryData convert(InventoryPojo p) throws ApiException {
+        InventoryData data = new InventoryData();
+
+
+
+        ProductData d = productService.get(p.getBarcode());
+
+
+        data.setId(p.getId());
+        data.setName(d.getName());
+        data.setBarcode(p.getBarcode());
+        data.setQuantity(p.getQuantity());
+
+        return data;
+    }
+
 
 
     private InventoryPojo convert(InventoryForm form){
@@ -112,6 +179,9 @@ public class InventoryService {
 
         return p;
     }
+
+
+
 
     private void normalizeInventory(InventoryForm form){
         form.setBarcode(form.getBarcode().trim());

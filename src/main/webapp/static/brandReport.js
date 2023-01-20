@@ -67,6 +67,10 @@ function displayBrandList(data){
 
 function fillCategoryOptionUtil(data){
      var categoryOption = $(".append-category");
+     categoryOption[0].innerHTML = "";
+
+     categoryOption.append(`<option selected>Select Category</option>`);
+
      for(var i=0;i<data.length;i++)
      {
         categoryOption.append(`<option val="${data[i]}">${data[i]}</option>`);
@@ -96,6 +100,10 @@ function fillCategoryOption(){
 
 function fillBrandOptionUtil(data){
     var brandOption = $(".append-brand");
+
+    brandOption[0].innerHTML = "";
+
+    brandOption.append(`<option selected>Select Brand</option>`);
 
     for (var i=0;i<data.length;i++)
     {
@@ -129,6 +137,16 @@ function getBrandByCategory(event){
 
 
     var brand = $("#brand").val();
+
+
+
+    if(category==='Select Category' && brand==='Select Brand')
+    {
+        fillBrandOption();
+        fillCategoryOption();
+        return;
+    }
+
 
     if(brand!=='Select Brand')
     {
@@ -164,6 +182,13 @@ function getCategoryByBrand(event){
     var brand = event.target.value;
 
     var category = $("#category").val();
+
+    if(category==='Select Category' && brand==='Select Brand')
+        {
+            fillBrandOption();
+            fillCategoryOption();
+            return;
+        }
 
     if(category!=='Select Category')
     {
