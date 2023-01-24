@@ -1,7 +1,7 @@
 
 function getUserUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/admin/user";
+	return baseUrl + "/api/supervisor/user";
 }
 
 //BUTTON ACTIONS
@@ -55,6 +55,19 @@ function deleteUser(id){
 	});
 }
 
+function displayEditUser(id){
+    var url = getUserUrl() + "/" + id;
+
+    $.ajax({
+    	   url: url,
+    	   type: 'PUT',
+    	   success: function(data) {
+    	   		getUserList();
+    	   },
+    	   error: handleAjaxError
+    	});
+}
+
 //UI DISPLAY METHODS
 
 function displayUserList(data){
@@ -63,14 +76,14 @@ function displayUserList(data){
 	for(var i in data){
 		var e = data[i];
 
-		var buttonHtml = '<button style="padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditUser(' + e.id + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;&nbsp;&nbsp; '
-		buttonHtml+='<button style="padding:0.5rem;border-radius:0.3rem;" title="Delete" onclick="deleteUser(' + e.id + ')"><i class="fa fa-trash fa-lg"></i></button>';
+		var buttonHtml = '<button style="border:0;padding:0.5rem;background-color:transparent;border:0;border-radius:0.3rem;" title="Edit" onclick="displayEditUser(' + e.id + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;&nbsp;&nbsp; '
+		buttonHtml+='<button style="border:0;background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Delete" onclick="deleteUser(' + e.id + ')"><i class="fa fa-trash fa-lg"></i></button>';
 
         var row = '<tr>'
 		+ '<td>' + e.id + '</td>'
 		+ '<td>' + e.email + '</td>'
 		+ '<td>' + e.role + '</td>'
-		+ '<td>' + buttonHtml + '</td>'
+		+ '<td class="text-center">' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 	}

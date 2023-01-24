@@ -13,7 +13,10 @@ import org.springframework.stereotype.Controller;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static com.google.common.collect.Lists.reverse;
 
 @Component
 public class BrandDto {

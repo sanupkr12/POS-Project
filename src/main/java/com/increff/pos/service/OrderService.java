@@ -33,10 +33,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.criteria.Order;
 import javax.transaction.Transactional;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DateFormat;
@@ -64,11 +61,13 @@ public class OrderService {
     @Autowired
     private OrderItemDao orderItemDao;
 
+    @Autowired
+    private RestTemplate restTemplate;
 
 
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(List<OrderForm> orderList) throws ApiException, ParseException, DocumentException, FileNotFoundException {
+    public List<OrderItemData> add(List<OrderForm> orderList) throws ApiException, ParseException, DocumentException, IOException {
 
         for(OrderForm form:orderList){
 
@@ -90,6 +89,8 @@ public class OrderService {
         orderDao.insert(p);
 
         List<OrderItemPojo> itemList = new ArrayList<>();
+
+        List<OrderItemData> list = new ArrayList<>();
 
         for(OrderForm form:orderList){
 
@@ -123,7 +124,36 @@ public class OrderService {
             orderItemDao.insert(itemPojo);
 
             inventoryService.updateWithOrder(form);
+
+            list.add(convert(itemPojo,p.getDate()));
+
+
         }
+
+        final String url = "http://localhost:8000/invoice/";
+
+
+        String base64Str = restTemplate.postForObject(url, list, String.class);
+
+
+        File dir = FileUtil.createDirectory("invoiceFiles");
+        File bill = new File("/home/sanupkumar/Downloads/invoiceFiles/bill" + String.valueOf(p.getId()) + ".pdf");
+
+        byte[] decodedPdf = Base64.getDecoder().decode(base64Str);
+
+
+        FileOutputStream outputStream = new FileOutputStream(bill);
+
+        outputStream.write(decodedPdf);
+
+        outputStream.flush();
+
+        outputStream.getFD().sync();
+
+        outputStream.close();
+
+
+        return list;
 
 
     }
@@ -193,7 +223,7 @@ public class OrderService {
 
 
     @Transactional(rollbackOn = ApiException.class)
-    public void update(EditOrderForm form, int id) throws ApiException, ParseException {
+    public OrderItemData update(EditOrderForm form, int id) throws ApiException, ParseException {
 
         OrderItemPojo p = orderItemDao.getByItemId(id);
 
@@ -236,8 +266,12 @@ public class OrderService {
         p.setQuantity(newQuantity);
         inventoryService.updateWithOrder(orderForm);
 
-        orderPojo.setDate(getCurrentUtcTime());
+        Date date = getCurrentUtcTime();
 
+        orderPojo.setDate(date);
+
+
+        return convert(orderItemDao.getByItemId(id),date);
 
 
 

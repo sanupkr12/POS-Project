@@ -8,9 +8,9 @@
 
 <nav th:replace="snippets.html :: name_app_navbar"></nav>
 
-<div class="container">
+<div class="container-fluid" style="padding:0rem 5rem;">
 
-    <h3 style="text-align:center;margin:2rem">Sales Report</h3>
+    <h3 style="margin:1.5rem 0rem;">Sales Report</h3>
     <form class="form" id="options-form">
         <div class="row">
                     <div class="col-5">
@@ -52,7 +52,7 @@
             </div>
 
 
-            <div class="col-12" style="text-align:center;display:flex;align-items:center;justify-content:center;margin:1rem 0 2rem 0">
+            <div class="col-12" style="display:flex;align-items:center;margin:1rem 0 2rem 0;padding:0rem;">
                 <button id="download-sales" class="btn btn-primary btn-md">Generate Report</button>
             </div>
 
@@ -63,12 +63,12 @@
     <div class="col-12">
         <table class="table table-striped" id="display-sales-table">
             <thead class="thead-dark">
-            <tr>
+            <tr class="sticky-top" style="top:5rem;z-index:auto;">
                 <th scope="col">S No.</th>
                 <th scope="col">Name</th>
                 <th scope="col">Barcode</th>
                 <th scope="col">quantity</th>
-                <th scope="col">Total</th>
+                <th scope="col" style="text-align:end">Total</th>
                 <th scope="col">Date</th>
             </tr>
             </thead>

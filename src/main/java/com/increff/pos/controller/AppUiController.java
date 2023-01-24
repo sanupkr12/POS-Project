@@ -29,7 +29,7 @@ public class AppUiController extends AbstractUiController {
 		return mav("inventory.html");
 	}
 
-	@RequestMapping(value = "/ui/admin")
+	@RequestMapping(value = "/ui/supervisor")
 	public ModelAndView admin() {
 		return mav("user.html");
 	}

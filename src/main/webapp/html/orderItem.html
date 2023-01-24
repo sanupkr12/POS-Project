@@ -25,12 +25,12 @@
     <div class="col-12">
       <table class="table table-striped" id="order-item-table">
         <thead class="thead-dark">
-        <tr>
+        <tr class="sticky-top" style="top:5rem;z-index:auto;">
           <th scope="col">Order Id</th>
           <th scope="col">Barcode</th>
           <th scope="col">Product Name</th>
           <th scope="col">Quantity</th>
-          <th scope="col">Total cost</th>
+          <th scope="col" style="text-align:end">Total cost</th>
           <th scope="col">Order Date</th>
           <th scope="col">Actions</th>
         </tr>
@@ -49,22 +49,19 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Edit Order</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
         </div>
         <div class="modal-body">
-          <form class="form-inline" id="order-edit-form">
+          <form id="order-edit-form">
             <div class="form-group">
               <label  class="col-sm-2 col-form-label">Barcode</label>
-              <div class="col-sm-10">
+              <div class="col-sm-12">
                 <input type="text" class="form-control" name="barcode" placeholder="Enter Barcode" readonly>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-2 col-form-label">Quantity</label>
-              <div class="col-sm-10">
-                <input type="number" class="form-control" name="quantity" placeholder="Enter Quantity">
+              <div class="col-sm-12">
+                <input type="number" class="form-control" min="1" name="quantity" placeholder="Enter Quantity">
               </div>
             </div>
             <input type="hidden" name="id" >

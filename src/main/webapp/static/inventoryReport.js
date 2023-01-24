@@ -4,6 +4,9 @@ function getCurrentUrl(){
 
 }
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
 
 function downloadInventory(event){
 event.preventDefault();
@@ -59,7 +62,7 @@ function displayInventoryList(data){
 		+ '<td>' + sno + '</td>'
 		+ '<td>' + e.name + '</td>'
 		+ '<td>' + e.barcode + '</td>'
-		+ '<td>'  + e.quantity + '</td>'
+		+ '<td>'  + numberWithCommas(e.quantity) + '</td>'
 		+ '</tr>';
         $tbody.append(row);
         sno+=1;

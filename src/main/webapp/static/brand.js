@@ -157,18 +157,24 @@ function displayBrandList(data){
 	var j=1;
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = ' <button style="padding:0.5rem;border-radius:0.3rem;" title="Edit"  onclick="displayEditBrand(' + e.id + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
+		var buttonHtml = ' <button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Edit"  onclick="displayEditBrand(' + e.id + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
 
 
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.name + '</td>'
 		+ '<td>'  + e.category + '</td>'
-		+ '<td>' + buttonHtml + '</td>'
+		+ '<td class="text-center supervisor-only">' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
         j+=1;
 	}
+
+	if($("meta[name=role]").attr("content") === 'operator')
+	{
+	    $(".supervisor-only").hide();
+	}
+
 }
 
 function displayEditBrand(id){

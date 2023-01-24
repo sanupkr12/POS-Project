@@ -117,7 +117,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
     @Test
     public void testAddWithInvalidQuantity() throws ApiException {
         String barcode = "efgh1234";
-        int quantity = 15;
+        int quantity = -15;
         String brandName = "boat";
         String category = "headphones";
         double mrp = 2100;

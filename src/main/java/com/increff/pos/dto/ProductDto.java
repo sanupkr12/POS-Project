@@ -92,9 +92,9 @@ public class ProductDto {
         return convert(p);
     }
 
-    public List<ProductPojo> getByBrandId(int brandId) throws ApiException {
-        return service.getByBrandId(brandId);
-    }
+//    public List<ProductPojo> getByBrandId(int brandId) throws ApiException {
+//        return service.getByBrandId(brandId);
+//    }
 
     @Transactional(rollbackOn = ApiException.class)
     public List<ProductData> get() throws ApiException{

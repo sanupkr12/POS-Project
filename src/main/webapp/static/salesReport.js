@@ -4,6 +4,10 @@ function getCurrentUrl(){
 
 }
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
+
 
 function downloadSales(event){
     event.preventDefault();
@@ -73,8 +77,8 @@ function displaySalesList(data){
 		+ '<td>' + sno + '</td>'
 		+ '<td>' + e.productName + '</td>'
 		+ '<td>' + e.barcode + '</td>'
-		+ '<td>'  + e.quantity + '</td>'
-		+ '<td>'  + e.total + '</td>'
+		+ '<td>'  + numberWithCommas(e.quantity) + '</td>'
+		+ '<td style="text-align:end">'  + numberWithCommas(e.total) + '</td>'
 		+ '<td>'  + dateIST + '</td>'
 		+ '</tr>';
         $tbody.append(row);

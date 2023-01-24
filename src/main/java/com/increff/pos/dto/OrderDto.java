@@ -23,6 +23,10 @@ import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,6 +34,10 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,7 +57,7 @@ public class OrderDto {
 
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(List<OrderForm> orderList) throws ApiException, ParseException, DocumentException, FileNotFoundException {
+    public List<OrderItemData> add(List<OrderForm> orderList) throws ApiException, ParseException, DocumentException, IOException {
 
         for(OrderForm form:orderList){
 
@@ -61,46 +69,43 @@ public class OrderDto {
         }
 
 
-        service.add(orderList);
+        return service.add(orderList);
 
     }
 
 
     @Transactional(rollbackOn = ApiException.class)
-    public void printInvoice(int orderId) throws ApiException {
+    public ResponseEntity<ByteArrayResource> printInvoice(int orderId) throws ApiException {
         try {
-
-            final String url = "http://localhost:8000/invoice/";
 
             OrderPojo p = service.getOrderById(orderId);
 
-            List<OrderItemData> list = service.get(orderId);
 
+            File file = new File("/home/sanupkumar/Downloads/invoiceFiles/bill" + String.valueOf(orderId) + ".pdf");
+            HttpHeaders header = getHttpHeaders("invoice.pdf");
 
-            String base64Str = restTemplate.postForObject(url, list, String.class);
-
-
-            File dir = FileUtil.createDirectory("invoiceFiles");
-            File bill = new File("/home/sanupkumar/Downloads/invoiceFiles/bill" + String.valueOf(orderId) + ".pdf");
-
-            byte[] decodedPdf = Base64.getDecoder().decode(base64Str);
-
-
-            FileOutputStream outputStream = new FileOutputStream(bill);
-
-            outputStream.write(decodedPdf);
-
-            outputStream.flush();
-
-            outputStream.getFD().sync();
-
-            outputStream.close();
+            Path path = Paths.get(file.getAbsolutePath());
+            ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
 
             p.setInvoiceGenerated(true);
+            return ResponseEntity.ok()
+                    .headers(header)
+                    .contentLength(file.length())
+                    .contentType(MediaType.parseMediaType("application/pdf"))
+                    .body(resource);
         }
         catch (Exception e) {
             throw new ApiException(e.getMessage());
         }
+    }
+
+    private HttpHeaders getHttpHeaders(String filename) {
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        header.add("Pragma", "no-cache");
+        header.add("Expires", "0");
+        return header;
     }
 
 
@@ -115,14 +120,14 @@ public class OrderDto {
     }
 
 
-    public List<OrderItemData> getByProductId(int productId) throws ApiException {
-        return service.getByProductId(productId);
-    }
+//    public List<OrderItemData> getByProductId(int productId) throws ApiException {
+//        return service.getByProductId(productId);
+//    }
 
 
     @Transactional(rollbackOn = ApiException.class)
-    public void update(EditOrderForm form, int id) throws ApiException, ParseException {
-        service.update(form,id);
+    public OrderItemData update(EditOrderForm form, int id) throws ApiException, ParseException {
+        return service.update(form,id);
     }
 
     public invoiceData getInvoice(int id){

@@ -7,6 +7,10 @@ function getOrderUrl(){
 
 var update_id;
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function updateOrderItem(event){
 	$('#edit-order-modal').modal('toggle');
 
@@ -69,13 +73,13 @@ function displayOrders(data){
             dateIST.setHours(dateIST.getHours() + 5);
             dateIST.setMinutes(dateIST.getMinutes() + 30);
 
-            var buttonHtml = '<button style="padding:0.5rem" class="edit-btn" onclick="displayEditOrderItem(' + e.itemId + ')"><i class="fa fa-edit fa-lg"></i></button>'
+            var buttonHtml = '<button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" class="edit-btn" onclick="displayEditOrderItem(' + e.itemId + ')"><i class="fa fa-edit fa-lg"></i></button>'
     		var row ='<tr>'
     		+ '<td>' + e.id + '</td>'
     		+ '<td>' + e.barcode + '</td>'
     		+ '<td>' + e.productName + '</td>'
-    		+ '<td>' + e.quantity + '</td>'
-    		+ '<td>'  + e.total + '</td>'
+    		+ '<td>' + numberWithCommas(e.quantity) + '</td>'
+    		+ '<td style="text-align:end">'  + numberWithCommas(e.total) + '</td>'
     		+ '<td>' + dateIST + '</td>'
     		+ '<td>' + buttonHtml + '</td>'
     		+ '</tr>';
@@ -140,25 +144,49 @@ function handleEditOrder(){
 
 
 function generateInvoice(){
-    var url = $("meta[name=baseUrl]").attr("content") + "/api/order/invoice/" + window.location.href.split("/").pop();
+    var id = window.location.href.split("/").pop();
+    var url = $("meta[name=baseUrl]").attr("content") + "/api/order/invoice/" + id;
 
-    $.ajax({
-            url:url,
-            type:'PUT',
-            headers: {
-                           	'Content-Type': 'application/json'
-                           },
-                    	   success: function(data) {
-                    	        $(".toast-body").html("Invoice Generated");
-                                $(".message").html("success");
-                                $(".toast").toast("show");
-                    	   		handleEditOrder();
+    var req = new XMLHttpRequest();
+        req.open("POST",url, true);
+        req.responseType = "blob";
 
-                    	   },
-            error:handleAjaxError
+        req.onload = function (event) {
+          var blob = req.response;
+          $.notify("Invoice generated!", "success");
 
-        }) ;
+          var link=document.createElement('a');
+          link.href=window.URL.createObjectURL(blob);
+          link.download=`invoice${id}.pdf`;
+          link.click();
+
+          handleEditOrder();
+        };
+
+        req.send();
+
+//    $.ajax({
+//            url:url,
+//            type:'GET',
+//            headers: {
+//                           	'Content-Type': 'application/json'
+//                           },
+//                    	   success: function(data) {
+//                    	        $(".toast-body").html("Invoice Generated");
+//                                $(".message").html("success");
+//                                $(".toast").toast("show");
+//
+//
+//
+//
+//
+//                    	   },
+//            error:handleAjaxError
+//
+//        }) ;
 }
+
+
 
 function init(){
      getOrder();

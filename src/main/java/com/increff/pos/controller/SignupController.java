@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Controller
-@PropertySource(value="file:./admin.properties")
+@PropertySource(value="file:./supervisor.properties")
 public class SignupController {
 
     @Value("${adminList}")
@@ -49,6 +49,12 @@ public class SignupController {
         if(!EmailValidator.getInstance().isValid(form.getEmail()))
         {
             throw new ApiException("Invalid Email Address");
+        }
+
+        if(form.getPassword().equals(""))
+        {
+            info.setMessage("password cannot be empty");
+            return new ModelAndView("redirect:/site/signup");
         }
 
         if(!form.getPassword().equals(form.getConfirmPassword()))
@@ -79,7 +85,7 @@ public class SignupController {
         {
             if(admin.equals(form.getEmail()))
             {
-                user.setRole("admin");
+                user.setRole("supervisor");
                 flag = true;
                 break;
             }

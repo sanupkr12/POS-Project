@@ -57,3 +57,7 @@ table { box-shadow: 1px 3px 5px #999; }
 .icon:hover{
     background-color:#E3F6FF;
 }
+
+.hide-option{
+ display:none;
+}

@@ -9,11 +9,16 @@ import io.swagger.annotations.ApiOperation;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+
+import static com.google.common.collect.Lists.reverse;
 
 @Api
 @RestController
@@ -27,7 +32,7 @@ public class OrderApiController {
 
     @ApiOperation(value="creating an order")
     @RequestMapping(path="/api/order",method = RequestMethod.POST)
-    public void create(@RequestBody List<OrderForm> form) throws ParseException, ApiException, DocumentException, FileNotFoundException {
+    public void create(@RequestBody List<OrderForm> form) throws ParseException, ApiException, DocumentException, IOException {
         orderDto.add(form);
     }
 
@@ -41,7 +46,7 @@ public class OrderApiController {
     @ApiOperation(value="get order")
     @RequestMapping(path="/api/order",method=RequestMethod.GET)
     public List<OrderData> get(){
-        return orderDto.getAll();
+        return reverse(orderDto.getAll());
     }
 
 
@@ -58,9 +63,9 @@ public class OrderApiController {
     }
 
     @ApiOperation(value="generate invoice")
-    @RequestMapping(path="/api/order/invoice/{id}",method=RequestMethod.PUT)
-    public void invoice(@PathVariable int id) throws ApiException, FileNotFoundException, DocumentException {
-        orderDto.printInvoice(id);
+    @RequestMapping(path="/api/order/invoice/{id}",method=RequestMethod.POST)
+    public ResponseEntity<ByteArrayResource> invoice(@PathVariable int id) throws ApiException, FileNotFoundException, DocumentException {
+        return orderDto.printInvoice(id);
     }
 
     @ApiOperation(value="get Invoice data")

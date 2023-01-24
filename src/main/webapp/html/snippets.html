@@ -5,6 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="baseUrl" th:attr="content=${baseUrl}">
+  <meta name="role" th:attr="content=${role}">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/js/all.min.js" integrity="sha512-rpLlll167T5LJHwp0waJCh3ZRf7pO6IT1+LZOhAyP6phAirwchClbTZV3iqL3BMrVxIYRbzGTpli4rfxsCK6Vw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -16,28 +17,20 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-1" th:fragment="name_site_navbar">
   <a class="navbar-brand" th:href="@{/}">
-    <img th:src="@{/static/logo.jpg}" class="d-inline-block align-top" alt="">
+    <img th:src="@{/static/logo2.png}" class="d-inline-block align-top" alt="">
   </a>
 
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/site/features}">Features</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/site/pricing}">Pricing</a>
-      </li>
-    </ul>
     
     <ul class="navbar-nav ml-auto">
-       <li class="nav-item">
+       <li class="nav-item" id="login">
         <a class="btn btn-info" th:href="@{/site/login}">Login</a>
       </li>
       &nbsp;&nbsp;
-      <li class="nav-item">
+      <li class="nav-item" id="signup">
         <a class="btn btn-info" th:href="@{/site/signup}">Signup</a>
       </li>
     </ul>
@@ -48,7 +41,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark  mb-1 sticky-top" th:fragment="name_app_navbar">
   <a class="navbar-brand" th:href="@{/}">
-    <img th:src="@{/static/logo.jpg}" class="d-inline-block align-top" alt="">
+    <img th:src="@{/static/logo2.png}" class="d-inline-block align-top" alt="">
   </a>
 
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,7 +69,7 @@
         <a class="nav-link dropdown-toggle "  href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Report
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <div class="dropdown-menu" style="box-shadow: 1px 3px 5px #999;"  aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item btn-dark" th:href="@{/ui/report/brand}">Brand Report</a>
           <a class="dropdown-item btn-dark" th:href="@{/ui/report/inventory}">Inventory Report</a>
           <a class="dropdown-item btn-dark" th:href="@{/ui/report/sales}">Sales Report</a>
@@ -85,18 +78,23 @@
         </li>
 
       <li class="nav-item">
-        <a class="nav-link" id="admin-link"  th:href="@{/ui/admin}">Admin</a>
+        <a class="nav-link" id="admin-link" th:if="${role=='supervisor'}"  th:href="@{/ui/supervisor}">Admin</a>
       </li>
     </ul>
     
     <ul class="navbar-nav ml-auto">
-	    <li class="navbar-text">
-	    	[[${info.getEmail()}]]
-            &nbsp;&nbsp;
-	    </li>
-	    <li class="nav-item">
-	    	<a class="nav-link" th:href="@{/session/logout}">Logout</a>
-	    </li>
+        <li  class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle "  href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            [[${info.getEmail()}]]
+            <br>
+            <span>[[${role}]]</span>
+          </a>
+          <div class="dropdown-menu" style="box-shadow: 1px 3px 5px #999;" aria-labelledby="navbarDropdownMenuLink2">
+            <a class="dropdown-item btn-dark" th:href="@{/session/logout}">Logout</a>
+          </div>
+        </li>
+
+
     </ul>
     
         

@@ -8,19 +8,13 @@
 
 <nav th:replace="snippets.html :: name_app_navbar"></nav>
 
-<div class="container">
-
-<h3 style="text-align:center;margin:2rem">Home</h3>
+<div class="container-fluid mt-5">
 
  <!-- Top row with form-->
-<div class="container">
-<div class="row">
+<div class="container" >
+<div class="row justify-content-around">
 	 <div class="col-4 icon" style="text-align:center;">
 	 	<a th:href="@{/ui/brand}" title="Brands"  style="text-decoration:none;color:black"> <img style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;"  th:src="@{/static/brand.png}"><p>Brand</p></a>
-
-	 </div>	
-	 <div class="col-4 icon" style="text-align:center;">
-	 	<a th:href="@{/ui/admin}" title="Admin" style="text-decoration:none;color:black"> <img  style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/admin.png}"><p>Admin</p></a>
 
 	 </div>
 	<div class="col-4 icon" style="text-align:center;">
@@ -37,6 +31,10 @@
 	</div>
 	<div class="col-4 icon" style="text-align:center;">
 		<a th:href="@{/ui/report}" title="Report" style="text-decoration:none;color:black"> <img  style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/report.png}"><p>Report</p></a>
+
+	</div>
+	<div class="col-4 icon" th:if="${role=='supervisor'}" style="text-align:center;">
+		<a th:href="@{/ui/supervisor}" title="supervisor" style="text-decoration:none;color:black"> <img  style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/admin.png}"><p>Admin</p></a>
 
 	</div>
 	</div>

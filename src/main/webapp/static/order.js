@@ -7,6 +7,10 @@ function getOrderUrl(){
 
 var index = 1;
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
+
 
 var orderForm = document.querySelector("#inputOrder");
 
@@ -99,12 +103,12 @@ function displayOrders(data){
             dateIST.setHours(dateIST.getHours() + 5);
             dateIST.setMinutes(dateIST.getMinutes() + 30);
 //
-               var buttonHtml = '<a title="Details" href="http://localhost:9000/pos/ui/order/' + e.id + '"><i class="fa fa-regular fa-circle-info"></i></a>'
+               var buttonHtml = '<a style="background-color:transparent;border:0;" title="Details"  href="http://localhost:9000/pos/ui/order/' + e.id + '"><img style="height:1.6rem;width:1.6rem;" src="' + $("meta[name=baseUrl]").attr("content") + "/static/info.png" + '"></a>'
     		var row ='<tr>'
     		+ '<td>' + e.id + '</td>'
     		+ '<td>' + dateIST + '</td>'
-    		+ '<td>'  + e.total + '</td>'
-    		+ '<td>'  + buttonHtml + '</td>'
+    		+ '<td style="text-align:end">'  + numberWithCommas(e.total) + '</td>'
+    		+ '<td class="text-center">'  + buttonHtml + '</td>'
     		+ '</tr>';
             $tbody.append(row);
     	}

@@ -19,6 +19,8 @@ public class UserDto {
     @Autowired
     private UserService service;
 
+
+
     @Transactional
     public void add(UserForm form) throws ApiException {
         if(form.getEmail().equals(""))
@@ -36,7 +38,7 @@ public class UserDto {
             throw new ApiException("Invalid Email Address");
         }
 
-        if(form.getRole().equals("") || (!form.getRole().equals("admin") && !form.getRole().equals("operator")))
+        if(form.getRole().equals("") || (!form.getRole().equals("supervisor") && !form.getRole().equals("operator")))
         {
             throw new ApiException("Invalid Role");
         }
@@ -68,6 +70,11 @@ public class UserDto {
     @Transactional
     public void delete(int id) {
         service.delete(id);
+    }
+
+    @Transactional
+    public void update(UserForm form) throws ApiException {
+        service.update(form.getEmail(),form.getRole());
     }
 
     protected static void normalize(UserPojo p) {

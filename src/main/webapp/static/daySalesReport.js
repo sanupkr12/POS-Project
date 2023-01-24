@@ -1,3 +1,8 @@
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function displayDaySales(data){
     var sno = 1;
 	var $tbody = $('#display-daySales-table').find('tbody');
@@ -15,7 +20,7 @@ function displayDaySales(data){
 		+ '<td>' + dateIST + '</td>'
 		+ '<td>' + e.orderCount + '</td>'
 		+ '<td>'  + e.itemCount + '</td>'
-		+ '<td>' + e.revenue + '</td>'
+		+ '<td class="text-end">' + numberWithCommas(e.revenue) + '</td>'
 		+ '</tr>';
         $tbody.append(row);
         sno+=1;

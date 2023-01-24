@@ -102,11 +102,11 @@ public class ProductDtoTest extends AbstractUnitTest {
 
         ProductForm form = new ProductForm();
 
-        form.setBrandCategory(category);
-        form.setBrandName(brandName);
-        form.setBarcode(barcode);
-        form.setName(name);
-        form.setMrp(mrp);
+        form.setBrandCategory("");
+        form.setBrandName("");
+        form.setBarcode("");
+        form.setName("");
+        form.setMrp(20);
 
         exceptionRule.expect(ApiException.class);
         ProductData data = productDto.add(form);
@@ -140,8 +140,8 @@ public class ProductDtoTest extends AbstractUnitTest {
 
         List<ProductData> list = productDto.get();
 
-        assertEquals(list.get(0).getBrandName(),p1.getName());
-        assertEquals(list.get(1).getBrandName(),p2.getName());
+        assertEquals(list.get(0).getName(),p1.getName());
+        assertEquals(list.get(1).getName(),p2.getName());
 
 
     }
@@ -182,10 +182,10 @@ public class ProductDtoTest extends AbstractUnitTest {
         ProductForm updatedForm = new ProductForm();
         String updatedName = "";
         updatedForm.setName(updatedName);
-        updatedForm.setBrandName(brandName);
-        updatedForm.setBarcode(barcode);
-        updatedForm.setBrandCategory(category);
-        updatedForm.setMrp(mrp);
+        updatedForm.setBrandName("");
+        updatedForm.setBarcode("");
+        updatedForm.setBrandCategory("");
+        updatedForm.setMrp(1200);
 
         exceptionRule.expect(ApiException.class);
         ProductData data = productDto.update(updatedForm,p.getId());

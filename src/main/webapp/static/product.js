@@ -6,6 +6,10 @@ function getProductUrl(){
 
 var update_id = 0;
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
+
 //BUTTON ACTIONS
 function addProduct(event){
 	//Set the values to update
@@ -153,20 +157,25 @@ function displayProductList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button style="padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditProduct(' + e.id + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
+		var buttonHtml = '<button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditProduct(' + e.id + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
 
 		var row = '<tr>'
 		+ '<td>' + sno + '</td>'
 		+ '<td>' + e.name + '</td>'
 		+ '<td>' + e.brandName + '</td>'
 		+ '<td>' + e.brandCategory + '</td>'
-		+ '<td>'  + e.mrp + '</td>'
+		+ '<td style="text-align:end">'  + numberWithCommas(e.mrp) + '</td>'
 		+ '<td>' + e.barcode + '</td>'
-		+ '<td>' + buttonHtml + '</td>'
+		+ '<td class="text-center supervisor-only">' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
         sno+=1;
 	}
+    console.log($("meta[name=role]").attr("content"));
+	if($("meta[name=role]").attr("content") === 'operator')
+        	{
+        	    $(".supervisor-only").hide();
+        	}
 }
 
 function displayEditProduct(id){

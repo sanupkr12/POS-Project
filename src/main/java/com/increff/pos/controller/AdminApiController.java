@@ -28,19 +28,27 @@ public class AdminApiController {
 	private UserDto dto;
 
 	@ApiOperation(value = "Adds a user")
-	@RequestMapping(path = "/api/admin/user", method = RequestMethod.POST)
+	@RequestMapping(path = "/api/supervisor/user", method = RequestMethod.POST)
 	public void addUser(@RequestBody UserForm form) throws ApiException {
 		dto.add(form);
 	}
 
+	@ApiOperation(value = "Edit users")
+	@RequestMapping(path = "/api/supervisor/user/{id}", method = RequestMethod.POST)
+	public void editUser(@RequestBody UserForm form) throws ApiException {
+		dto.update(form);
+	}
+
+
+
 	@ApiOperation(value = "Deletes a user")
-	@RequestMapping(path = "/api/admin/user/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(path = "/api/supervisor/user/{id}", method = RequestMethod.DELETE)
 	public void deleteUser(@PathVariable int id) {
 		dto.delete(id);
 	}
 
 	@ApiOperation(value = "Gets list of all users")
-	@RequestMapping(path = "/api/admin/user", method = RequestMethod.GET)
+	@RequestMapping(path = "/api/supervisor/user", method = RequestMethod.GET)
 	public List<UserData> getAllUser() {
 
 		return dto.getAll();

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.google.common.collect.Lists.reverse;
+
 @Api
 @RestController
 public class InventoryApiController {
@@ -38,7 +40,7 @@ public class InventoryApiController {
     @ApiOperation(value="Get All Inventory")
     @RequestMapping(path="/api/inventory",method=RequestMethod.GET)
     public List<InventoryData> get() throws ApiException{
-        return inventoryDto.get();
+        return reverse(inventoryDto.get());
     }
 
     @ApiOperation(value="Update Inventory")

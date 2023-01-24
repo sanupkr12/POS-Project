@@ -30,6 +30,7 @@ public abstract class AbstractUiController {
 		ModelAndView mav = new ModelAndView(page);
 		mav.addObject("info", info);
 		mav.addObject("baseUrl", baseUrl);
+		mav.addObject("role",info.getRole());
 		return mav;
 	}
 
@@ -41,9 +42,9 @@ public abstract class AbstractUiController {
 
 		boolean isSupervisor = auth.getAuthorities()
 				.stream()
-				.anyMatch(it -> it.getAuthority().equalsIgnoreCase("admin"));
+				.anyMatch(it -> it.getAuthority().equalsIgnoreCase("supervisor"));
 
-		return isSupervisor ? "admin" : "operator";
+		return isSupervisor ? "supervisor" : "operator";
 	}
 
 }

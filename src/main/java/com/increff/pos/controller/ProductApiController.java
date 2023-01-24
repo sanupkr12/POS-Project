@@ -21,6 +21,8 @@ import com.increff.pos.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import static com.google.common.collect.Lists.reverse;
+
 @Api
 @RestController
 public class ProductApiController {
@@ -51,7 +53,7 @@ public class ProductApiController {
     @ApiOperation(value = "Gets list of all Product")
     @RequestMapping(path = "/api/product", method = RequestMethod.GET)
     public List<ProductData> getAll() throws ApiException{
-        return dto.get();
+        return reverse(dto.get());
     }
 
     @ApiOperation(value = "Updates an Product")

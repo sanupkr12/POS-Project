@@ -8,9 +8,9 @@
 
 <nav th:replace="snippets.html :: name_app_navbar"></nav>
 
-<div class="container">
+<div class="container-fluid" style="padding:0rem 5rem;">
 
-  <h3 style="text-align:center;margin:2rem">Day Sales Report</h3>
+  <h3 style="margin:1.5rem 0rem;">Day Sales Report</h3>
 
 
   <div class="row">
@@ -19,12 +19,12 @@
     <div class="col-12">
       <table class="table table-striped" id="display-daySales-table">
         <thead class="thead-dark">
-        <tr>
+        <tr class="sticky-top" style="top:5rem;z-index:auto;">
           <th scope="col">S No.</th>
           <th scope="col">Date</th>
           <th scope="col">Order Count</th>
           <th scope="col">Item Count</th>
-          <th scope="col">Revenue</th>
+          <th scope="col" style="text-align:end">Revenue</th>
         </tr>
         </thead>
         <tbody>

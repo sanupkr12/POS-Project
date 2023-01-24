@@ -4,6 +4,10 @@ function getInventoryUrl(){
 	return baseUrl + "/api/inventory";
 }
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
+
 //BUTTON ACTIONS
 function addInventory(event){
 	//Set the values to update
@@ -155,19 +159,24 @@ function displayInventoryList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = ' <button style="padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
+		var buttonHtml = ' <button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
 
 
 		var row = '<tr>'
 		+ '<td>' + sno + '</td>'
 		+ '<td>' + e.barcode + '</td>'
 		+ '<td>' + e.name + '</td>'
-		+ '<td>'  + e.quantity + '</td>'
-		+ '<td>' + buttonHtml + '</td>'
+		+ '<td>'  + numberWithCommas(e.quantity) + '</td>'
+		+ '<td class="text-center supervisor-only">' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
         sno+=1;
 	}
+
+	if($("meta[name=role]").attr("content") === 'operator')
+    	{
+    	   $(".supervisor-only").hide();
+    	}
 }
 
 function displayEditInventory(barcode){

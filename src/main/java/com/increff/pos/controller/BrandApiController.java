@@ -20,6 +20,8 @@ import com.increff.pos.service.BrandService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import static com.google.common.collect.Lists.reverse;
+
 @Api
 @RestController
 public class BrandApiController {
@@ -51,7 +53,7 @@ public class BrandApiController {
 	@ApiOperation(value = "Gets list of all Brand")
 	@RequestMapping(path = "/api/brand", method = RequestMethod.GET)
 	public List<BrandData> getAll() {
-		return brandDto.getAll();
+		return reverse(brandDto.getAll());
 	}
 
 	@ApiOperation(value = "Updates an Brand")
