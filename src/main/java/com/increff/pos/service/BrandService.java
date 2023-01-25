@@ -143,6 +143,9 @@ public class BrandService {
 		return brandList;
 
 	}
+
+
+
 	public List<BrandData> getBrand(BrandReportForm form) throws ApiException {
 		List<BrandPojo> list = dao.selectBrand(form.getCategory(),form.getBrand());
 

@@ -42,6 +42,8 @@ public class SiteUiController extends AbstractUiController {
 			return mav("redirect:/ui/home");
 		}
 
+		info.setMessage("");
+
 		return mav("signup.html");
 	}
 

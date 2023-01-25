@@ -4,6 +4,8 @@ function getUserUrl(){
 	return baseUrl + "/api/supervisor/user";
 }
 
+var updatedId;
+
 //BUTTON ACTIONS
 function addUser(event){
 	//Set the values to update
@@ -56,17 +58,27 @@ function deleteUser(id){
 }
 
 function displayEditUser(id){
-    var url = getUserUrl() + "/" + id;
+
+    updatedId = id;
+
+    var url = getUserUrl() + "/" + updatedId;
 
     $.ajax({
     	   url: url,
-    	   type: 'PUT',
+    	   type: 'GET',
     	   success: function(data) {
-    	   		getUserList();
+    	   		 $("#edit-user-form input[name=email]").val(data.email);
+                 $("edit-user-form input[name=role]").val(data.role);
+
+                     $("#edit-user-modal").modal('toggle');
     	   },
     	   error: handleAjaxError
     	});
+
+
 }
+
+
 
 //UI DISPLAY METHODS
 
@@ -96,6 +108,28 @@ function createUser(){
     $('#create-user-modal').modal('toggle');
 }
 
+function handleEditUser(){
+    var url = getUserUrl() + "/" + updatedId;
+
+    var $form = $("#edit-user-form");
+    var json = toJson($form);
+    console.log(json);
+
+    $.ajax({
+        	   url: url,
+        	   type: 'POST',
+        	   data:json,
+        	   headers: {
+                      	'Content-Type': 'application/json'
+                      },
+        	   success: function() {
+                         $("#edit-user-modal").modal('toggle');
+                         getUserList();
+        	   },
+        	   error: handleAjaxError
+        	});
+
+}
 
 //INITIALIZATION CODE
 function init(){
@@ -103,6 +137,9 @@ $("#admin-link").addClass('active');
 	$('#add-user').click(addUser);
 	$('#refresh-data').click(getUserList);
 	$('#create-user').click(createUser);
+	$('#edit-user').click(handleEditUser);
+
+
 }
 
 $(document).ready(init);

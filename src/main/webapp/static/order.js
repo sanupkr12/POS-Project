@@ -163,7 +163,7 @@ function displayOrderItems(){
 }
 
 function removeFromModal(e){
-    e.target.parentElement.parentElement.remove();
+    e.target.parentElement.parentElement.parentElement.parentElement.remove();
 }
 
 
@@ -186,7 +186,8 @@ function addToOrderList(event){
     {
 
     var $tbody = $('#orderItemTable').find('tbody');
-    var buttonHtml = '<button style="padding:0.5rem;border-radius:0.3rem;" class="fa fa-sharp fa-solid fa-trash" onclick=removeFromModal(event)></button>&nbsp;'
+
+    var buttonHtml = '<button style="border:0;background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Delete" onclick=removeFromModal(event)><i class="fa fa-trash fa-lg"></i></button>&nbsp;';
         		var row = '<tr class="items">'
         		+ '<td class="new-barcode">' + barcode + '</td>'
         		+ '<td class="new-quantity" id="barcode-' + barcode + '">' + quantity + '</td>'

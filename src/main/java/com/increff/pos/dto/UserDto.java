@@ -3,6 +3,7 @@ package com.increff.pos.dto;
 import com.increff.pos.dao.UserDao;
 import com.increff.pos.model.UserData;
 import com.increff.pos.model.UserForm;
+import com.increff.pos.model.editUserForm;
 import com.increff.pos.pojo.UserPojo;
 import com.increff.pos.service.ApiException;
 import com.increff.pos.service.UserService;
@@ -56,6 +57,10 @@ public class UserDto {
         return service.get(email);
     }
 
+    public UserData getUserById(int id){
+        return convert(service.getById(id));
+    }
+
     @Transactional
     public List<UserData> getAll() {
 
@@ -73,8 +78,8 @@ public class UserDto {
     }
 
     @Transactional
-    public void update(UserForm form) throws ApiException {
-        service.update(form.getEmail(),form.getRole());
+    public void update(int id,editUserForm form) throws ApiException {
+        service.update(id,form.getEmail(),form.getRole());
     }
 
     protected static void normalize(UserPojo p) {

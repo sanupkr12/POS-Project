@@ -61,3 +61,7 @@ table { box-shadow: 1px 3px 5px #999; }
 .hide-option{
  display:none;
 }
+
+td,th{
+    vertical-align:middle;
+}

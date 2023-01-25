@@ -295,9 +295,6 @@ public class OrderDtoTest extends AbstractUnitTest {
 
         OrderData orderData = orderDto.convert(pojo);
 
-
-
-
         assertEquals(orderData.getId(),data.get(0).getId());
 
     }

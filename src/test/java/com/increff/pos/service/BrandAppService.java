@@ -16,19 +16,6 @@ public class BrandAppService extends AbstractUnitTest {
     @Autowired
     private BrandDto brandDto;
 
-//    @Test
-//    public void testAdd() throws ApiException {
-//        BrandPojo p = new BrandPojo();
-//        p.setName(" Romil Jain ");
-//        brandDto.add(p);
-//    }
-//
-//    @Test
-//    public void testNormalize() {
-//        BrandPojo p = new BrandPojo();
-//        p.setName(" Romil Jain ");
-//        brandDto.normalize(p);
-//        assertEquals("romil jain", p.getName());
-//    }
+
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.increff.pos.dto.UserDto;
+import com.increff.pos.model.editUserForm;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,10 +34,18 @@ public class AdminApiController {
 		dto.add(form);
 	}
 
-	@ApiOperation(value = "Edit users")
+	@ApiOperation(value = "Get a user by id")
+	@RequestMapping(path = "/api/supervisor/user/{id}", method = RequestMethod.GET)
+	public UserData getUserById(@PathVariable int id) throws ApiException {
+		return dto.getUserById(id);
+	}
+
+
+
+	@ApiOperation(value = "Edit user")
 	@RequestMapping(path = "/api/supervisor/user/{id}", method = RequestMethod.POST)
-	public void editUser(@RequestBody UserForm form) throws ApiException {
-		dto.update(form);
+	public void editUser(@RequestBody editUserForm form,@PathVariable int id) throws ApiException {
+		dto.update(id,form);
 	}
 
 

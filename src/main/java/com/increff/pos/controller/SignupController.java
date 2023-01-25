@@ -48,7 +48,8 @@ public class SignupController {
 
         if(!EmailValidator.getInstance().isValid(form.getEmail()))
         {
-            throw new ApiException("Invalid Email Address");
+            info.setMessage("Invalid Email Address");
+            return new ModelAndView("redirect:/site/signup");
         }
 
         if(form.getPassword().equals(""))
@@ -64,7 +65,6 @@ public class SignupController {
         }
 
         UserPojo p = service.get(form.getEmail());
-        info.setMessage("");
 
         if (p != null) {
             info.setMessage("User already exist with given credentials please login instead");

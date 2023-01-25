@@ -30,18 +30,30 @@ public class UserService {
 		dao.insert(p);
 	}
 
+	public UserPojo getById(int id){
+		UserPojo pojo = dao.getById(id);
+
+		return pojo;
+	}
+
 	@Transactional(rollbackOn = ApiException.class)
 	public UserPojo get(String email) throws ApiException {
 		return dao.select(email);
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public void update(String email,String role) throws ApiException {
-		UserPojo userPojo = new UserPojo();
+	public void update(int id,String email,String role) throws ApiException {
+		UserPojo userPojo;
+
+		if(get(email)==null)
+		{
+			throw new ApiException("No User Exist With Current Email");
+		}
+
 
 		if(info.getRole().equals("supervisor"))
 		{
-			userPojo = get(email);
+			userPojo = dao.getById(id);
 			userPojo.setRole(role);
 		}
 		else{
