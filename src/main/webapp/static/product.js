@@ -12,6 +12,7 @@ function numberWithCommas(x) {
 
 //BUTTON ACTIONS
 function addProduct(event){
+    event.preventDefault();
 	//Set the values to update
 	var $form = $("#product-create-form");
 	var json = toJson($form);
@@ -41,6 +42,7 @@ function addProduct(event){
 }
 
 function updateProduct(event){
+    event.preventDefault();
 	$('#edit-product-modal').modal('toggle');
 	//Get the ID
 	var url = getProductUrl() + "/" + update_id;
@@ -102,11 +104,39 @@ var processCount = 0;
 
 function processData(){
 	var file = $('#productFile')[0].files[0];
+
+	if(!file)
+    {
+        handleErrorNotification("No file detected");
+        return;
+    }
+
 	readFileData(file, readFileDataCallback);
 }
 
 function readFileDataCallback(results){
 	fileData = results.data;
+	var fields = results.meta.fields;
+
+    if(fields.length!=5)
+    {
+        var row = {};
+        row.error = "Incorrect fields provided";
+        errorData.push(row);
+        $("#download-errors").show();
+        return;
+    }
+    else{
+        if(fields[0]!='name' || fields[1]!='brandName' || fields[2]!='brandCategory' || fields[3]!='barcode' || fields[4]!='mrp')
+        {
+            var row = {};
+            row.error = "Incorrect headers provided";
+            errorData.push(row);
+            $("#download-errors").show();
+            return;
+        }
+    }
+
 	uploadRows();
 }
 
@@ -115,12 +145,28 @@ function uploadRows(){
 	updateUploadDialog();
 	//If everything processed then return
 	if(processCount==fileData.length){
-		return;
+	    getProductList();
+		if(errorData.length==0)
+        {
+            $.notify("Brand File uploaded successfully","success");
+            $('#upload-product-modal').modal('toggle');
+
+            return;
+        }
+        $("#download-errors").show();
+        return;
 	}
 	
 	//Process next row
 	var row = fileData[processCount];
 	processCount++;
+
+	if(row.__parsed_extra != null) {
+        row.error="Extra Fields exist.";
+        errorData.push(row);
+        uploadRows();
+        return;
+    }
 	
 	var json = JSON.stringify(row);
 	var url = getProductUrl();
@@ -137,6 +183,7 @@ function uploadRows(){
 	   		uploadRows();  
 	   },
 	   error: function(response){
+
 	   		row.error=response.responseText
 	   		errorData.push(row);
 	   		uploadRows();
@@ -162,10 +209,10 @@ function displayProductList(data){
 		var row = '<tr>'
 		+ '<td>' + sno + '</td>'
 		+ '<td>' + e.name + '</td>'
+		+ '<td>' + e.barcode + '</td>'
 		+ '<td>' + e.brandName + '</td>'
 		+ '<td>' + e.brandCategory + '</td>'
-		+ '<td style="text-align:end">'  + numberWithCommas(e.mrp) + '</td>'
-		+ '<td>' + e.barcode + '</td>'
+		+ '<td style="text-align:end">'  + numberWithCommas(e.mrp.toFixed(2)) + '</td>'
 		+ '<td class="text-center supervisor-only">' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
@@ -219,7 +266,8 @@ function updateFileName(){
 }
 
 function displayUploadData(){
- 	resetUploadDialog(); 	
+ 	resetUploadDialog();
+ 	$('#download-errors').hide();
 	$('#upload-product-modal').modal('toggle');
 }
 
@@ -234,7 +282,7 @@ function displayProduct(data){
 }
 
 function createProduct(){
-    $("#product-create-form input[name=name]").val("");
+        $("#product-create-form input[name=name]").val("");
     	$("#product-create-form input[name=barcode]").val("");
     	$("#product-create-form input[name=brandName]").val("");
     	$("#product-create-form input[name=brandCategory]").val("");
@@ -245,15 +293,15 @@ function createProduct(){
 //INITIALIZATION CODE
 function init(){
     $("#product-link").addClass('active');
-	$('#add-product').click(addProduct);
-	$('#update-product').click(updateProduct);
+	$('#product-create-form').submit(addProduct);
+	$('#product-edit-form').submit(updateProduct);
 	$('#refresh-data').click(getProductList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
     $('#productFile').on('change', updateFileName);
     $('#create-product').click(createProduct);
-
+    $('#download-errors').hide();
 
 }
 

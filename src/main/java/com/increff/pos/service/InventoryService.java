@@ -24,6 +24,21 @@ public class InventoryService {
     @Autowired
     private BrandService brandService;
 
+    @Transactional(rollbackOn = ApiException.class)
+    public InventoryPojo create(InventoryForm form) throws ApiException {
+
+        if(dao.select(form.getBarcode())!=null)
+        {
+            throw new ApiException("Inventory already exists");
+        }
+
+        InventoryPojo p = convert(form);
+        dao.insert(p);
+
+
+        return p;
+    }
+
 
     @Transactional
     public InventoryPojo get(String barcode) throws ApiException {
@@ -42,9 +57,7 @@ public class InventoryService {
 
     @Transactional
     public List<InventoryPojo> get() throws ApiException {
-
         List<InventoryPojo> list = dao.selectAll();
-
         return list;
     }
 
@@ -55,24 +68,34 @@ public class InventoryService {
         return list;
     }
 
-    @Transactional(rollbackOn = ApiException.class)
-    public InventoryPojo create(InventoryForm form) throws ApiException {
 
-        if(dao.select(form.getBarcode())!=null)
+
+    @Transactional(rollbackOn = ApiException.class)
+    public InventoryPojo update(InventoryForm form) throws ApiException{
+
+        InventoryPojo p1 = dao.select(form.getBarcode());
+
+
+        if(p1==null)
         {
-            throw new ApiException("Inventory already exists");
+            throw new ApiException("Inventory does not exist");
         }
 
-        InventoryPojo p = convert(form);
-        dao.insert(p);
 
 
-        return p;
+
+
+        int newQuantity = p1.getQuantity() + form.getQuantity();
+        p1.setQuantity(newQuantity);
+
+        return p1;
+
+
+
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public InventoryPojo update (InventoryForm form) throws ApiException{
-
+    public InventoryPojo replaceInventory (InventoryForm form) throws ApiException{
 
         if(dao.select(form.getBarcode())==null)
         {
@@ -83,8 +106,8 @@ public class InventoryService {
 
         InventoryPojo p1 = dao.select(form.getBarcode());
 
-        int newQuantity = p1.getQuantity() + form.getQuantity();
-        p1.setQuantity(newQuantity);
+
+        p1.setQuantity(form.getQuantity());
 
         return p1;
 

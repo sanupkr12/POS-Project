@@ -64,9 +64,8 @@ public class ProductDto {
 
         ProductPojo pojo = service.add(prod);
 
-
         InventoryForm inventoryForm = new InventoryForm();
-        inventoryForm.setBarcode(p.getBarcode());
+        inventoryForm.setBarcode(prod.getBarcode());
         inventoryForm.setQuantity(0);
         inventoryService.create(inventoryForm);
 

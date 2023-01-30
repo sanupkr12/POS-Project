@@ -16,10 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 @Component
 public class ReportDto {
@@ -47,7 +44,7 @@ public class ReportDto {
 
     }
 
-    public List<OrderItemData> getSales(SalesReportForm salesReportForm) throws ApiException, FileNotFoundException {
+    public List<SalesReportData> getSales(SalesReportForm salesReportForm) throws ApiException, FileNotFoundException {
 
         if(salesReportForm.getStartDate()==null)
         {
@@ -69,6 +66,11 @@ public class ReportDto {
 
         List<BrandPojo> data =  brandService.getSales(salesReportForm);
         List<OrderItemData> list = new ArrayList<>();
+
+        HashMap<Integer,Double> mapTotal = new HashMap<>();
+        HashMap<Integer,Integer> mapQuantity = new HashMap<>();
+
+
         for(BrandPojo p:data)
         {
             List<ProductPojo> d = productService.getByBrandId(p.getId());
@@ -82,8 +84,20 @@ public class ReportDto {
                 {
                     LocalDate date = item.getDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate();
 
-                    if(date.compareTo(startDate)>0 && date.compareTo(endDate)<0)
+                    if(date.compareTo(startDate)>=0 && date.compareTo(endDate)<=0)
                     {
+                        if(mapTotal.containsKey(p.getId()))
+                        {
+                            double prevTotal = mapTotal.get(p.getId());
+                            mapTotal.put(p.getId(),prevTotal + item.getTotal());
+
+                            int prevQuantity = mapQuantity.get(p.getId());
+                            mapQuantity.put(p.getId(),prevQuantity + item.getQuantity());
+                        }
+                        else{
+                            mapTotal.put(p.getId(),item.getTotal());
+                            mapQuantity.put(p.getId(),item.getQuantity());
+                        }
 
                         list.add(item);
                     }
@@ -92,8 +106,26 @@ public class ReportDto {
                 }
             }
         }
+        List<SalesReportData> salesList = new ArrayList<>();
 
-        return list;
+       for(BrandPojo p:data)
+       {
+
+           if(mapTotal.containsKey(p.getId()))
+           {
+
+               SalesReportData item = new SalesReportData();
+               item.setCategory(p.getCategory());
+               item.setBrand(p.getName());
+               item.setTotal(mapTotal.get(p.getId()));
+               item.setQuantity(mapQuantity.get(p.getId()));
+
+               salesList.add(item);
+           }
+
+       }
+
+        return salesList;
 
 
     }
@@ -115,9 +147,7 @@ public class ReportDto {
 
     public List<BrandData> getBrand(BrandReportForm brandReportForm) throws FileNotFoundException, ApiException {
         List<BrandData> data =  brandService.getBrand(brandReportForm);
-
         return data;
-
     }
 
     @Scheduled(cron = "0 0 0 * * ?")
@@ -160,26 +190,6 @@ public class ReportDto {
 
     }
 
-    public static Date getCurrentUtcTime() throws ParseException {
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
-
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        SimpleDateFormat ldf = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
-
-        Date d1 = null;
-        try {
-
-            d1 = ldf.parse( sdf.format(new Date()) );
-        }
-        catch (java.text.ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-        }
-        return d1;
-    }
 
     public DaySalesData convert(DaySalesPojo p)
     {

@@ -17,10 +17,10 @@ function displayDaySales(data){
 
 		var row = '<tr>'
 		+ '<td>' + sno + '</td>'
-		+ '<td>' + dateIST + '</td>'
+		+ '<td>' + String(dateIST).slice(0,25) + '</td>'
 		+ '<td>' + e.orderCount + '</td>'
 		+ '<td>'  + e.itemCount + '</td>'
-		+ '<td class="text-end">' + numberWithCommas(e.revenue) + '</td>'
+		+ '<td class="text-right">' + numberWithCommas(e.revenue.toFixed(2)) + '</td>'
 		+ '</tr>';
         $tbody.append(row);
         sno+=1;

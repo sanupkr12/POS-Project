@@ -6,6 +6,7 @@ function getBrandUrl(){
 
 //BUTTON ACTIONS
 function addBrand(event){
+    event.preventDefault();
 	//Set the values to update
 	var $form = $("#brand-form");
 	var json = toJson($form);
@@ -35,6 +36,7 @@ function addBrand(event){
 }
 
 function updateBrand(event){
+    event.preventDefault();
 	$('#edit-Brand-modal').modal('toggle');
 	//Get the ID
 	var id = $("#Brand-edit-form input[name=id]").val();	
@@ -97,12 +99,39 @@ function processData(){
 
 	var file = $('#brandFile')[0].files[0];
 
+	if(!file)
+    {
+        handleErrorNotification("No file detected");
+        return;
+    }
+
 	readFileData(file, readFileDataCallback);
 }
 
 function readFileDataCallback(results){
+
 	fileData = results.data;
-	console.log(fileData);
+	var fields = results.meta.fields;
+
+	if(fields.length!=2)
+	{
+	    var row = {};
+	    row.error = "Incorrect fields provided";
+	    errorData.push(row);
+	    $("#download-errors").show();
+	    return;
+	}
+	else{
+	    if(fields[0]!='name' || fields[1]!='category')
+	    {
+	        var row = {};
+            row.error = "Incorrect headers provided";
+            errorData.push(row);
+            $("#download-errors").show();
+            return;
+	    }
+	}
+
 	uploadRows();
 }
 
@@ -111,13 +140,31 @@ function uploadRows(){
 	updateUploadDialog();
 	//If everything processed then return
 	if(processCount==fileData.length){
-	    location.reload();
+	    getBrandList();
+
+	    if(errorData.length===0)
+	    {
+	        $.notify("Brand File uploaded successfully","success");
+	        $('#upload-brand-modal').modal('toggle');
+	        return;
+	    }
+
+
+	    $("#download-errors").show();
 		return;
 	}
 	
 	//Process next row
 	var row = fileData[processCount];
 	processCount++;
+
+
+	if(row.__parsed_extra != null) {
+        row.error="Extra Fields exist.";
+        errorData.push(row);
+        uploadRows();
+        return;
+    }
 	
 	var json = JSON.stringify(row);
 
@@ -137,7 +184,8 @@ function uploadRows(){
 	   		uploadRows();  
 	   },
 	   error: function(response){
-	   		row.error=response.responseText
+            var data = JSON.parse(response.responseText);
+	   		row.error=data["message"];
 	   		errorData.push(row);
 	   		uploadRows();
 	   }
@@ -215,7 +263,8 @@ function updateFileName(){
 }
 
 function displayUploadData(){
- 	resetUploadDialog(); 	
+ 	resetUploadDialog();
+ 	$('#download-errors').hide();
 	$('#upload-brand-modal').modal('toggle');
 }
 
@@ -236,18 +285,19 @@ function createBrand(){
 //INITIALIZATION CODE
 function init(){
     $("#brand-link").addClass('active');
-	$('#update-Brand').click(updateBrand);
+	$('#brand-edit-form').submit(updateBrand);
 	$('#refresh-data').click(getBrandList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
     $('#BrandFile').on('change', updateFileName);
     $('#add-brand').click(createBrand);
-    $('#create-brand').click(addBrand);
+    $('#brand-form').submit(addBrand);
     $('#brandFile').on('change',function(){
         var fileName = $(this).val();
         $('#brandFileName').html(fileName);
     });
+
 
 
 }

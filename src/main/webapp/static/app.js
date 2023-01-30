@@ -12,12 +12,18 @@ function toJson($form){
     return json;
 }
 
+function handleErrorNotification(message){
+
+            $('.notifyjs-wrapper').trigger('notify-hide');
+            $.notify.defaults( {clickToHide:true,autoHide:false} );
+            $.notify(message + " ❌️",'error');
+
+}
 
 function handleAjaxError(response){
 	var response = JSON.parse(response.responseText);
-	$.notify.defaults( {clickToHide:true,autoHide:false} );
+	handleErrorNotification(response.message);
 
-	$.notify(response.message + " ❌️",'error');
 }
 
 function readFileData(file, callback){
@@ -54,5 +60,30 @@ function writeFileData(arr){
     tempLink.setAttribute('download', 'download.tsv');
     tempLink.click(); 
 }
+
+function numberValidation(){
+    var ele = document.querySelectorAll('.num-input');
+        if(ele.length===0)
+        {
+            return;
+        }
+        else{
+            for(var i=0;i<ele.length;i++)
+            {
+                ele[i].onkeypress = function (evt) {
+                    if (evt.which != 8 && evt.which != 0 && evt.which!=46 && evt.which < 48 || evt.which > 57)
+                    {
+                        evt.preventDefault();
+                    }
+                 };
+            }
+        }
+}
+
+function init(){
+    numberValidation();
+}
+
+$(document).ready(init);
 
 

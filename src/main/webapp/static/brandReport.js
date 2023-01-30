@@ -48,8 +48,21 @@ function downloadBrand(event){
 }
 
 function displayBrandList(data){
+
+    if(data.length===0)
+    {
+        $.notify("No Results to display","info");
+        return;
+    }
+    $("#display-brand-table").show();
 	var $tbody = $('#display-brand-table').find('tbody');
 	$tbody.empty();
+
+	if(data.length===0)
+	{
+
+
+	}
 	var j=1;
 	for(var i in data){
 		var e = data[i];
@@ -135,23 +148,26 @@ function fillBrandOption(){
 function getBrandByCategory(event){
     var category = event.target.value;
 
+//
+//    var brand = $("#brand").val();
+//
+//    if(category==='Select Category')
+//    {
+//
+//    }
 
-    var brand = $("#brand").val();
-
-
-
-    if(category==='Select Category' && brand==='Select Brand')
-    {
-        fillBrandOption();
-        fillCategoryOption();
-        return;
-    }
-
-
-    if(brand!=='Select Brand')
-    {
-        return;
-    }
+//    if(category==='Select Category' && brand==='Select Brand')
+//    {
+//        fillBrandOption();
+//        fillCategoryOption();
+//        return;
+//    }
+//
+//
+//    if(brand!=='Select Brand')
+//    {
+//        return;
+//    }
 
     $.ajax({
          url:$("meta[name=baseUrl]").attr("content") + "/api/brand/category/" + category,
@@ -221,11 +237,12 @@ function getCategoryByBrand(event){
 
 
 function init(){
+    $("#display-brand-table").hide();
     $("#download-brand").click(downloadBrand);
     fillCategoryOption();
-    fillBrandOption();
+//    fillBrandOption();
     $("#category").on('change',getBrandByCategory);
-    $("#brand").on('change',getCategoryByBrand);
+//    $("#brand").on('change',getCategoryByBrand);
 
 }
 

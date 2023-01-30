@@ -66,7 +66,6 @@ public class InventoryDto {
         for (InventoryPojo l:list){
             data.add(convert(l));
         }
-
         return data;
     }
 
@@ -109,6 +108,25 @@ public class InventoryDto {
         }
 
         return convert(service.update(form));
+    }
+
+    public InventoryData replaceInventory (InventoryForm form) throws ApiException{
+        if(form.getBarcode().equals(""))
+        {
+            throw new ApiException("Barcode cannot be empty");
+        }
+
+        if(form.getQuantity()<0)
+        {
+            throw new ApiException("Quantity cannot be negative");
+        }
+
+        if(!productService.checkAny(form.getBarcode()))
+        {
+            throw new ApiException("No Product exists with current barcode");
+        }
+
+        return convert(service.replaceInventory(form));
     }
 
 

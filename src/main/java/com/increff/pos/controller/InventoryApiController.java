@@ -17,36 +17,37 @@ import static com.google.common.collect.Lists.reverse;
 
 @Api
 @RestController
+@RequestMapping(value="/api/inventory")
 public class InventoryApiController {
     @Autowired
     private InventoryDto inventoryDto;
 
 
-    @ApiOperation(value="Add New Inventory")
-    @RequestMapping(path="/api/inventory",method = RequestMethod.POST)
-    public void create(@RequestBody InventoryForm form) throws ApiException {
-        inventoryDto.create(form);
+    @ApiOperation(value="Update New Inventory")
+    @RequestMapping(path="",method = RequestMethod.POST)
+    public void updateInventory(@RequestBody InventoryForm form) throws ApiException {
+        inventoryDto.update(form);
 
     }
 
 
 
     @ApiOperation(value="Get Inventory by barcode")
-    @RequestMapping(path="/api/inventory/{barcode}",method=RequestMethod.GET)
+    @RequestMapping(path="/{barcode}",method=RequestMethod.GET)
     public InventoryData get(@PathVariable String barcode) throws ApiException{
         return inventoryDto.get(barcode);
     }
 
     @ApiOperation(value="Get All Inventory")
-    @RequestMapping(path="/api/inventory",method=RequestMethod.GET)
+    @RequestMapping(path="",method=RequestMethod.GET)
     public List<InventoryData> get() throws ApiException{
         return reverse(inventoryDto.get());
     }
 
     @ApiOperation(value="Update Inventory")
-    @RequestMapping(path="/api/inventory",method=RequestMethod.PUT)
+    @RequestMapping(path="",method=RequestMethod.PUT)
     public void update(@RequestBody InventoryForm form) throws ApiException{
-        inventoryDto.update(form);
+        inventoryDto.replaceInventory(form);
     }
 
 

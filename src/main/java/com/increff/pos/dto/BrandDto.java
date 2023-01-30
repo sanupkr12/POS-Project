@@ -20,8 +20,6 @@ import static com.google.common.collect.Lists.reverse;
 
 @Component
 public class BrandDto {
-            @Autowired
-            private ProductService productService;
 
             @Autowired
             private BrandService brandService;

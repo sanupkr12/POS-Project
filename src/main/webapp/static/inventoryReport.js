@@ -9,7 +9,7 @@ function numberWithCommas(x) {
 }
 
 function downloadInventory(event){
-event.preventDefault();
+    event.preventDefault();
     var category = $("#category").val();
     var brand = $("#brand").val();
 
@@ -50,6 +50,16 @@ event.preventDefault();
 }
 
 function displayInventoryList(data){
+
+    if(data.length===0)
+    {
+        $.notify("No Results to display","info");
+        return;
+    }
+
+    $("#display-inventory-table").show();
+
+
     var sno = 1;
 	var $tbody = $('#display-inventory-table').find('tbody');
 	$tbody.empty();
@@ -130,20 +140,20 @@ function fillBrandOption(){
 
 function getBrandByCategory(event){
     var category = event.target.value;
-
-    var brand = $("#brand").val();
-
-    if(category==='Select Category' && brand==='Select Brand')
-        {
-            fillBrandOption();
-            fillCategoryOption();
-            return;
-        }
-
-            if(brand!=='Select Brand')
-            {
-                return;
-            }
+//
+//    var brand = $("#brand").val();
+//
+//    if(category==='Select Category' && brand==='Select Brand')
+//        {
+//            fillBrandOption();
+//            fillCategoryOption();
+//            return;
+//        }
+//
+//            if(brand!=='Select Brand')
+//            {
+//                return;
+//            }
 
     $.ajax({
          url:$("meta[name=baseUrl]").attr("content") + "/api/brand/category/" + category,
@@ -212,11 +222,12 @@ function getCategoryByBrand(event){
 
 
 function init(){
+    $("#display-inventory-table").hide();
     $("#download-inventory").click(downloadInventory);
     fillCategoryOption();
-    fillBrandOption();
+//    fillBrandOption();
     $("#category").on('change',getBrandByCategory);
-    $("#brand").on('change',getCategoryByBrand);
+//    $("#brand").on('change',getCategoryByBrand);
 
 }
 

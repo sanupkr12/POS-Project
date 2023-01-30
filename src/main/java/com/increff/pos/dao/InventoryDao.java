@@ -21,15 +21,14 @@ public class InventoryDao extends AbstractDao{
     @PersistenceContext
     private EntityManager em;
 
+    @Transactional
     public InventoryPojo select(String barcode){
 
         TypedQuery<InventoryPojo> query = getQuery(select_by_barcode,InventoryPojo.class);
 
         query.setParameter("barcode",barcode);
 
-        InventoryPojo p =  getSingle(query);
-
-        return p;
+        return getSingle(query);
     }
 
     @Transactional

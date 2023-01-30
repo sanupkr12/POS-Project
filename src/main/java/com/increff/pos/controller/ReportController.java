@@ -20,6 +20,7 @@ import java.util.List;
 
 @Api
 @RestController
+@RequestMapping(value="/api/report")
 public class ReportController {
 
     @Autowired
@@ -28,27 +29,27 @@ public class ReportController {
 
 
     @ApiOperation(value="Generate Inventory Report")
-    @RequestMapping(path = "/api/report/inventory",method = RequestMethod.POST)
+    @RequestMapping(path = "/inventory",method = RequestMethod.POST)
     public List<InventoryData> generateInventory(@RequestBody InventoryReportForm inventoryReportForm) throws ApiException, FileNotFoundException {
 
         return reportDto.getInventory(inventoryReportForm);
     }
 
     @ApiOperation(value="Generate Brand Report")
-    @RequestMapping(path = "/api/report/brand",method = RequestMethod.POST)
+    @RequestMapping(path = "/brand",method = RequestMethod.POST)
     public List<BrandData> generateBrand(@RequestBody BrandReportForm brandReportForm) throws ApiException, FileNotFoundException {
         return reportDto.getBrand(brandReportForm);
     }
 
 
     @ApiOperation(value="Generate Sales Report")
-    @RequestMapping(path = "/api/report/sales",method = RequestMethod.POST)
-    public List<OrderItemData> generateSales(@RequestBody SalesReportForm salesReportForm) throws ApiException, FileNotFoundException {
+    @RequestMapping(path = "/sales",method = RequestMethod.POST)
+    public List<SalesReportData> generateSales(@RequestBody SalesReportForm salesReportForm) throws ApiException, FileNotFoundException {
         return reportDto.getSales(salesReportForm);
     }
 
     @ApiOperation(value="Generate Per Day Sales Report")
-    @RequestMapping(path = "/api/report/daySales",method = RequestMethod.GET)
+    @RequestMapping(path = "/daySales",method = RequestMethod.GET)
     public List<DaySalesData> generateDaySales() throws ApiException, FileNotFoundException, ParseException {
         return reportDto.getDaySalesInfo();
     }

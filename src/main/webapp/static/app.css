@@ -65,3 +65,7 @@ table { box-shadow: 1px 3px 5px #999; }
 td,th{
     vertical-align:middle;
 }
+
+.dropdown-toggle::after {
+    vertical-align:0.15em;
+}

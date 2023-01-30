@@ -3,6 +3,7 @@ package com.increff.pos.dto;
 import com.increff.pos.dao.OrderDao;
 import com.increff.pos.dao.OrderItemDao;
 import com.increff.pos.model.*;
+import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.OrderItemPojo;
 import com.increff.pos.pojo.OrderPojo;
 import com.increff.pos.service.ApiException;
@@ -53,17 +54,21 @@ public class OrderDto {
     private OrderService service;
 
     @Autowired
+    private ProductService productService;
+
+    @Autowired
     private RestTemplate restTemplate;
 
 
     @Transactional(rollbackOn = ApiException.class)
     public List<OrderItemData> add(List<OrderForm> orderList) throws ApiException, ParseException, DocumentException, IOException {
 
-        for(OrderForm form:orderList){
+        for (OrderForm form : orderList) {
+            ProductData data = productService.get(form.getBarcode());
+            InventoryPojo pojo = inventoryService.get(form.getBarcode());
 
-            if(inventoryService.checkForInsufficientInventory(form))
-            {
-                throw new ApiException("Insufficient Inventory");
+            if (form.getQuantity()>pojo.getQuantity()) {
+                throw new ApiException("Insufficient Inventory for " + data.getName() + " only " + pojo.getQuantity() + " items left");
             }
 
         }
@@ -118,12 +123,6 @@ public class OrderDto {
     public OrderItemData getByItemId(int id) throws ApiException {
         return service.getByItemId(id);
     }
-
-
-//    public List<OrderItemData> getByProductId(int productId) throws ApiException {
-//        return service.getByProductId(productId);
-//    }
-
 
     @Transactional(rollbackOn = ApiException.class)
     public OrderItemData update(EditOrderForm form, int id) throws ApiException, ParseException {

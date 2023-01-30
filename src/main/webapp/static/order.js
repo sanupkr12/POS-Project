@@ -34,14 +34,32 @@ function addOrder(event){
     var orderItems = [];
     let orderList = document.querySelectorAll('.items');
 
+    if(orderList.length===0)
+    {
+        handleErrorNotification("order cannot be empty");
+        return;
+    }
+
     for(var i=0;i<orderList.length;i++)
     {
         let item = orderList[i];
 
         var barcode = item.querySelector(".new-barcode").innerText;
-        var quantity =  parseInt(item.querySelector(".new-quantity").innerText);
-        var price = parseInt(item.querySelector(".new-sellingPrice").innerText);
 
+        var quantity =  parseInt(item.querySelector(".new-quantity").value);
+        var price = parseInt(item.querySelector(".new-sellingPrice").value);
+
+        if(quantity<=0)
+        {
+            handleErrorNotification("Quantity cannot be negative");
+            return;
+        }
+
+        if(price<=0)
+        {
+            handleErrorNotification("Price cannot be negative");
+            return;
+        }
         var orderItem = {};
         orderItem["barcode"] = barcode;
         orderItem["quantity"] = quantity;
@@ -49,11 +67,7 @@ function addOrder(event){
 
         orderItems.push(orderItem);
     }
-
     var json = JSON.stringify(orderItems);
-
-
-
     var url = getOrderUrl();
 
     $.ajax({
@@ -106,8 +120,8 @@ function displayOrders(data){
                var buttonHtml = '<a style="background-color:transparent;border:0;" title="Details"  href="http://localhost:9000/pos/ui/order/' + e.id + '"><img style="height:1.6rem;width:1.6rem;" src="' + $("meta[name=baseUrl]").attr("content") + "/static/info.png" + '"></a>'
     		var row ='<tr>'
     		+ '<td>' + e.id + '</td>'
-    		+ '<td>' + dateIST + '</td>'
-    		+ '<td style="text-align:end">'  + numberWithCommas(e.total) + '</td>'
+    		+ '<td>' + String(dateIST).slice(0,25) + '</td>'
+    		+ '<td style="text-align:end">'  + numberWithCommas(e.total.toFixed(2)) + '</td>'
     		+ '<td class="text-center">'  + buttonHtml + '</td>'
     		+ '</tr>';
             $tbody.append(row);
@@ -173,9 +187,12 @@ function addToOrderList(event){
     var quantity = $('#order-create-form input[name=quantity]').val();
     var sellingPrice = $('#order-create-form input[name=sellingPrice]').val();
 
-    if(barcode==='' || quantity==='' || sellingPrice===0)
+
+
+    if(barcode==='' || quantity==='' || quantity<=0 || sellingPrice==='' || sellingPrice<=0)
     {
-       alert('Invalid Data Entry');
+       handleErrorNotification('Invalid Data Entry');
+       return;
     }
 
     var ele = document.querySelector(`#barcode-${barcode}`);
@@ -190,8 +207,8 @@ function addToOrderList(event){
     var buttonHtml = '<button style="border:0;background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Delete" onclick=removeFromModal(event)><i class="fa fa-trash fa-lg"></i></button>&nbsp;';
         		var row = '<tr class="items">'
         		+ '<td class="new-barcode">' + barcode + '</td>'
-        		+ '<td class="new-quantity" id="barcode-' + barcode + '">' + quantity + '</td>'
-        		+ '<td class="new-sellingPrice">' + sellingPrice + '</td>'
+        		+ '<td id="barcode-' + barcode + '"><input type="number"  class="w-50 new-quantity" step="1" min="1" value="' + quantity + '"></td>'
+        		+ '<td ><input type="number" step="0.01" min="1" class="w-50 new-sellingPrice" value="' + sellingPrice + '"></td>'
         		+ '<td>' + buttonHtml + '</td>'
         		+ '</tr>';
     $tbody.append(row);

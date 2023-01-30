@@ -133,7 +133,6 @@ function handleEditUser(){
 
 //INITIALIZATION CODE
 function init(){
-$("#admin-link").addClass('active');
 	$('#add-user').click(addUser);
 	$('#refresh-data').click(getUserList);
 	$('#create-user').click(createUser);

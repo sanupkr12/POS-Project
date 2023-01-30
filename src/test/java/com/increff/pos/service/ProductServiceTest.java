@@ -1,5 +1,6 @@
 package com.increff.pos.service;
 
+import com.increff.pos.model.InventoryForm;
 import com.increff.pos.model.ProductData;
 import com.increff.pos.model.ProductForm;
 import com.increff.pos.pojo.BrandPojo;
@@ -23,6 +24,9 @@ public class ProductServiceTest extends AbstractUnitTest{
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private InventoryService inventoryService;
 
     @Test
     public void testAdd() throws ApiException {
@@ -112,6 +116,15 @@ public class ProductServiceTest extends AbstractUnitTest{
 
     }
 
+    @Test
+    public void testCheckAny() throws ApiException {
+        BrandPojo brandPojo = generateBrand("speakers","jabra");
+
+        ProductPojo productPojo1 = createProduct(brandPojo,14000,"a1","jabra high end speaker");
+
+        assertEquals(productService.checkAny("a100"),false);
+    }
+
     public ProductPojo createProduct(BrandPojo brand,double mrp,String barcode,String productName) throws ApiException {
 
         ProductPojo p = new ProductPojo();
@@ -122,6 +135,13 @@ public class ProductServiceTest extends AbstractUnitTest{
 
 
         ProductPojo productPojo = productService.add(p);
+
+        InventoryForm form = new InventoryForm();
+
+        form.setBarcode(p.getBarcode());
+        form.setQuantity(0);
+
+        inventoryService.create(form);
 
         return productPojo;
     }

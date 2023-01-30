@@ -79,7 +79,7 @@ function displayOrders(data){
     		+ '<td>' + e.barcode + '</td>'
     		+ '<td>' + e.productName + '</td>'
     		+ '<td>' + numberWithCommas(e.quantity) + '</td>'
-    		+ '<td style="text-align:end">'  + numberWithCommas(e.total) + '</td>'
+    		+ '<td style="text-align:end">'  + numberWithCommas(e.total.toFixed(2)) + '</td>'
     		+ '<td>' + dateIST + '</td>'
     		+ '<td>' + buttonHtml + '</td>'
     		+ '</tr>';

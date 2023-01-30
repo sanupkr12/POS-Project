@@ -22,6 +22,9 @@ public class ProductService {
     @Autowired
     private BrandService brandService;
 
+    @Autowired
+    private InventoryService inventoryService;
+
 
     @Transactional(rollbackOn = ApiException.class)
     public ProductPojo add(ProductPojo prod) throws ApiException{
