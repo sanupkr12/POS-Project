@@ -13,10 +13,32 @@ function numberWithCommas(x) {
 //BUTTON ACTIONS
 function addProduct(event){
     event.preventDefault();
-	//Set the values to update
-	var $form = $("#product-create-form");
-	var json = toJson($form);
 
+    var $form = $("#product-create-form");
+	//Set the values to update
+	var name = $("#product-create-form input[name='name']").val();
+	var barcode = $("#product-create-form input[name='barcode']").val();
+	var mrp = $("#product-create-form input[name='mrp']").val();
+	var brandName = $("#inputBrandName").val();
+	var brandCategory = $("#inputCategory").val();
+
+	if(brandName==='Select Brand' || brandCategory==='Select Category')
+	{
+	    handleErrorNotification("Invalid Brand or Category");
+	    return;
+	}
+
+	var product = {};
+
+	product["name"] = name;
+	product["barcode"] = barcode;
+	product["mrp"] = mrp;
+	product["brandName"] = brandName;
+	product["brandCategory"] = brandCategory;
+
+	var json = JSON.stringify(product);
+
+    console.log(json);
 
 	var url = getProductUrl();
 
@@ -29,7 +51,7 @@ function addProduct(event){
        },	   
 	   success: function(response) {
 	        $('#create-product-modal').modal('toggle');
-	        $.notify("Product has been added successfully","success");
+	        handleSuccessNotification("Product has been added successfully");
 	   		getProductList();  
 	   },
 	   error: function(response){
@@ -42,14 +64,35 @@ function addProduct(event){
 }
 
 function updateProduct(event){
-    event.preventDefault();
-	$('#edit-product-modal').modal('toggle');
 	//Get the ID
 	var url = getProductUrl() + "/" + update_id;
 
-	//Set the values to update
-	var $form = $("#product-edit-form");
-	var json = toJson($form);
+        //Set the values to update
+        var $form = $("#product-edit-form");
+
+    	//Set the values to update
+    	var name = $("#product-edit-form input[name='name']").val();
+    	var barcode = $("#product-edit-form input[name='barcode']").val();
+    	var mrp = $("#product-edit-form input[name='mrp']").val();
+    	var brandName = $("#editInputBrandName").val();
+    	var brandCategory = $("#editInputCategory").val();
+
+    	if(brandName==='Select Brand' || brandCategory==='Select Category')
+    	{
+    	    handleErrorNotification("Invalid Brand or Category");
+    	    return;
+    	}
+
+    	var product = {};
+
+    	product["name"] = name;
+    	product["barcode"] = barcode;
+    	product["mrp"] = mrp;
+    	product["brandName"] = brandName;
+    	product["brandCategory"] = brandCategory;
+
+    	var json = JSON.stringify(product);
+
 
 	$.ajax({
 	   url: url,
@@ -59,10 +102,15 @@ function updateProduct(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	        $.notify("Product has been updated successfully","success");
+
+	        handleSuccessNotification("Product Updated Successfully");
+	        $('#edit-product-modal').modal('toggle');
 	   		getProductList();   
 	   },
-	   error: handleAjaxError
+	   error: function(response){
+
+	        handleAjaxError(response);
+	   }
 	});
 
 	return false;
@@ -116,6 +164,18 @@ function processData(){
 
 function readFileDataCallback(results){
 	fileData = results.data;
+
+	if(fileData.length===0)
+    {
+        handleErrorNotification("Empty tsv");
+        return;
+    }
+	if(fileData.length>5000)
+    {
+        handleErrorNotification("Number of entry greater than 5000");
+        return;
+    }
+
 	var fields = results.meta.fields;
 
     if(fields.length!=5)
@@ -148,7 +208,7 @@ function uploadRows(){
 	    getProductList();
 		if(errorData.length==0)
         {
-            $.notify("Brand File uploaded successfully","success");
+            handleSuccessNotification("Brand File uploaded successfully");
             $('#upload-product-modal').modal('toggle');
 
             return;
@@ -161,12 +221,12 @@ function uploadRows(){
 	var row = fileData[processCount];
 	processCount++;
 
-	if(row.__parsed_extra != null) {
-        row.error="Extra Fields exist.";
-        errorData.push(row);
-        uploadRows();
-        return;
-    }
+//	if(row.__parsed_extra != null) {
+//        row.error="Extra Fields exist.";
+//        errorData.push(row);
+//        uploadRows();
+//        return;
+//    }
 	
 	var json = JSON.stringify(row);
 	var url = getProductUrl();
@@ -262,8 +322,146 @@ function updateUploadDialog(){
 function updateFileName(){
 	var $file = $('#productFile');
 	var fileName = $file.val();
+	fileName = fileName.split("\\").pop();
 	$('#productFileName').html(fileName);
 }
+
+function fillBrandOption(){
+
+
+    $.ajax({
+        url:$("meta[name=baseUrl]").attr("content") + "/api/brand/list",
+        type:'GET',
+        headers:{
+            'Content-type':'application/json'
+
+        },
+        success:function(data){
+
+            fillBrandOptionUtil(data);
+        }
+    })
+}
+
+function fillBrandOptionUtil(data){
+    var brandOption = $(".append-brand");
+
+    brandOption[0].innerHTML = "";
+
+    brandOption.append(`<option selected>Select Brand</option>`);
+
+    for (var i=0;i<data.length;i++)
+    {
+        brandOption.append(`<option value="${data[i]}">${data[i]}</option>`);
+    }
+
+
+}
+
+function fillEditBrandOption(){
+
+
+    $.ajax({
+        url:$("meta[name=baseUrl]").attr("content") + "/api/brand/list",
+        type:'GET',
+        headers:{
+            'Content-type':'application/json'
+
+        },
+        success:function(data){
+
+            fillEditBrandOptionUtil(data);
+        }
+    })
+}
+
+function fillEditBrandOptionUtil(data){
+    var brandOption = $("#editInputBrandName");
+
+    brandOption[0].innerHTML = "";
+    data.sort();
+    brandOption.append(`<option selected>Select Brand</option>`);
+
+    for (var i=0;i<data.length;i++)
+    {
+        brandOption.append(`<option value="${data[i]}">${data[i]}</option>`);
+    }
+
+
+}
+
+function displayCategory(event){
+
+    var brand = event.target.value;
+
+    if(brand==='Select Brand')
+    {
+        var categoryOption = $(".append-category");
+        categoryOption[0].innerHTML = "";
+        categoryOption.append(`<option selected>Select Category</option>`);
+        return;
+    }
+
+
+    $.ajax({
+             url:$("meta[name=baseUrl]").attr("content") + "/api/brand/list/" + brand,
+                    type:'GET',
+                    headers:{
+                        'Content-type':'application/json'
+
+                    },
+                    success:function(data){
+                        var categoryOption = $(".append-category");
+
+                        categoryOption[0].innerHTML = "";
+
+                        categoryOption.append(`<option selected>Select Category</option>`);
+                         for(var i=0;i<data.length;i++)
+                         {
+                            categoryOption.append(`<option val="${data[i]}">${data[i]}</option>`);
+                         }
+                    }
+
+        })
+
+}
+
+function displayEditCategory(event){
+
+    var brand = event.target.value;
+
+    if(brand==='Select Brand')
+    {
+        var categoryOption = $("#editInputCategory");
+        categoryOption[0].innerHTML = "";
+        categoryOption.append(`<option selected>Select Category</option>`);
+        return;
+    }
+
+
+    $.ajax({
+             url:$("meta[name=baseUrl]").attr("content") + "/api/brand/list/" + brand,
+                    type:'GET',
+                    headers:{
+                        'Content-type':'application/json'
+
+                    },
+                    success:function(data){
+                        var categoryOption = $("#editInputCategory");
+                        data.sort();
+                        categoryOption[0].innerHTML = "";
+
+                        categoryOption.append(`<option selected>Select Category</option>`);
+                         for(var i=0;i<data.length;i++)
+                         {
+                            categoryOption.append(`<option val="${data[i]}">${data[i]}</option>`);
+                         }
+                    }
+
+        })
+
+}
+
 
 function displayUploadData(){
  	resetUploadDialog();
@@ -275,8 +473,7 @@ function displayProduct(data){
 
 	$("#product-edit-form input[name=name]").val(data.name);
 	$("#product-edit-form input[name=barcode]").val(data.barcode);
-	$("#product-edit-form input[name=brandName]").val(data.brandName);
-	$("#product-edit-form input[name=brandCategory]").val(data.brandCategory);
+	fillEditBrandOption();
 	$("#product-edit-form input[name=mrp]").val(data.mrp);
 	$('#edit-product-modal').modal('toggle');
 }
@@ -284,8 +481,7 @@ function displayProduct(data){
 function createProduct(){
         $("#product-create-form input[name=name]").val("");
     	$("#product-create-form input[name=barcode]").val("");
-    	$("#product-create-form input[name=brandName]").val("");
-    	$("#product-create-form input[name=brandCategory]").val("");
+    	fillBrandOption();
     	$("#product-create-form input[name=mrp]").val("");
     	$('#create-product-modal').modal('toggle');
 }
@@ -302,7 +498,8 @@ function init(){
     $('#productFile').on('change', updateFileName);
     $('#create-product').click(createProduct);
     $('#download-errors').hide();
-
+    $("#inputBrandName").on('change',displayCategory);
+    $("#editInputBrandName").on('change',displayEditCategory);
 }
 
 $(document).ready(init);

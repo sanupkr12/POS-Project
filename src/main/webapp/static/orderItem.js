@@ -95,22 +95,17 @@ function displayOrders(data){
 
 function getOrder(){
     var url = getOrderUrl();
-
-
     $.ajax({
         url:url,
         type:'GET',
         headers: {
-                       	'Content-Type': 'application/json'
-                       },
-                	   success: function(data) {
-                	   		displayOrders(data);
-
-                	   },
+            'Content-Type': 'application/json'
+        },
+        success: function(data) {
+            displayOrders(data);
+        },
         error:handleAjaxError
-
     })
-
 }
 
 function handleEditOrder(){
@@ -121,21 +116,20 @@ function handleEditOrder(){
     url:url,
     type:'GET',
     headers: {
-                               	'Content-Type': 'application/json'
-                               },
-                        	   success: function(data) {
+            'Content-Type': 'application/json'
+     },
+    success: function(data) {
+        if(data.invoiceGenerated)
+        {
+            let elements = document.querySelectorAll(".edit-btn");
+            for(var i=0;i<elements.length;i++)
+            {
+                elements[i].setAttribute("disabled","disabled");
+            }
+        }
 
-                        	   		if(data.invoiceGenerated)
-                        	   		{
-                        	   		    let elements = document.querySelectorAll(".edit-btn");
-                                        for(var i=0;i<elements.length;i++)
-                                        {
-                                            elements[i].setAttribute("disabled","disabled");
-                                        }
-                        	   		}
-
-                        	   },
-                error:handleAjaxError
+    },
+    error:handleAjaxError
 
     })
 
@@ -194,9 +188,6 @@ function init(){
      $("#update-order-item").click(updateOrderItem);
      $("#invoice").click(generateInvoice);
         setTimeout(handleEditOrder, 100);
-
-
-
 }
 
 

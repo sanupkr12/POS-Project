@@ -53,7 +53,7 @@ public class OrderApiController {
 
     @ApiOperation(value="update Order")
     @RequestMapping(path="/item/{id}",method=RequestMethod.PUT)
-    public void update(@RequestBody EditOrderForm form,@PathVariable int id) throws ApiException, ParseException {
+    public void update(@RequestBody EditOrderForm form,@PathVariable int id) throws ApiException, ParseException, IOException {
         orderDto.update(form,id);
     }
 

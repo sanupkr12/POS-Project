@@ -1,6 +1,7 @@
 package com.increff.pos.dto;
 
 import com.increff.pos.dao.UserDao;
+import com.increff.pos.model.AddUserForm;
 import com.increff.pos.model.UserData;
 import com.increff.pos.model.UserForm;
 import com.increff.pos.model.editUserForm;
@@ -9,6 +10,8 @@ import com.increff.pos.service.ApiException;
 import com.increff.pos.service.UserService;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -16,14 +19,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@PropertySource(value="file:./supervisor.properties")
 public class UserDto {
     @Autowired
     private UserService service;
 
-
+    @Value("${adminList}")
+    private String adminList;
 
     @Transactional
-    public void add(UserForm form) throws ApiException {
+    public void add(AddUserForm form) throws ApiException {
         if(form.getEmail().equals(""))
         {
             throw new ApiException("Email cannot be empty");
@@ -39,17 +44,29 @@ public class UserDto {
             throw new ApiException("Invalid Email Address");
         }
 
-        if(form.getRole().equals("") || (!form.getRole().equals("supervisor") && !form.getRole().equals("operator")))
+
+        UserPojo p = convert(form);
+        normalize(p);
+
+        String []admins = adminList.split(",");
+        Boolean flag = false;
+
+        for(String email:admins)
         {
-            throw new ApiException("Invalid Role");
+            if(email.equals(p.getEmail()))
+            {
+                p.setRole("supervisor");
+                flag = true;
+            }
         }
 
 
-        UserPojo p = convert(form);
+        if(!flag)
+        {
+            p.setRole("operator");
+        }
 
-        normalize(p);
         service.add(p);
-
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -73,7 +90,7 @@ public class UserDto {
     }
 
     @Transactional
-    public void delete(int id) {
+    public void delete(int id) throws ApiException {
         service.delete(id);
     }
 
@@ -84,7 +101,6 @@ public class UserDto {
 
     protected static void normalize(UserPojo p) {
         p.setEmail(p.getEmail().toLowerCase().trim());
-        p.setRole(p.getRole().toLowerCase().trim());
     }
 
     private static UserData convert(UserPojo p) {
@@ -95,10 +111,9 @@ public class UserDto {
         return d;
     }
 
-    private static UserPojo convert(UserForm f) {
+    private static UserPojo convert(AddUserForm f) {
         UserPojo p = new UserPojo();
         p.setEmail(f.getEmail());
-        p.setRole(f.getRole());
         p.setPassword(f.getPassword());
         return p;
     }

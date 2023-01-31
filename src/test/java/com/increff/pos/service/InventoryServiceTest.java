@@ -1,6 +1,7 @@
 package com.increff.pos.service;
 
 import com.increff.pos.dao.InventoryDao;
+import com.increff.pos.model.InventoryData;
 import com.increff.pos.model.InventoryForm;
 import com.increff.pos.model.OrderForm;
 import com.increff.pos.model.OrderItemData;
@@ -99,6 +100,10 @@ public class InventoryServiceTest extends AbstractUnitTest{
 
         List<InventoryPojo> inventoryList = inventoryService.get(barcodeList);
 
+        for(InventoryPojo pojo:inventoryList)
+        {
+            System.out.println(pojo.getId());
+        }
 
         assertEquals(inventoryList.get(0).getId(),product1.getId());
 
@@ -164,9 +169,21 @@ public class InventoryServiceTest extends AbstractUnitTest{
 
         assertEquals(pojo.getQuantity(),15);
 
-
-
     }
+
+    @Test
+    public void testConvert() throws ApiException {
+        BrandPojo brandPojo = generateBrand("speakers","jbl");
+        ProductPojo productPojo = createProduct(brandPojo,3400,"jbl123","jbl regular speakers");
+
+        InventoryPojo inventoryPojo = inventoryService.get(productPojo.getBarcode());
+
+        InventoryData data = inventoryService.convert(inventoryPojo);
+
+        assertEquals(data.getName(),productPojo.getName());
+    }
+
+
 
     public ProductPojo createProduct(BrandPojo brand, double mrp, String barcode, String productName) throws ApiException {
 

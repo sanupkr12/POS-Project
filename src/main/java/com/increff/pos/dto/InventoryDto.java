@@ -97,6 +97,11 @@ public class InventoryDto {
             throw new ApiException("Barcode cannot be empty");
         }
 
+        if(!form.getBarcode().trim().matches("\\w+"))
+        {
+            throw new ApiException("Invalid Barcode");
+        }
+
         if(form.getQuantity()<0)
         {
             throw new ApiException("Quantity cannot be negative");

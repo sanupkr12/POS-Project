@@ -150,7 +150,7 @@ public class OrderService {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public OrderItemData update(EditOrderForm form, int id) throws ApiException, ParseException {
+    public OrderItemData update(EditOrderForm form, int id) throws ApiException, ParseException, IOException {
         OrderItemPojo p = orderItemDao.getByItemId(id);
         OrderPojo orderPojo = orderDao.get(p.getOrderId());
         if (orderPojo.getInvoiceGenerated()) {
@@ -175,7 +175,30 @@ public class OrderService {
         inventoryService.updateWithOrder(orderForm);
         Date date = getCurrentUtcTime();
         orderPojo.setDate(date);
-        return convert(orderItemDao.getByItemId(id), date);
+        OrderItemData data = convert(orderItemDao.getByItemId(id), date);
+
+        List<OrderItemPojo> items = orderItemDao.getByOrderId(orderPojo.getId());
+
+        List<OrderItemData> itemList = new ArrayList<>();
+
+        for(OrderItemPojo item:items)
+        {
+            itemList.add(convert(item,orderPojo.getDate()));
+        }
+
+        final String url = "http://localhost:8000/invoice/";
+        String base64Str = restTemplate.postForObject(url, itemList, String.class);
+        File dir = FileUtil.createDirectory("invoiceFiles");
+        File bill = new File("/home/sanupkumar/Downloads/invoiceFiles/bill" + String.valueOf(orderPojo.getId()) + ".pdf");
+
+        byte[] decodedPdf = Base64.getDecoder().decode(base64Str);
+        FileOutputStream outputStream = new FileOutputStream(bill);
+        outputStream.write(decodedPdf);
+        outputStream.flush();
+        outputStream.getFD().sync();
+        outputStream.close();
+
+        return data;
     }
 
     @Transactional(rollbackOn = ApiException.class)

@@ -12,11 +12,16 @@ function toJson($form){
     return json;
 }
 
+function handleSuccessNotification(message){
+    $('.notifyjs-wrapper').trigger('notify-hide');
+    $.notify(message,'success');
+}
+
 function handleErrorNotification(message){
 
-            $('.notifyjs-wrapper').trigger('notify-hide');
-            $.notify.defaults( {clickToHide:true,autoHide:false} );
-            $.notify(message + " ❌️",'error');
+    $('.notifyjs-wrapper').trigger('notify-hide');
+    $.notify.defaults( {clickToHide:true,autoHide:false} );
+    $.notify(message + " ❌️",'error');
 
 }
 
@@ -79,6 +84,7 @@ function numberValidation(){
             }
         }
 }
+
 
 function init(){
     numberValidation();

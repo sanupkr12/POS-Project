@@ -27,7 +27,7 @@ function addInventory(event){
        },
 	   success: function(response) {
 	        $("#create-inventory-modal").modal('toggle');
-	        $.notify("Inventory has been updated successfully","success");
+	        handleSuccessNotification("Inventory has been updated successfully");
 	   		getInventoryList();
 	   },
 	   error: function(response){
@@ -60,7 +60,7 @@ function updateInventory(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	        $.notify("Inventory has been updated successfully","success");
+	        handleSuccessNotification("Inventory has been updated successfully");
 	   		getInventoryList();
 	   },
 	   error: handleAjaxError
@@ -105,6 +105,8 @@ var processCount = 0;
 function processData(){
 	var file = $('#inventoryFile')[0].files[0];
 
+
+
 	if(!file)
     {
         handleErrorNotification("No file detected");
@@ -115,6 +117,17 @@ function processData(){
 
 function readFileDataCallback(results){
 	fileData = results.data;
+
+	if(fileData.length===0)
+    {
+        handleErrorNotification("Empty tsv");
+        return;
+    }
+	if(fileData.length>5000)
+    {
+        handleErrorNotification("Number of entry greater than 5000");
+        return;
+    }
 
 	var fields = results.meta.fields;
 
@@ -149,9 +162,8 @@ function uploadRows(){
 	 getInventoryList();
 		if(errorData.length==0)
         {
-            $.notify("Inventory File uploaded successfully","success");
-            	        $('#upload-inventory-modal').modal('toggle');
-
+            handleSuccessNotification("Inventory File uploaded successfully");
+            $('#upload-inventory-modal').modal('toggle');
             return;
         }
 
@@ -164,12 +176,12 @@ function uploadRows(){
 	var row = fileData[processCount];
 	processCount++;
 
-	if(row.__parsed_extra != null) {
-            row.error="Extra Fields exist.";
-            errorData.push(row);
-            uploadRows();
-            return;
-     }
+//	if(row.__parsed_extra != null) {
+//            row.error="Extra Fields exist.";
+//            errorData.push(row);
+//            uploadRows();
+//            return;
+//     }
 
 	var json = JSON.stringify(row);
 	var url = getInventoryUrl();
@@ -299,6 +311,7 @@ $("#inventory-link").addClass('active');
     $('#download-errors').hide();
     $('#inventoryFile').on('change',function(){
           var fileName = $(this).val();
+          fileName = fileName.split("\\").pop();
           $("#inventoryFileName").html(fileName);
       })
 }

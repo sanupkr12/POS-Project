@@ -30,6 +30,9 @@ public class ProductDto {
     @Autowired
     private InventoryService inventoryService;
 
+    @Autowired
+    private ProductService productService;
+
 
     @Transactional(rollbackOn = ApiException.class)
     public ProductData add(ProductForm p) throws ApiException{
@@ -42,9 +45,19 @@ public class ProductDto {
             throw new ApiException("Barcode  cannot be empty");
         }
 
+        if(!p.getBarcode().trim().matches("\\w+"))
+        {
+            throw new ApiException("Invalid Barcode");
+        }
+
         if(p.getBrandName().equals(""))
         {
             throw new ApiException("Brand Name cannot be empty");
+        }
+
+        if(p.getBrandCategory().equals(""))
+        {
+
         }
 
         if(p.getMrp()<=0)
@@ -115,6 +128,8 @@ public class ProductDto {
 
     @Transactional(rollbackOn = ApiException.class)
     public ProductData update(ProductForm p,int id) throws ApiException{
+
+
         if(p.getName().equals(""))
         {
             throw new ApiException("Product Name cannot be empty");
@@ -122,6 +137,11 @@ public class ProductDto {
         if(p.getBarcode().equals(""))
         {
             throw new ApiException("Barcode  cannot be empty");
+        }
+
+        if(!p.getBarcode().trim().matches("\\w+"))
+        {
+            throw new ApiException("Invalid Barcode");
         }
 
         if(p.getBrandName().equals(""))
@@ -134,11 +154,28 @@ public class ProductDto {
             throw new ApiException("Price cannot be negative");
         }
 
+        ProductData data = productService.get(p.getBarcode());
+        ProductPojo pojo = productService.get(id);
+
+        if(data!=null)
+        {
+            if(!data.getBarcode().equals(pojo.getBarcode()))
+            {
+                throw new ApiException("Barcode already exists");
+            }
+
+        }
+
         BrandPojo b = brandService.get(p.getBrandName(),p.getBrandCategory());
 
         if(b==null)
         {
             throw new ApiException("No brand exist with current details");
+        }
+
+        if(!pojo.getBarcode().equals(p.getBarcode()))
+        {
+            inventoryService.updateWithProduct(pojo.getBarcode(),p.getBarcode());
         }
 
         return convert(service.update(p,id,b.getId()));

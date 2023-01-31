@@ -53,7 +53,9 @@ function displayInventoryList(data){
 
     if(data.length===0)
     {
+        $('.notifyjs-wrapper').trigger('notify-hide');
         $.notify("No Results to display","info");
+        $("#display-inventory-table").hide();
         return;
     }
 
@@ -81,6 +83,7 @@ function displayInventoryList(data){
 
 function fillCategoryOptionUtil(data){
      var categoryOption = $(".append-category");
+     data.sort();
      for(var i=0;i<data.length;i++)
      {
         categoryOption.append(`<option val="${data[i]}">${data[i]}</option>`);
@@ -140,38 +143,21 @@ function fillBrandOption(){
 
 function getBrandByCategory(event){
     var category = event.target.value;
-//
-//    var brand = $("#brand").val();
-//
-//    if(category==='Select Category' && brand==='Select Brand')
-//        {
-//            fillBrandOption();
-//            fillCategoryOption();
-//            return;
-//        }
-//
-//            if(brand!=='Select Brand')
-//            {
-//                return;
-//            }
-
     $.ajax({
          url:$("meta[name=baseUrl]").attr("content") + "/api/brand/category/" + category,
                 type:'GET',
                 headers:{
                     'Content-type':'application/json'
-
                 },
                 success:function(data){
                     var brandOption = $(".append-brand");
+                    data.sort();
                     brandOption[0].innerHTML = "";
-
                     brandOption.append(`<option selected>Select Brand</option>`);
-
-                         for(var i=0;i<data.length;i++)
-                         {
-                            brandOption.append(`<option val="${data[i]}">${data[i]}</option>`);
-                         }
+                     for(var i=0;i<data.length;i++)
+                     {
+                        brandOption.append(`<option val="${data[i]}">${data[i]}</option>`);
+                     }
                 }
 
     })

@@ -74,6 +74,12 @@ public class ProductService {
     @Transactional(rollbackOn = ApiException.class)
     public ProductData get(String barcode) throws ApiException{
         ProductPojo p = dao.select(barcode);
+
+        if(p==null)
+        {
+            return null;
+        }
+
         return convert(p);
     }
 
@@ -90,7 +96,6 @@ public class ProductService {
         prod.setMrp(p.getMrp());
         prod.setBarcode(p.getBarcode());
         prod.setBrandId(brandId);
-
         return prod;
 
     }
@@ -115,14 +120,10 @@ public class ProductService {
     @Transactional
     public boolean checkAny(String barcode){
         ProductPojo p = dao.select(barcode);
-
-
         if(p==null)
         {
             return false;
         }
-
-
         return true;
     }
 

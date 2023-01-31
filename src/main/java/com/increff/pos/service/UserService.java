@@ -68,7 +68,13 @@ public class UserService {
 	}
 
 	@Transactional
-	public void delete(int id) {
+	public void delete(int id) throws ApiException {
+		UserPojo user = getById(id);
+
+		if(user.getRole().equals("supervisor"))
+		{
+			throw new ApiException("Not Permitted");
+		}
 		dao.delete(id);
 	}
 

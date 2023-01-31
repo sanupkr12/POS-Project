@@ -79,16 +79,11 @@ function addOrder(event){
            },
     	   success: function(response) {
     	        $('#create-order-modal').modal('toggle');
-
-    	   		    $.notify("Order Placed Successfully","success");
-
+    	   		    handleSuccessNotification("Order Placed Successfully");
                     getOrder();
-
-
     	   },
     	   error: function(response){
-
-                  	        handleAjaxError(response);
+                    handleAjaxError(response);
                   	   }
     	});
 
@@ -134,21 +129,17 @@ function displayOrders(data){
 
 function getOrder(){
     var url = getOrderUrl();
-
     $.ajax({
         url:url,
         type:'GET',
         headers: {
-                       	'Content-Type': 'application/json'
-                       },
-                	   success: function(data) {
-                	   		displayOrders(data);
-
-                	   },
+                'Content-Type': 'application/json'
+               },
+        success: function(data) {
+            displayOrders(data);
+        },
         error:handleAjaxError
-
     })
-
 }
 
 

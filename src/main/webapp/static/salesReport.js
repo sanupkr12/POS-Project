@@ -63,6 +63,7 @@ function displaySalesList(data){
 
     if(data.length===0)
     {
+        $('.notifyjs-wrapper').trigger('notify-hide');
         $.notify("No Results to display","info");
         var $tbody = $('#display-sales-table').find('tbody');
         $tbody.empty();
@@ -97,6 +98,7 @@ function displaySalesList(data){
 
 function fillCategoryOptionUtil(data){
      var categoryOption = $(".append-category");
+     data.sort();
      for(var i=0;i<data.length;i++)
      {
         categoryOption.append(`<option val="${data[i]}">${data[i]}</option>`);
@@ -173,6 +175,7 @@ function getBrandByCategory(event){
          success:function(data){
             var brandOption = $(".append-brand");
             brandOption[0].innerHTML = "";
+            data.sort();
             brandOption.append(`<option selected>Select Brand</option>`);
              for(var i=0;i<data.length;i++)
              {

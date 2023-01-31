@@ -125,7 +125,8 @@ public class OrderDto {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public OrderItemData update(EditOrderForm form, int id) throws ApiException, ParseException {
+    public OrderItemData update(EditOrderForm form, int id) throws ApiException, ParseException, IOException {
+
         return service.update(form,id);
     }
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.increff.pos.dto.UserDto;
+import com.increff.pos.model.AddUserForm;
 import com.increff.pos.model.editUserForm;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import com.increff.pos.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import static com.google.common.collect.Lists.reverse;
+
 @Api
 @RestController
 public class AdminApiController {
@@ -30,7 +33,7 @@ public class AdminApiController {
 
 	@ApiOperation(value = "Adds a user")
 	@RequestMapping(path = "/api/supervisor/user", method = RequestMethod.POST)
-	public void addUser(@RequestBody UserForm form) throws ApiException {
+	public void addUser(@RequestBody AddUserForm form) throws ApiException {
 		dto.add(form);
 	}
 
@@ -49,20 +52,17 @@ public class AdminApiController {
 	}
 
 
-
 	@ApiOperation(value = "Deletes a user")
 	@RequestMapping(path = "/api/supervisor/user/{id}", method = RequestMethod.DELETE)
-	public void deleteUser(@PathVariable int id) {
+	public void deleteUser(@PathVariable int id) throws ApiException {
 		dto.delete(id);
 	}
 
 	@ApiOperation(value = "Gets list of all users")
 	@RequestMapping(path = "/api/supervisor/user", method = RequestMethod.GET)
 	public List<UserData> getAllUser() {
-
-		return dto.getAll();
+		return reverse(dto.getAll());
 	}
-
 
 
 }

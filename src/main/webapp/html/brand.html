@@ -26,7 +26,7 @@
 					<h5 class="modal-title">Create Brand</h5>
 				</div>
 				<form class="" id="brand-form">
-				<div class="modal-body">
+				<div class="modal-body mt-3">
 
 						<div class="form-group">
 							<label for="inputName" class="col-sm-6 col-form-label">Brand Name</label>
@@ -89,7 +89,7 @@
         <h5 class="modal-title">Edit Brand</h5>
       </div>
 		<form class="" id="brand-edit-form">
-      <div class="modal-body">
+      <div class="modal-bodym mt-3">
 
 			  <div class="form-group">
 			    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
@@ -99,7 +99,7 @@
 			  </div>
 			  <div class="form-group">
 			    <label for="inputCategory" class="col-sm-2 col-form-label">Category</label>
-			    <div class="col-sm-12">
+			    <div class="col-sm-12 mb-4">
 			      <input type="text" class="form-control" required="required" name="category" placeholder="Enter Category">
 			    </div>
 			  </div>
@@ -125,12 +125,12 @@
         <h5 class="modal-title">Upload Brand</h5>
       </div>
       
-      <div class="modal-body">
+      <div class="modal-body mt-3">
       	<div class="brand-file">
 		  <input type="file" class="custom-file-input" id="brandFile">
 		  <label class="custom-file-label" for="brandFile" id="brandFileName">Choose file</label>
 		</div>
-		<a th:href="@{/sample/employee.tsv}" target="_blank">Download Sample</a> 
+		<a th:href="@{/sample/dummyBrand.tsv}" target="_blank">Download Sample</a>
 		<br>
 		Rows: <span id="rowCount">0</span>, 
 		Processed: <span id="processCount">0</span>, 

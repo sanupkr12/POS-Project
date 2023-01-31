@@ -13,27 +13,27 @@
  <!-- Top row with form-->
 <div class="container" >
 <div class="row justify-content-around">
-	 <div class="col-4 icon" style="text-align:center;">
+	 <div class="col-md-4 icon" style="text-align:center;">
 	 	<a th:href="@{/ui/brand}" title="Brands"  style="text-decoration:none;color:black"> <img style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;"  th:src="@{/static/brand.png}"><p>Brand</p></a>
 
 	 </div>
-	<div class="col-4 icon" style="text-align:center;">
+	<div class="col-md-4 icon" style="text-align:center;">
 		<a th:href="@{/ui/inventory}" title="Inventory" style="text-decoration:none;color:black"> <img style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/management.png}"><p>Inventory</p></a>
 
 	</div>
-	<div class="col-4 icon" style="text-align:center;">
+	<div class="col-md-4 icon" style="text-align:center;">
 		<a th:href="@{/ui/products}" title="Product" style="text-decoration:none;color:black"> <img style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/products.png}"><p>Product</p></a>
 
 	</div>
-	<div class="col-4 icon" style="text-align:center;">
+	<div class="col-md-4 icon" style="text-align:center;">
 		<a th:href="@{/ui/order}" title="Order" style="text-decoration:none;color:black"> <img style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/checkout.png}"><p>Order</p></a>
 
 	</div>
-	<div class="col-4 icon" style="text-align:center;">
+	<div class="col-md-4 icon" style="text-align:center;">
 		<a th:href="@{/ui/report}" title="Report" style="text-decoration:none;color:black"> <img  style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/report.png}"><p>Report</p></a>
 
 	</div>
-	<div class="col-4 icon" th:if="${role=='supervisor'}" style="text-align:center;">
+	<div class="col-md-4 icon" th:if="${role=='supervisor'}" style="text-align:center;">
 		<a  th:href="@{/ui/supervisor}" title="Admin" style="text-decoration:none;color:black"> <img  style="width:40% ;height:80% ;padding-bottom:1rem;padding-top:2rem;" th:src="@{/static/admin.png}"><p>Admin</p></a>
 
 	</div>

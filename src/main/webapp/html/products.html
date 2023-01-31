@@ -27,7 +27,7 @@
                     <h5 class="modal-title">Create Product</h5>
                 </div>
                 <form class="" id="product-create-form">
-                <div class="modal-body">
+                <div class="modal-body mt-3">
                         <div class="form-group" style="margin-bottom:0.5rem;">
                             <label for="inputName" class="col-sm-4 edit-form-label" style="justify-content:left;">Name</label>
                             <div class="col-sm-12">
@@ -45,25 +45,29 @@
                         <div class="form-group" style="margin-bottom:0.5rem;">
                             <label for="inputMrp" class="col-sm-4  edit-form-label" style="justify-content:left;">MRP</label>
                             <div class="col-sm-12">
-                                <input type="number" class="form-control num-input" required="required" step="0.01" min="1" id="inputMrp" autocomplete="off" name="mrp"  placeholder="Enter Mrp">
+                                <input type="number" class="form-control num-input" required="required" step="0.01" min="1" id="inputMrp" autocomplete="off" name="mrp"  placeholder="Enter Mrp (in ₹)">
                             </div>
                         </div>
                         <br>
                         <div class="form-group" style="margin-bottom:0.5rem;">
                             <label for="inputBrandName" class="col-sm-4  edit-form-label" style="justify-content:left;">Brand Name</label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" required="required" id="inputBrandName" autocomplete="off" name="brandName"  placeholder="Enter Brand Name">
-                            </div>
+                            <select name="brandName" class="append-brand col-sm-12 form-control form-select ml-3" id="inputBrandName" style=" width: 94%;" aria-label=".form-select-lg example">
+                                <option selected>Select Brand</option>
+                            </select>
+<!--                            <div class="col-sm-12">-->
+<!--                                <input type="text" class="form-control" required="required" id="inputBrandName" autocomplete="off" name="brandName"  placeholder="Enter Brand Name">-->
+<!--                            </div>-->
                         </div>
                         <br>
                         <div class="form-group" style="margin-bottom:0.5rem;">
                             <label for="inputCategory" class="col-sm-4  edit-form-label" style="justify-content:left;">Brand Category</label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" required="required" id="inputCategory" autocomplete="off" name="brandCategory"  placeholder="Enter Brand Category">
-                            </div>
+                            <select name="brandCategory" class="col-sm-12 form-control form-select ml-3 append-category" id="inputCategory" style="width:94%"  aria-label=".form-select-lg example">
+                                <option selected>Select Category</option>
+                            </select>
+<!--                            <div class="col-sm-12">-->
+<!--                                <input type="text" class="form-control" required="required" id="inputCategory" autocomplete="off" name="brandCategory"  placeholder="Enter Brand Category">-->
+<!--                            </div>-->
                         </div>
-                        <br>
-                        <input type="hidden" name="id" >
 
                 </div>
                 <div class="modal-footer">
@@ -114,7 +118,7 @@
                     <h5 class="modal-title">Edit Product</h5>
                 </div>
                 <form class="" id="product-edit-form">
-                <div class="modal-body">
+                <div class="modal-body mt-3">
 
                         <div class="form-group" style="margin-bottom:0.5rem;">
                             <label for="editInputName" class="col-sm-4  edit-form-label" style="justify-content:left;">Name</label>
@@ -133,25 +137,28 @@
                         <div class="form-group" style="margin-bottom:0.5rem;">
                             <label for="editInputMrp" class="col-sm-4  edit-form-label" style="justify-content:left;">MRP</label>
                             <div class="col-sm-12">
-                                <input type="number" step="0.01" class="form-control num-input" required="required" id="editInputMrp" min="1" autocomplete="off" name="mrp"  placeholder="Enter Mrp">
+                                <input type="number" step="0.01" class="form-control num-input" required="required" id="editInputMrp" min="1" autocomplete="off" name="mrp"  placeholder="Enter Mrp (in ₹)">
                             </div>
                         </div>
-                        <br>
-                        <div class="form-group" style="margin-bottom:0.5rem;">
-                            <label for="editInputBrandName" class="col-sm-4  edit-form-label" style="justify-content:left;">Brand Name</label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" required="required" id="editInputBrandName" autocomplete="off" name="brandName"  placeholder="Enter Brand Name">
-                            </div>
-                        </div>
-                        <br>
-                        <div class="form-group" style="margin-bottom:0.5rem;">
-                            <label for="editInputCategory" class="col-sm-4  edit-form-label" style="justify-content:left;">Brand Category</label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" required="required" id="editInputCategory" autocomplete="off" name="brandCategory"  placeholder="Enter Brand Category">
-                            </div>
-                        </div>
-                        <br>
-                        <input type="hidden" name="id" >
+                        <br> <div class="form-group" style="margin-bottom:0.5rem;">
+                    <label for="editInputBrandName" class="col-sm-4  edit-form-label" style="justify-content:left;">Brand Name</label>
+                    <select name="brandName" class="append-brand col-sm-12 form-control form-select ml-3" id="editInputBrandName" style=" width: 94%;" aria-label=".form-select-lg example">
+                        <option selected>Select Brand</option>
+                    </select>
+                    <!--                            <div class="col-sm-12">-->
+                    <!--                                <input type="text" class="form-control" required="required" id="inputBrandName" autocomplete="off" name="brandName"  placeholder="Enter Brand Name">-->
+                    <!--                            </div>-->
+                </div>
+                    <br>
+                    <div class="form-group" style="margin-bottom:0.5rem;">
+                        <label for="editInputCategory" class="col-sm-4  edit-form-label" style="justify-content:left;">Brand Category</label>
+                        <select name="brandCategory" class="col-sm-12 form-control form-select ml-3 append-category" id="editInputCategory" style="width:94%"  aria-label=".form-select-lg example">
+                            <option selected>Select Category</option>
+                        </select>
+                        <!--                            <div class="col-sm-12">-->
+                        <!--                                <input type="text" class="form-control" required="required" id="inputCategory" autocomplete="off" name="brandCategory"  placeholder="Enter Brand Category">-->
+                        <!--                            </div>-->
+                    </div>
 
                 </div>
                 <div class="modal-footer">
@@ -173,12 +180,12 @@
                     <h5 class="modal-title">Upload Product</h5>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body mt-3">
                     <div class="product-file">
                         <input type="file" class="custom-file-input" id="productFile">
                         <label class="custom-file-label" for="productFile" id="productFileName">Choose file</label>
                     </div>
-                    <a th:href="@{/sample/product.tsv}" target="_blank">Download Sample</a>
+                    <a th:href="@{/sample/sampleProduct.tsv}" target="_blank">Download Sample</a>
                     <br>
                     Rows: <span id="rowCount">0</span>,
                     Processed: <span id="processCount">0</span>,

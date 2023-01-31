@@ -60,9 +60,16 @@ public class BrandService {
 	@Transactional(rollbackOn  = ApiException.class)
 	public BrandPojo update(int id, BrandPojo p) throws ApiException {
 
+		BrandPojo pojo = dao.select(id);
+
+		if(pojo.getName().equals(p.getName()) && pojo.getCategory().equals(p.getCategory()))
+		{
+			throw new ApiException("No change detected");
+		}
+
 		if(dao.selectAny(p.getName(),p.getCategory()))
 		{
-			throw new ApiException("Brand already exist with given details");
+				throw new ApiException("Brand already exist with given details");
 		}
 
 		BrandPojo ex = getCheck(id);
@@ -102,28 +109,19 @@ public class BrandService {
 		return p;
 	}
 
-
-
 	public List<String> get(InventoryReportForm form) throws ApiException {
 		List<BrandPojo> list = dao.selectBrand(form.getCategory(),form.getBrand());
 		List<String> barcodeList = new ArrayList<>();
-
-
 		for(BrandPojo p:list)
 		{
-
-
 			List<ProductPojo> productList = productService.getByBrandId(p.getId());
-
 			for(ProductPojo d:productList)
 			{
-
 				barcodeList.add(d.getBarcode());
 			}
 		}
 
 		return barcodeList;
-
 	}
 
 	public List<BrandPojo> getSales(SalesReportForm form) throws ApiException {
