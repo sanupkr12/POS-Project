@@ -29,27 +29,27 @@ public class OrderApiController {
 
     @ApiOperation(value="creating an order")
     @RequestMapping(path="",method = RequestMethod.POST)
-    public void create(@RequestBody List<OrderForm> form) throws ParseException, ApiException, DocumentException, IOException {
+    public void createOrder(@RequestBody List<OrderForm> form) throws ParseException, ApiException, DocumentException, IOException {
         orderDto.add(form);
     }
 
     @ApiOperation(value="get orderItems by orderId")
     @RequestMapping(path="/{id}",method=RequestMethod.GET)
-    public List<OrderItemData> get(@PathVariable int id) throws ApiException {
+    public List<OrderItemData> getOrderById(@PathVariable int id) throws ApiException {
         return orderDto.get(id);
     }
 
 
     @ApiOperation(value="get order")
     @RequestMapping(path="",method=RequestMethod.GET)
-    public List<OrderData> get(){
+    public List<OrderData> getOrder(){
         return reverse(orderDto.getAll());
     }
 
 
     @ApiOperation(value="update Order")
     @RequestMapping(path="/item/{id}",method=RequestMethod.PUT)
-    public void update(@RequestBody EditOrderForm form,@PathVariable int id) throws ApiException, ParseException, IOException {
+    public void updateOrder(@RequestBody EditOrderForm form,@PathVariable int id) throws ApiException, ParseException, IOException {
         orderDto.update(form,id);
     }
 

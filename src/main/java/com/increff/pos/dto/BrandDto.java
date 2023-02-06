@@ -22,7 +22,7 @@ public class BrandDto {
     @Autowired
     private BrandService brandService;
 
-    public BrandData add(BrandForm form) throws ApiException {
+    public BrandData addBrand(BrandForm form) throws ApiException {
         try{
             BrandPojo brand = convert(form);
             normalize(brand);
@@ -34,16 +34,16 @@ public class BrandDto {
         }
     }
 
-    public void delete(int id) throws ApiException{
+    public void deleteBrand(int id) throws ApiException{
         brandService.delete(id);
     }
 
-    public BrandData get(int id) throws ApiException {
+    public BrandData getBrand(int id) throws ApiException {
         BrandPojo brand = brandService.get(id);
         return convert(brand);
     }
 
-    public List<BrandData> getAll() {
+    public List<BrandData> getAllBrand() {
         List<BrandPojo> list = brandService.getAll();
         List<BrandData> brandList = new ArrayList<BrandData>();
         for (BrandPojo brand : list) {
@@ -52,14 +52,19 @@ public class BrandDto {
         return brandList;
     }
 
-    public BrandData update(int id, BrandForm form) throws ApiException {
+    public BrandData updateBrand(int id, BrandForm form) throws ApiException {
         BrandPojo brand = convert(form);
         normalize(brand);
-        BrandPojo pojo = brandService.update(id,brand);
-        return convert(pojo);
+        try{
+            BrandPojo pojo = brandService.update(id,brand);
+            return convert(pojo);
+        } catch (ApiException e)
+        {
+            throw new ApiException(e.getMessage());
+        }
     }
 
-    public BrandPojo get(String name,String category) throws ApiException{
+    public BrandPojo getBrand(String name,String category) throws ApiException{
         return brandService.get(name,category);
     }
 

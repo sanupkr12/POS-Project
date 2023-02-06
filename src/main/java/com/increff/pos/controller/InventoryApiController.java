@@ -31,19 +31,19 @@ public class InventoryApiController {
 
     @ApiOperation(value="Get Inventory by barcode")
     @RequestMapping(path="/{barcode}",method=RequestMethod.GET)
-    public InventoryData get(@PathVariable String barcode) throws ApiException{
+    public InventoryData getInventoryByInventory(@PathVariable String barcode) throws ApiException{
         return inventoryDto.get(barcode);
     }
 
     @ApiOperation(value="Get All Inventory")
     @RequestMapping(path="",method=RequestMethod.GET)
-    public List<InventoryData> get() throws ApiException{
+    public List<InventoryData> getInventory() throws ApiException{
         return reverse(inventoryDto.get());
     }
 
     @ApiOperation(value="Update Inventory")
     @RequestMapping(path="",method=RequestMethod.PUT)
-    public void update(@RequestBody InventoryForm form) throws ApiException{
+    public void replaceInventory(@RequestBody InventoryForm form) throws ApiException{
         inventoryDto.replaceInventory(form);
     }
 

@@ -4,6 +4,7 @@ let errorData = [];
 let processCount = 0;
 let updatedId;
 
+$(document).ready(init);
 //INITIALIZATION CODE
 function init() {
 	$("#brand-link").addClass('active');
@@ -23,23 +24,16 @@ function init() {
 	getBrandList();
 }
 
-$(document).ready(init);
-
 function getBrandUrl() {
 	let baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/brand";
 }
-
 function getBrandList() {
 	let url = getBrandUrl();
-	$.ajax({
-		url: url,
-		type: 'GET',
-		success: function (data) {
-			displayBrandList(data);
-		},
-		error: handleAjaxError
-	});
+	makeAjaxCall(url,'GET',{},(data)=>{
+        displayBrandList(data);
+    },
+    handleAjaxError);
 }
 
 //UI DISPLAY METHODS
@@ -71,22 +65,13 @@ function addBrand(event) {
 	let $form = $("#brand-form");
 	let json = toJson($form);
 	let url = getBrandUrl();
-	$.ajax({
-		url: url,
-		type: 'POST',
-		data: json,
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		success: function (response) {
-			$('#create-brand-modal').modal('toggle');
-			handleSuccessNotification("Brand has been added successfully");
-			getBrandList();
-		},
-		error: function (response) {
-			handleAjaxError(response);
-		}
-	});
+	makeAjaxCall(url,'POST',json,(response)=> {
+        $('#create-brand-modal').modal('toggle');
+        handleSuccessNotification("Brand has been added successfully");
+        getBrandList();
+    },(response)=> {
+        handleAjaxError(response);
+    });
 	return false;
 }
 
@@ -98,34 +83,19 @@ function updateBrand(event) {
 	//Set the values to update
 	let $form = $("#brand-edit-form");
 	let json = toJson($form);
-	console.log(json);
-	$.ajax({
-		url: url,
-		type: 'PUT',
-		data: json,
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		success: function (response) {
-			$('#edit-brand-modal').modal('toggle');
-			handleSuccessNotification("Brand Edited Successfully");
-			getBrandList();
-		},
-		error: handleAjaxError
-	});
+	makeAjaxCall(url,'PUT',json,(response)=> {
+        $('#edit-brand-modal').modal('toggle');
+        handleSuccessNotification("Brand Edited Successfully");
+        getBrandList();
+    },handleAjaxError);
 	return false;
 }
 
 function deleteBrand(id) {
 	let url = getBrandUrl() + "/" + id;
-	$.ajax({
-		url: url,
-		type: 'DELETE',
-		success: function (data) {
-			getBrandList();
-		},
-		error: handleAjaxError
-	});
+	makeAjaxCall(url,'DELETE',{},(data)=> {
+        getBrandList();
+    },handleAjaxError);
 }
 
 function processData() {
@@ -191,23 +161,16 @@ function uploadRows() {
 	let json = JSON.stringify(row);
 	let url = getBrandUrl();
 	//Make ajax call
-	$.ajax({
-		url: url,
-		type: 'POST',
-		data: json,
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		success: function (response) {
-			uploadRows();
-		},
-		error: function (response) {
-			let data = JSON.parse(response.responseText);
-			row.error = data["message"];
-			errorData.push(row);
-			uploadRows();
-		}
-	});
+	makeAjaxCall(url,'POST',json,
+	(response)=> {
+	uploadRows();
+	},
+	(response)=> {
+        let data = JSON.parse(response.responseText);
+        row.error = data["message"];
+        errorData.push(row);
+        uploadRows();
+    });
 }
 
 function downloadErrors() {
@@ -217,14 +180,11 @@ function downloadErrors() {
 function displayEditBrand(id) {
 	let url = getBrandUrl() + "/" + id;
 	updatedId = id;
-	$.ajax({
-		url: url,
-		type: 'GET',
-		success: function (data) {
-			displayBrand(data);
-		},
-		error: handleAjaxError
-	});
+	makeAjaxCall(url,'GET',{},(data) =>{
+        displayBrand(data);
+    },
+    handleAjaxError
+	);
 }
 
 function resetUploadDialog() {

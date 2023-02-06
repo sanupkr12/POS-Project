@@ -8,8 +8,7 @@
         <h3 style="margin:1.5rem 0rem;">Inventory</h3>
         <button type="button" class="btn btn-primary" th:if="${info.getRole() == 'supervisor'}"
             id="create-inventory">Add Inventory</button>
-        &nbsp;&nbsp;
-        <button type="button" class="btn btn-primary" th:if="${info.getRole() == 'supervisor'}"
+        <button type="button" class="btn btn-primary ml-3" th:if="${info.getRole() == 'supervisor'}"
             id="upload-data">Upload</button>
         <div class="modal" tabindex="-1" role="dialog" id="create-inventory-modal">
             <div class="modal-dialog" role="document">
@@ -43,11 +42,7 @@
                 </div>
             </div>
         </div>
-        <!-- Blank Row -->
-        <div class="row">
-            &nbsp;
-        </div>
-        <div class="row">
+        <div class="row mt-3">
             <!-- Table -->
             <div class="col-12">
                 <table class="table table-striped" id="inventory-table">
@@ -112,11 +107,10 @@
                                 file</label>
                         </div>
                         <a th:href="@{/sample/sampleInventory.tsv}" target="_blank">Download Sample</a>
-                        <br>
                         Rows: <span id="rowCount">0</span>,
                         Processed: <span id="processCount">0</span>,
                         Errors: <span id="errorCount">0</span>
-                        <span>&nbsp;&nbsp; File Limit : 5000 Rows</span>
+                        <span> File Limit : 5000 Rows</span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

@@ -110,7 +110,7 @@ public class OrderDto {
        return service.getAll();
     }
 
-    public OrderData convert(OrderPojo p){
+    protected OrderData convert(OrderPojo p){
         List<OrderItemPojo> itemPojo = service.getOrderItemByOrderId(p.getId());
         double totalCost = 0;
         for(OrderItemPojo item:itemPojo){

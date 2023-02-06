@@ -1,8 +1,8 @@
+$(document).ready(init);
+
 function init() {
     numberValidation();
 }
-
-$(document).ready(init);
 
 function numberValidation() {
     let ele = document.querySelectorAll('.num-input');
@@ -23,7 +23,6 @@ function numberValidation() {
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
-
 //HELPER METHOD
 function toJson($form) {
     let serialized = $form.serializeArray();
@@ -36,24 +35,20 @@ function toJson($form) {
     let json = JSON.stringify(data);
     return json;
 }
-
 function handleSuccessNotification(message) {
     $('.notifyjs-wrapper').trigger('notify-hide');
     $.notify(message, 'success');
 }
-
 function handleErrorNotification(message) {
     $('.notifyjs-wrapper').trigger('notify-hide');
     $.notify.defaults({ clickToHide: true, autoHide: false });
     $.notify(message + " ❌️", 'error');
 }
-
 function handleAjaxError(response) {
     response = JSON.parse(response.responseText);
     handleErrorNotification(response.message);
 
 }
-
 function readFileData(file, callback) {
     let config = {
         header: true,
@@ -65,8 +60,6 @@ function readFileData(file, callback) {
     }
     Papa.parse(file, config);
 }
-
-
 function writeFileData(arr) {
     let config = {
         quoteChar: '',
@@ -86,6 +79,33 @@ function writeFileData(arr) {
     tempLink.href = fileUrl;
     tempLink.setAttribute('download', 'download.tsv');
     tempLink.click();
+}
+
+function makeAjaxCall(url,type,data,success,error){
+    if(type==='GET' || type==='DELETE')
+    {
+        $.ajax({
+            url: url,
+            type: type,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            success: success,
+            error: error
+        });
+    }
+    else{
+       $.ajax({
+                url: url,
+                type: type,
+                data: data,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                success: success,
+                error: error
+            });
+    }
 }
 
 

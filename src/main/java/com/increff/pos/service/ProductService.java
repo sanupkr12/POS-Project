@@ -5,6 +5,7 @@ import com.increff.pos.model.ProductData;
 import com.increff.pos.model.ProductForm;
 import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.ProductPojo;
+import com.increff.pos.util.ConvertUtil.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -17,8 +18,6 @@ public class ProductService {
     private ProductDao dao;
     @Autowired
     private BrandService brandService;
-    @Autowired
-    private InventoryService inventoryService;
 
     @Transactional(rollbackOn = ApiException.class)
     public ProductPojo add(ProductPojo prod) throws ApiException{
@@ -77,8 +76,7 @@ public class ProductService {
         return prod;
     }
 
-    //TODO make it a private
-    private ProductData convert(ProductPojo p) throws ApiException{
+    private ProductData convert(ProductPojo p) throws ApiException {
         BrandPojo b = brandService.get(p.getBrandId());
         ProductData d = new ProductData();
         d.setId(p.getId());
@@ -89,6 +87,7 @@ public class ProductService {
         d.setBarcode(p.getBarcode());
         return d;
     }
+
 
     public boolean checkAny(String barcode){
         ProductPojo p = dao.select(barcode);

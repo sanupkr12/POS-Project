@@ -2,6 +2,7 @@ package com.increff.pos.service;
 
 import com.increff.pos.dao.InventoryDao;
 import com.increff.pos.model.*;
+import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.ProductPojo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,10 @@ import java.util.List;
 public class InventoryService {
     @Autowired
     private InventoryDao dao;
+
     @Autowired
     private ProductService productService;
-    @Autowired
-    private BrandService brandService;
+
     @Transactional(rollbackOn = ApiException.class)
     public InventoryPojo create(InventoryForm form) throws ApiException {
         if(dao.select(form.getBarcode())!=null)
@@ -106,26 +107,6 @@ public class InventoryService {
         }
     }
 
-    public List<InventoryData> get(InventoryReportForm inventoryReportForm) throws ApiException {
-        List<String> barcodeList = brandService.get(inventoryReportForm);
-        List<InventoryPojo> list = get(barcodeList);
-        List<InventoryData> inventoryList = new ArrayList<>();
-        for(InventoryPojo p:list)
-        {
-            inventoryList.add(convert(p));
-        }
-        return inventoryList;
-    }
-
-    public InventoryData convert(InventoryPojo p) throws ApiException {
-        InventoryData data = new InventoryData();
-        ProductData d = productService.get(p.getBarcode());
-        data.setId(p.getId());
-        data.setName(d.getName());
-        data.setBarcode(p.getBarcode());
-        data.setQuantity(p.getQuantity());
-        return data;
-    }
 
     private static InventoryPojo convert(InventoryForm form){
         InventoryPojo p = new InventoryPojo();

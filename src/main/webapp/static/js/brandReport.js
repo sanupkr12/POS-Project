@@ -16,21 +16,16 @@ function downloadBrand(event) {
     event.preventDefault();
     let category = $("#category").val();
     let brand = $("#brand").val();
-
-    if (category == "Select Category") {
+    if (category === "Select Category") {
         category = "";
     }
-
-    if (brand == "Select Brand") {
+    if (brand === "Select Brand") {
         brand = "";
     }
-
     let details = {};
-
     details["category"] = category;
     details["brand"] = brand;
     let json = JSON.stringify(details);
-
     $.ajax({
         url: getCurrentUrl(),
         type: "POST",
@@ -40,7 +35,6 @@ function downloadBrand(event) {
         },
         success: function (response) {
             displayBrandList(response);
-
         },
         error: handleAjaxError
 
@@ -49,18 +43,15 @@ function downloadBrand(event) {
 }
 
 function displayBrandList(data) {
-
     if (data.length === 0) {
         $('.notifyjs-wrapper').trigger('notify-hide');
         $.notify("No Results to display", "info");
         $("#display-brand-table").hide();
         return;
     }
-
     $("#display-brand-table").show();
     let $tbody = $('#display-brand-table').find('tbody');
     $tbody.empty();
-
     let j = 1;
     for (let i in data) {
         let e = data[i];
@@ -119,7 +110,6 @@ function fillBrandOption() {
             'Content-type': 'application/json'
         },
         success: function (data) {
-
             fillBrandOptionUtil(data);
         }
     })

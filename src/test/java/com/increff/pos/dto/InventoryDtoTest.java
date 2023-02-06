@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.increff.pos.util.NormalizeUtil.normalizeInventory;
 import static org.junit.Assert.assertEquals;
 
 public class InventoryDtoTest extends AbstractUnitTest {
@@ -43,7 +44,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
         form.setQuantity(10);
         form.setBarcode("efgh1234 ");
 
-        inventoryDto.normalizeInventory(form);
+        normalizeInventory(form);
 
         assertEquals(form.getBarcode(),"efgh1234");
     }
@@ -108,7 +109,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
 
         form.setBarcode("abcd1234");
 
-        inventoryDto.normalizeInventory(form);
+        normalizeInventory(form);
 
         exceptionRule.expect(ApiException.class);
         inventoryDto.create(form);

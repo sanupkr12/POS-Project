@@ -1,22 +1,11 @@
 package com.increff.pos.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class invoiceData {
-    int id;
-    boolean invoiceGenerated;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public boolean isInvoiceGenerated() {
-        return invoiceGenerated;
-    }
-
-    public void setInvoiceGenerated(boolean invoiceGenerated) {
-        this.invoiceGenerated = invoiceGenerated;
-    }
+    private int id;
+    private boolean invoiceGenerated;
 }

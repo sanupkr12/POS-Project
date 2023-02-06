@@ -15,8 +15,6 @@ import com.increff.pos.util.StringUtil;
 public class BrandService {
 	@Autowired
 	private BrandDao dao;
-	@Autowired
-	private ProductService productService;
 
 	@Transactional(rollbackOn = ApiException.class)
 	public BrandPojo add(BrandPojo pojo) throws ApiException {
@@ -90,20 +88,6 @@ public class BrandService {
 	{
 		List<BrandPojo> list = dao.selectBrand(category,name);
 		return list;
-	}
-
-	public List<String> get(InventoryReportForm form) throws ApiException {
-		List<BrandPojo> list = dao.selectBrand(form.getCategory(),form.getBrand());
-		List<String> barcodeList = new ArrayList<>();
-		for(BrandPojo pojo:list)
-		{
-			List<ProductPojo> productList = productService.getByBrandId(pojo.getId());
-			for(ProductPojo product:productList)
-			{
-				barcodeList.add(product.getBarcode());
-			}
-		}
-		return barcodeList;
 	}
 
 	public List<BrandPojo> getSales(SalesReportForm form) throws ApiException {

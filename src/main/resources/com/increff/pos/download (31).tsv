@@ -1,4 +1,0 @@
-name	brandName	brandCategory	barcode	mrp	error
-grey jeans	levis	clothing	lev123	1299	{"message":"Brand does not exist"}
-red tshirt regular	levis	clothing	lev1234	699	{"message":"Brand does not exist"}
-medium jacket	levis	clothing		1599	{"message":"Barcode  cannot be empty"}

@@ -6,6 +6,7 @@ import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.service.AbstractUnitTest;
 import com.increff.pos.service.ApiException;
 import com.increff.pos.service.BrandService;
+import static com.increff.pos.util.ConvertUtil.convert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.increff.pos.util.NormalizeUtil.normalize;
 import static org.junit.Assert.assertEquals;
 
 public class BrandDtoTest extends AbstractUnitTest {
@@ -35,7 +37,7 @@ public class BrandDtoTest extends AbstractUnitTest {
         p.setName(name);
         p.setCategory(category);
 
-        BrandDto.normalize(p);
+        normalize(p);
 
         assertEquals(p.getName(),"boat");
         assertEquals(p.getCategory(),"headphones");
@@ -50,10 +52,10 @@ public class BrandDtoTest extends AbstractUnitTest {
         form.setName(name);
         form.setCategory(category);
 
-        BrandData data = brandDto.add(form);
+        BrandData data = brandDto.addBrand(form);
 
-        BrandPojo p = BrandDto.convert(form);
-        BrandDto.normalize(p);
+        BrandPojo p = convert(form);
+        normalize(p);
 
         assertEquals(data.getName(),p.getName());
         assertEquals(data.getCategory(),p.getCategory());
@@ -69,10 +71,10 @@ public class BrandDtoTest extends AbstractUnitTest {
         form.setCategory(category);
 
         exceptionRule.expect(ApiException.class);
-        BrandData data = brandDto.add(form);
+        BrandData data = brandDto.addBrand(form);
 
-        BrandPojo p = BrandDto.convert(form);
-        BrandDto.normalize(p);
+        BrandPojo p = convert(form);
+        normalize(p);
 
         assertEquals(data.getName(),p.getName());
         assertEquals(data.getCategory(),p.getCategory());
@@ -90,10 +92,10 @@ public class BrandDtoTest extends AbstractUnitTest {
         p.setName(name);
         p.setCategory(category);
 
-        BrandDto.normalize(p);
+        normalize(p);
         BrandPojo pojo = brandService.add(p);
 
-        BrandData data = brandDto.get(pojo.getId());
+        BrandData data = brandDto.getBrand(pojo.getId());
 
         assertEquals(data.getName(),pojo.getName());
         assertEquals(data.getCategory(),pojo.getCategory());
@@ -103,7 +105,7 @@ public class BrandDtoTest extends AbstractUnitTest {
     @Test
     public void testGetByIdWithInvalidId() throws ApiException {
         exceptionRule.expect(ApiException.class);
-        BrandData data = brandDto.get(123456);
+        BrandData data = brandDto.getBrand(123456);
 
     }
 
@@ -116,18 +118,18 @@ public class BrandDtoTest extends AbstractUnitTest {
         p1.setName("boat");
         p1.setCategory("headphones");
 
-        BrandDto.normalize(p1);
+        normalize(p1);
 
         p2.setName("apple");
         p2.setCategory("headphones");
 
-        BrandDto.normalize(p2);
+        normalize(p2);
 
 
         BrandPojo pojo1 = brandService.add(p1);
         BrandPojo pojo2 = brandService.add(p2);
 
-        list = brandDto.getAll();
+        list = brandDto.getAllBrand();
 
         assertEquals(list.get(0).getName(),pojo1.getName());
         assertEquals(list.get(0).getCategory(),pojo1.getCategory());
@@ -144,7 +146,7 @@ public class BrandDtoTest extends AbstractUnitTest {
         form.setName(name);
         form.setCategory(category);
 
-        BrandPojo p = BrandDto.convert(form);
+        BrandPojo p = convert(form);
 
         BrandPojo pojo = brandService.add(p);
 
@@ -152,7 +154,7 @@ public class BrandDtoTest extends AbstractUnitTest {
         updatedForm.setName("apple");
         updatedForm.setCategory("headphones");
 
-        BrandData updatedData = brandDto.update(pojo.getId(),updatedForm);
+        BrandData updatedData = brandDto.updateBrand(pojo.getId(),updatedForm);
 
         assertEquals(updatedData.getName(),"apple");
         assertEquals(updatedData.getCategory(),"headphones");
@@ -168,11 +170,11 @@ public class BrandDtoTest extends AbstractUnitTest {
         form.setName(name);
         form.setCategory(category);
 
-        BrandPojo p = BrandDto.convert(form);
+        BrandPojo p = convert(form);
 
         BrandPojo pojo = brandService.add(p);
 
-        BrandPojo data = brandDto.get(pojo.getName(),pojo.getCategory());
+        BrandPojo data = brandDto.getBrand(pojo.getName(),pojo.getCategory());
 
         assertEquals(data.getId(),pojo.getId());
 
@@ -186,12 +188,12 @@ public class BrandDtoTest extends AbstractUnitTest {
         p1.setName("boat");
         p1.setCategory("headphones");
 
-        BrandDto.normalize(p1);
+        normalize(p1);
 
         p2.setName("apple");
         p2.setCategory("smartphone");
 
-        BrandDto.normalize(p2);
+        normalize(p2);
 
         brandService.add(p1);
         brandService.add(p2);
@@ -210,12 +212,12 @@ public class BrandDtoTest extends AbstractUnitTest {
         p1.setName("apple");
         p1.setCategory("headphones");
 
-        BrandDto.normalize(p1);
+        normalize(p1);
 
         p2.setName("apple");
         p2.setCategory("smartphone");
 
-        BrandDto.normalize(p2);
+        normalize(p2);
 
         brandService.add(p1);
         brandService.add(p2);
@@ -235,12 +237,12 @@ public class BrandDtoTest extends AbstractUnitTest {
         p1.setName("boat");
         p1.setCategory(category);
 
-        BrandDto.normalize(p1);
+        normalize(p1);
 
         p2.setName("apple");
         p2.setCategory(category);
 
-        BrandDto.normalize(p2);
+        normalize(p2);
 
         brandService.add(p1);
         brandService.add(p2);
@@ -259,12 +261,12 @@ public class BrandDtoTest extends AbstractUnitTest {
         p1.setName(brand);
         p1.setCategory("headphones");
 
-        BrandDto.normalize(p1);
+        normalize(p1);
 
         p2.setName(brand);
         p2.setCategory("smartphone");
 
-        BrandDto.normalize(p2);
+        normalize(p2);
 
         brandService.add(p1);
         brandService.add(p2);

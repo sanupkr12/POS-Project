@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.increff.pos.util.NormalizeUtil.normalizeProduct;
 import static org.junit.Assert.assertEquals;
 
 public class ProductDtoTest extends AbstractUnitTest {
@@ -47,7 +48,7 @@ public class ProductDtoTest extends AbstractUnitTest {
         form.setBarcode(barcode);
 
 
-        productDto.normalizeProduct(form);
+        normalizeProduct(form);
 
         assertEquals(form.getName(),"boat rockerz 200");
     }
@@ -76,7 +77,7 @@ public class ProductDtoTest extends AbstractUnitTest {
         form.setName(name);
         form.setMrp(mrp);
 
-        ProductData data = productDto.add(form);
+        ProductData data = productDto.addProduct(form);
 
         assertEquals(data.getBarcode(),form.getBarcode());
         assertEquals(data.getName(),form.getName());
@@ -109,7 +110,7 @@ public class ProductDtoTest extends AbstractUnitTest {
         form.setMrp(20);
 
         exceptionRule.expect(ApiException.class);
-        ProductData data = productDto.add(form);
+        ProductData data = productDto.addProduct(form);
 
         assertEquals(data.getBarcode(),form.getBarcode());
         assertEquals(data.getName(),form.getName());
@@ -127,7 +128,7 @@ public class ProductDtoTest extends AbstractUnitTest {
 
         ProductPojo prod = generateProduct(brandName,category,name,barcode,mrp);
 
-        ProductData d = productDto.get(prod.getId());
+        ProductData d = productDto.getProductById(prod.getId());
 
         assertEquals(d.getBarcode(),prod.getBarcode());
     }
@@ -138,7 +139,7 @@ public class ProductDtoTest extends AbstractUnitTest {
         ProductPojo p1 = generateProduct("boat","headphones","boat rockerz 200","efgh1234",1400);
         ProductPojo p2 = generateProduct("apple","headphones","apple airpod","abcd1234",12000);
 
-        List<ProductData> list = productDto.get();
+        List<ProductData> list = productDto.getAllProduct();
 
         assertEquals(list.get(0).getName(),p1.getName());
         assertEquals(list.get(1).getName(),p2.getName());
@@ -164,7 +165,7 @@ public class ProductDtoTest extends AbstractUnitTest {
         updatedForm.setBrandCategory(category);
         updatedForm.setMrp(mrp);
 
-        ProductData data = productDto.update(updatedForm,p.getId());
+        ProductData data = productDto.updateProduct(updatedForm,p.getId());
 
         assertEquals(data.getName(),updatedName);
     }
@@ -188,7 +189,7 @@ public class ProductDtoTest extends AbstractUnitTest {
         updatedForm.setMrp(1200);
 
         exceptionRule.expect(ApiException.class);
-        ProductData data = productDto.update(updatedForm,p.getId());
+        ProductData data = productDto.updateProduct(updatedForm,p.getId());
 
 
     }

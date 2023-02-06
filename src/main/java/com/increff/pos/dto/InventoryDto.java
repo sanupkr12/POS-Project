@@ -1,7 +1,9 @@
 package com.increff.pos.dto;
 import com.increff.pos.dao.InventoryDao;
 import com.increff.pos.model.*;
+import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.InventoryPojo;
+import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.ApiException;
 import com.increff.pos.service.BrandService;
 import com.increff.pos.service.InventoryService;
@@ -24,20 +26,13 @@ public class InventoryDto {
     private BrandService brandService;
 
     public InventoryData create(InventoryForm form) throws ApiException {
-        if(form.getBarcode().equals(""))
-        {
-            throw new ApiException("Barcode cannot be empty");
+        try{
+            validationCheck(form);
+            normalizeInventory(form);
+            return convert(service.create(form));
+        } catch(ApiException e) {
+            throw new ApiException(e.getMessage());
         }
-        if(form.getQuantity()<0)
-        {
-            throw new ApiException("Quantity cannot be negative");
-        }
-        if(!productService.checkAny(form.getBarcode()))
-        {
-            throw new ApiException("No Product exists with current barcode");
-        }
-        normalizeInventory(form);
-        return convert(service.create(form));
     }
 
     public InventoryData get(String barcode) throws ApiException {
@@ -55,7 +50,16 @@ public class InventoryDto {
     }
 
     public List<InventoryData> get(InventoryReportForm inventoryReportForm) throws ApiException {
-        List<String> barcodeList = brandService.get(inventoryReportForm);
+        List<BrandPojo> brand = brandService.getBrandByCategoryAndBrand(inventoryReportForm.getBrand(),inventoryReportForm.getCategory());
+        List<String> barcodeList = new ArrayList<>();
+        for(BrandPojo pojo:brand)
+        {
+            List<ProductPojo> productList = productService.getByBrandId(pojo.getId());
+            for(ProductPojo product:productList)
+            {
+                barcodeList.add(product.getBarcode());
+            }
+        }
         List<InventoryPojo> list = service.get(barcodeList);
         List<InventoryData> inventoryList = new ArrayList<>();
         for(InventoryPojo pojo:list)
@@ -66,6 +70,35 @@ public class InventoryDto {
     }
 
     public InventoryData update (InventoryForm form) throws ApiException{
+        try{
+            validationCheck(form);
+            return convert(service.update(form));
+        } catch(ApiException e) {
+            throw new ApiException(e.getMessage());
+        }
+    }
+
+    public InventoryData replaceInventory (InventoryForm form) throws ApiException{
+        try{
+            validationCheck(form);
+            return convert(service.replaceInventory(form));
+        } catch(ApiException e){
+            throw new ApiException(e.getMessage());
+        }
+
+    }
+
+    private InventoryData convert(InventoryPojo pojo) throws ApiException {
+        InventoryData data = new InventoryData();
+        ProductData d = productService.get(pojo.getBarcode());
+        data.setId(pojo.getId());
+        data.setName(d.getName());
+        data.setBarcode(pojo.getBarcode());
+        data.setQuantity(pojo.getQuantity());
+        return data;
+    }
+
+    private void validationCheck(InventoryForm form) throws ApiException {
         if(form.getBarcode().equals(""))
         {
             throw new ApiException("Barcode cannot be empty");
@@ -82,32 +115,5 @@ public class InventoryDto {
         {
             throw new ApiException("No Product exists with current barcode");
         }
-        return convert(service.update(form));
-    }
-
-    public InventoryData replaceInventory (InventoryForm form) throws ApiException{
-        if(form.getBarcode().equals(""))
-        {
-            throw new ApiException("Barcode cannot be empty");
-        }
-        if(form.getQuantity()<0)
-        {
-            throw new ApiException("Quantity cannot be negative");
-        }
-        if(!productService.checkAny(form.getBarcode()))
-        {
-            throw new ApiException("No Product exists with current barcode");
-        }
-        return convert(service.replaceInventory(form));
-    }
-
-    public InventoryData convert(InventoryPojo pojo) throws ApiException {
-        InventoryData data = new InventoryData();
-        ProductData d = productService.get(pojo.getBarcode());
-        data.setId(pojo.getId());
-        data.setName(d.getName());
-        data.setBarcode(pojo.getBarcode());
-        data.setQuantity(pojo.getQuantity());
-        return data;
     }
 }

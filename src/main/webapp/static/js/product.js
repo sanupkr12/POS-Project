@@ -1,3 +1,8 @@
+// FILE UPLOAD METHODS
+let fileData = [];
+let errorData = [];
+let processCount = 0;
+
 $(document).ready(init);
 //INITIALIZATION CODE
 function init() {
@@ -122,10 +127,6 @@ function deleteProduct(id) {
 		error: handleAjaxError
 	});
 }
-// FILE UPLOAD METHODS
-let fileData = [];
-let errorData = [];
-let processCount = 0;
 function processData() {
 	let file = $('#productFile')[0].files[0];
 	if (file.type != 'text/tab-separated-values') {

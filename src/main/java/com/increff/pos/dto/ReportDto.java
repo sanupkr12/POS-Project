@@ -3,6 +3,7 @@ import com.increff.pos.dao.DaySalesDao;
 import com.increff.pos.model.*;
 import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.DaySalesPojo;
+import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,23 @@ public class ReportDto {
     private ReportService reportService;
 
     public List<InventoryData> getInventory(InventoryReportForm inventoryReportForm) throws ApiException, FileNotFoundException {
-        List<InventoryData> data =  inventoryService.get(inventoryReportForm);
-        return data;
+        List<BrandPojo> brand = brandService.getBrandByCategoryAndBrand(inventoryReportForm.getBrand(),inventoryReportForm.getCategory());
+        List<String> barcodeList = new ArrayList<>();
+        for(BrandPojo pojo:brand)
+        {
+            List<ProductPojo> productList = productService.getByBrandId(pojo.getId());
+            for(ProductPojo product:productList)
+            {
+                barcodeList.add(product.getBarcode());
+            }
+        }
+        List<InventoryPojo> list = inventoryService.get(barcodeList);
+        List<InventoryData> inventoryList = new ArrayList<>();
+        for(InventoryPojo p:list)
+        {
+            inventoryList.add(convertInventory(p));
+        }
+        return inventoryList;
     }
 
     public List<SalesReportData> getSales(SalesReportForm salesReportForm) throws ApiException, FileNotFoundException {
@@ -141,5 +157,15 @@ public class ReportDto {
         p.setItemCount(orderItemCount);
         p.setRevenue(revenue);
         reportService.add(p);
+    }
+
+    private InventoryData convertInventory(InventoryPojo p) throws ApiException {
+        InventoryData data = new InventoryData();
+        ProductData d = productService.get(p.getBarcode());
+        data.setId(p.getId());
+        data.setName(d.getName());
+        data.setBarcode(p.getBarcode());
+        data.setQuantity(p.getQuantity());
+        return data;
     }
 }

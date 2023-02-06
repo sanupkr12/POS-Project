@@ -1,10 +1,7 @@
 package com.increff.pos.service;
 
 import com.increff.pos.dao.InventoryDao;
-import com.increff.pos.model.InventoryData;
-import com.increff.pos.model.InventoryForm;
-import com.increff.pos.model.OrderForm;
-import com.increff.pos.model.OrderItemData;
+import com.increff.pos.model.*;
 import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.ProductPojo;
@@ -178,7 +175,12 @@ public class InventoryServiceTest extends AbstractUnitTest{
 
         InventoryPojo inventoryPojo = inventoryService.get(productPojo.getBarcode());
 
-        InventoryData data = inventoryService.convert(inventoryPojo);
+        InventoryData data = new InventoryData();
+        ProductData d = productService.get(inventoryPojo.getBarcode());
+        data.setId(inventoryPojo.getId());
+        data.setName(d.getName());
+        data.setBarcode(inventoryPojo.getBarcode());
+        data.setQuantity(inventoryPojo.getQuantity());
 
         assertEquals(data.getName(),productPojo.getName());
     }

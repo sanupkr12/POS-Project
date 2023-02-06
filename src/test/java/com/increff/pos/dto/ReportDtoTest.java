@@ -175,7 +175,7 @@ public class ReportDtoTest extends AbstractUnitTest {
         p.setBarcode(barcode);
 
 
-        ProductData prod = productDto.add(p);
+        ProductData prod = productDto.addProduct(p);
 
         InventoryForm form = new InventoryForm();
         form.setBarcode(prod.getBarcode());

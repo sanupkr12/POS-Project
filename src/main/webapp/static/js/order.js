@@ -1,3 +1,5 @@
+let index = 1;
+let orderForm = document.querySelector("#inputOrder");
 $(document).ready(init);
 function init() {
     $("#order-link").addClass('active');
@@ -10,8 +12,6 @@ function getOrderUrl() {
     let baseUrl = $("meta[name=baseUrl]").attr("content");
     return baseUrl + "/api/order";
 }
-let index = 1;
-let orderForm = document.querySelector("#inputOrder");
 function getElementFromString(string) {
     let div = document.createElement("div");
     div.innerHTML = string;

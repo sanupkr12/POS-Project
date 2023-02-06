@@ -1,3 +1,8 @@
+// FILE UPLOAD METHODS
+let fileData = [];
+let errorData = [];
+let processCount = 0;
+
 $(document).ready(init);
 //INITIALIZATION CODE
 function init(){
@@ -16,7 +21,7 @@ $("#inventory-link").addClass('active');
           fileName = fileName.split("\\").pop();
           $("#inventoryFileName").html(fileName);
       });
-	  getInventoryList();
+	 getInventoryList();
 }
 function getInventoryUrl(){
 	let baseUrl = $("meta[name=baseUrl]").attr("content")
@@ -29,22 +34,13 @@ function addInventory(event){
 	let $form = $("#inventory-create-form");
 	let json = toJson($form);
 	let url = getInventoryUrl();
-	$.ajax({
-	   url: url,
-	   type: 'POST',
-	   data: json,
-	   headers: {
-       	'Content-Type': 'application/json'
-       },
-	   success: function(response) {
-	        $("#create-inventory-modal").modal('toggle');
-	        handleSuccessNotification("Inventory has been updated successfully");
-	   		getInventoryList();
-	   },
-	   error: function(response){
-              	        handleAjaxError(response);
-              	   }
-	});
+	makeAjaxCall(url,'POST',json,(response)=>{
+        $("#create-inventory-modal").modal('toggle');
+        handleSuccessNotification("Inventory has been updated successfully");
+        getInventoryList();
+    },(response)=>{
+        handleAjaxError(response);
+    })
 	return false;
 }
 function updateInventory(event){
@@ -56,47 +52,25 @@ function updateInventory(event){
 	//Set the values to update
 	let $form = $("#inventory-edit-form");
 	let json = toJson($form);
-	$.ajax({
-	   url: url,
-	   type: 'PUT',
-	   data: json,
-	   headers: {
-       	'Content-Type': 'application/json'
-       },
-	   success: function(response) {
-	        handleSuccessNotification("Inventory has been updated successfully");
-	   		getInventoryList();
-	   },
-	   error: handleAjaxError
-	});
+	makeAjaxCall(url,'PUT',json,(response)=>{
+        handleSuccessNotification("Inventory has been updated successfully");
+        getInventoryList();
+     },handleAjaxError);
 	return false;
 }
 function getInventoryList(){
 	let url = getInventoryUrl();
-	$.ajax({
-	   url: url,
-	   type: 'GET',
-	   success: function(data) {
-	   		displayInventoryList(data);
-	   },
-	   error: handleAjaxError
-	});
+	makeAjaxCall(url,'GET',{},(data)=> {
+        displayInventoryList(data);
+    },handleAjaxError)
 }
 function deleteInventory(id){
 	let url = getInventoryUrl() + "/" + id;
-	$.ajax({
-	   url: url,
-	   type: 'DELETE',
-	   success: function(data) {
-	   		getInventoryList();
-	   },
-	   error: handleAjaxError
-	});
+	makeAjaxCall(url,'DELETE',{},(data)=> {
+        getInventoryList();
+    },handleAjaxError);
 }
-// FILE UPLOAD METHODS
-let fileData = [];
-let errorData = [];
-let processCount = 0;
+
 function processData(){
 	let file = $('#inventoryFile')[0].files[0];
 	if(file.type!='text/tab-separated-values')
@@ -165,22 +139,13 @@ function uploadRows(){
 	let json = JSON.stringify(row);
 	let url = getInventoryUrl();
 	//Make ajax call
-	$.ajax({
-	   url: url,
-	   type: 'POST',
-	   data: json,
-	   headers: {
-       	'Content-Type': 'application/json'
-       },
-	   success: function(response) {
-	   		uploadRows();
-	   },
-	   error: function(response){
-	   		row.error=response.responseText
-	   		errorData.push(row);
-	   		uploadRows();
-	   }
-	});
+	makeAjaxCall(url,'POST',json,(response) =>{
+        uploadRows();
+    },(response)=>{
+        row.error=response.responseText
+        errorData.push(row);
+        uploadRows();
+     });
 }
 function downloadErrors(){
 	writeFileData(errorData);
@@ -210,15 +175,11 @@ function displayInventoryList(data){
 }
 function displayEditInventory(barcode){
 	let url = getInventoryUrl() + "/" + barcode;
-	$.ajax({
-	   url: url,
-	   type: 'GET',
-	   success: function(data) {
-	   		displayInventory(data);
-	   },
-	   error: handleAjaxError
-	});
+	makeAjaxCall(url,'GET',{},(data)=> {
+        displayInventory(data);
+    },handleAjaxError);
 }
+
 function resetUploadDialog(){
 	//Reset file name
 	let $file = $('#inventoryFile');

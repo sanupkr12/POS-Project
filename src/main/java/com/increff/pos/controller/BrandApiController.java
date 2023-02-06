@@ -31,33 +31,33 @@ public class BrandApiController {
 
 	@ApiOperation(value = "Adds an Brand")
 	@RequestMapping(path = "", method = RequestMethod.POST)
-	public void add(@RequestBody BrandForm form) throws ApiException {
-		brandDto.add(form);
+	public void addBrand(@RequestBody BrandForm form) throws ApiException {
+		brandDto.addBrand(form);
 	}
 
 	@ApiOperation(value = "Deletes and Brand")
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	// /api/1
-	public void delete(@PathVariable int id) throws ApiException {
-		brandDto.delete(id);
+	public void deleteBrand(@PathVariable int id) throws ApiException {
+		brandDto.deleteBrand(id);
 	}
 
 	@ApiOperation(value = "Gets a Brand by ID")
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
-	public BrandData get(@PathVariable int id) throws ApiException {
-		return brandDto.get(id);
+	public BrandData getBrandById(@PathVariable int id) throws ApiException {
+		return brandDto.getBrand(id);
 	}
 
 	@ApiOperation(value = "Gets list of all Brand")
 	@RequestMapping(path = "", method = RequestMethod.GET)
-	public List<BrandData> getAll() {
-		return reverse(brandDto.getAll());
+	public List<BrandData> getAllBrand() {
+		return reverse(brandDto.getAllBrand());
 	}
 
 	@ApiOperation(value = "Updates an Brand")
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-	public void update(@PathVariable int id, @RequestBody BrandForm f) throws ApiException {
-		brandDto.update(id, f);
+	public void updateBrand(@PathVariable int id, @RequestBody BrandForm f) throws ApiException {
+		brandDto.updateBrand(id, f);
 	}
 
 	@ApiOperation(value="get All Category")

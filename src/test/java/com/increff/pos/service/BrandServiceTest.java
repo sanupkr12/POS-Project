@@ -151,38 +151,6 @@ public class BrandServiceTest extends AbstractUnitTest {
 
     }
 
-    @Test
-    public void testGetByInventoryForm() throws ApiException {
-        BrandPojo pojo = generateBrand("speakers","jabra");
-
-        ProductPojo productPojo1 = new ProductPojo();
-        ProductPojo productPojo2 = new ProductPojo();
-
-        productPojo1.setBarcode("a1");
-        productPojo1.setMrp(21000);
-        productPojo1.setName("jabra high end");
-        productPojo1.setBrandId(pojo.getId());
-
-        productService.add(productPojo1);
-
-        productPojo2.setBarcode("a2");
-        productPojo2.setMrp(15000);
-        productPojo2.setName("jabra low end");
-        productPojo2.setBrandId(pojo.getId());
-
-        productService.add(productPojo2);
-
-        InventoryReportForm form = new InventoryReportForm();
-        form.setBrand("jabra");
-        form.setCategory("speakers");
-
-        List<String> barcodeList = brandService.get(form);
-
-
-        assertEquals(barcodeList.get(0),"a1");
-        assertEquals(barcodeList.get(1),"a2");
-
-    }
 
     @Test
     public void testGetBrandReport() throws ApiException {

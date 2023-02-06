@@ -31,9 +31,9 @@ public class ProductServiceTest extends AbstractUnitTest{
     @Test
     public void testAdd() throws ApiException {
         BrandPojo pojo = generateBrand("speakers","jabra");
-
+        Double mrp = 2100.00;
         ProductPojo p = new ProductPojo();
-        p.setMrp(2100);
+        p.setMrp(mrp);
         p.setBarcode("a1");
         p.setName("jabra high end");
         p.setBrandId(pojo.getId());

@@ -6,7 +6,7 @@
   <div class="container-fluid" style="padding:0rem 5rem;">
     <h3 style="margin:1.5rem 0rem;">Order</h3>
     <button type="button" class="btn btn-primary" id="create-order">Create</button>
-    &nbsp;
+    
     <div class="modal" tabindex="-1" role="dialog" id="create-order-modal">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -52,11 +52,7 @@
         </div>
       </div>
     </div>
-    <!-- Blank Row -->
-    <div class="row">
-      &nbsp;
-    </div>
-    <div class="row">
+    <div class="row mt-3">
       <!-- Table -->
       <div class="col-12">
         <table class="table table-striped" id="order-table">
@@ -119,10 +115,9 @@
               <label class="custom-file-label" for="orderFile" id="orderFileName">Choose file</label>
             </div>
             <a th:href="@{/sample/order.tsv}" target="_blank">Download Sample</a>
-            <br>
-            Rows: <span id="rowCount">0</span>,
-            Processed: <span id="processCount">0</span>,
-            Errors: <span id="errorCount">0</span>
+            <p>Rows: <span id="rowCount">0</span>,
+              Processed: <span id="processCount">0</span>,
+              Errors: <span id="errorCount">0</span></p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

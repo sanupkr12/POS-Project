@@ -35,18 +35,15 @@ public class ProductDto {
             checkProductValidity(productForm);
             normalizeProduct(productForm);
             BrandPojo brand  = brandService.get(productForm.getBrandName(),productForm.getBrandCategory());
-            //TODO what if brand does not exists
             ProductPojo prod = new ProductPojo();
             prod.setBarcode(productForm.getBarcode());
             prod.setBrandId(brand.getId());
             prod.setName(productForm.getName());
             prod.setMrp(productForm.getMrp());
-            //TODO put it inside try catch block
             ProductPojo pojo = service.add(prod);
             InventoryForm inventoryForm = new InventoryForm();
             inventoryForm.setBarcode(prod.getBarcode());
             inventoryForm.setQuantity(0);
-            //TODO put it inside try catch block
             inventoryService.create(inventoryForm);
             return convert(pojo);
         } catch (ApiException e){
