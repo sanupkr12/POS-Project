@@ -11,20 +11,14 @@ import java.util.List;
 
 @Repository
 public class DaySalesDao extends AbstractDao {
+    private static final String GET_DAY_SALES = "select p from DaySalesPojo p";
 
-    @PersistenceContext
-    private EntityManager em;
-
-    private String getDaySales = "select p from DaySalesPojo p";
-
-
-    public void insert(DaySalesPojo p)
-    {
+    public void insert(DaySalesPojo p) {
         em.persist(p);
     }
 
     public List<DaySalesPojo> get(){
-        TypedQuery<DaySalesPojo> query = getQuery(getDaySales, DaySalesPojo.class);
+        TypedQuery<DaySalesPojo> query = getQuery(GET_DAY_SALES, DaySalesPojo.class);
         return query.getResultList();
     }
 }

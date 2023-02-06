@@ -1,5 +1,4 @@
 package com.increff.pos.dto;
-
 import com.increff.pos.dao.ProductDao;
 import com.increff.pos.model.BrandData;
 import com.increff.pos.model.InventoryForm;
@@ -13,196 +12,114 @@ import com.increff.pos.service.InventoryService;
 import com.increff.pos.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import static com.increff.pos.util.NormalizeUtil.normalizeProduct;
+import static com.increff.pos.util.validationUtil.checkProductValidity;
 
-@Component
+@Service
 public class ProductDto {
-
     @Autowired
     private ProductService service;
-
     @Autowired
     private BrandService brandService;
-
     @Autowired
     private InventoryService inventoryService;
-
     @Autowired
     private ProductService productService;
 
-
-    @Transactional(rollbackOn = ApiException.class)
-    public ProductData add(ProductForm p) throws ApiException{
-        if(p.getName().equals(""))
-        {
-            throw new ApiException("Product Name cannot be empty");
+    public ProductData addProduct(ProductForm productForm) throws ApiException{
+        try{
+            checkProductValidity(productForm);
+            normalizeProduct(productForm);
+            BrandPojo brand  = brandService.get(productForm.getBrandName(),productForm.getBrandCategory());
+            //TODO what if brand does not exists
+            ProductPojo prod = new ProductPojo();
+            prod.setBarcode(productForm.getBarcode());
+            prod.setBrandId(brand.getId());
+            prod.setName(productForm.getName());
+            prod.setMrp(productForm.getMrp());
+            //TODO put it inside try catch block
+            ProductPojo pojo = service.add(prod);
+            InventoryForm inventoryForm = new InventoryForm();
+            inventoryForm.setBarcode(prod.getBarcode());
+            inventoryForm.setQuantity(0);
+            //TODO put it inside try catch block
+            inventoryService.create(inventoryForm);
+            return convert(pojo);
+        } catch (ApiException e){
+            throw new ApiException(e.getMessage());
         }
-        if(p.getBarcode().equals(""))
-        {
-            throw new ApiException("Barcode  cannot be empty");
-        }
-
-        if(!p.getBarcode().trim().matches("\\w+"))
-        {
-            throw new ApiException("Invalid Barcode");
-        }
-
-        if(p.getBrandName().equals(""))
-        {
-            throw new ApiException("Brand Name cannot be empty");
-        }
-
-        if(p.getBrandCategory().equals(""))
-        {
-
-        }
-
-        if(p.getMrp()<=0)
-        {
-            throw new ApiException("Price cannot be negative");
-        }
-
-        normalizeProduct(p);
-
-        BrandPojo p1  = brandService.get(p.getBrandName(),p.getBrandCategory());
-
-        ProductPojo prod = new ProductPojo();
-        prod.setBarcode(p.getBarcode());
-        prod.setBrandId(p1.getId());
-        prod.setName(p.getName());
-        prod.setMrp(p.getMrp());
-
-        ProductPojo pojo = service.add(prod);
-
-        InventoryForm inventoryForm = new InventoryForm();
-        inventoryForm.setBarcode(prod.getBarcode());
-        inventoryForm.setQuantity(0);
-        inventoryService.create(inventoryForm);
-
-        return convert(pojo);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
-    public void delete(int id) throws ApiException{
+    public void deleteProduct(int id) throws ApiException{
         service.delete(id);
     }
 
-
-    @Transactional(rollbackOn = ApiException.class)
-    public ProductData get(int id) throws ApiException{
+    public ProductData getProductById(int id) throws ApiException{
         ProductPojo p = service.get(id);
-
         if(p==null)
         {
             throw new ApiException("No Product Found");
         }
-
-
         return convert(p);
     }
 
-//    public List<ProductPojo> getByBrandId(int brandId) throws ApiException {
-//        return service.getByBrandId(brandId);
-//    }
-
-    @Transactional(rollbackOn = ApiException.class)
-    public List<ProductData> get() throws ApiException{
+    public List<ProductData> getAllProduct() throws ApiException{
         List<ProductPojo> p = service.get();
-
         if(p==null)
         {
             throw new ApiException("No Product Found");
         }
-
         List<ProductData> list = new ArrayList<ProductData>();
-
         for(ProductPojo p1:p){
             list.add(convert(p1));
         }
-
         return list;
     }
 
-    @Transactional(rollbackOn = ApiException.class)
-    public ProductData update(ProductForm p,int id) throws ApiException{
+    public ProductData updateProduct(ProductForm productForm,int id) throws ApiException{
 
-
-        if(p.getName().equals(""))
-        {
-            throw new ApiException("Product Name cannot be empty");
-        }
-        if(p.getBarcode().equals(""))
-        {
-            throw new ApiException("Barcode  cannot be empty");
-        }
-
-        if(!p.getBarcode().trim().matches("\\w+"))
-        {
-            throw new ApiException("Invalid Barcode");
-        }
-
-        if(p.getBrandName().equals(""))
-        {
-            throw new ApiException("Brand Name cannot be empty");
-        }
-
-        if(p.getMrp()<=0)
-        {
-            throw new ApiException("Price cannot be negative");
-        }
-
-        ProductData data = productService.get(p.getBarcode());
-        ProductPojo pojo = productService.get(id);
-
-        if(data!=null)
-        {
-            if(!data.getBarcode().equals(pojo.getBarcode()))
+        try{
+            normalizeProduct(productForm);
+            checkProductValidity(productForm);
+            ProductData data = productService.get(productForm.getBarcode());
+            ProductPojo pojo = productService.get(id);
+            if(data!=null)
             {
-                throw new ApiException("Barcode already exists");
+                if(!data.getBarcode().equals(pojo.getBarcode()))
+                {
+                    throw new ApiException("Barcode already exists");
+                }
             }
-
-        }
-
-        BrandPojo b = brandService.get(p.getBrandName(),p.getBrandCategory());
-
-        if(b==null)
+            BrandPojo b = brandService.get(productForm.getBrandName(),productForm.getBrandCategory());
+            if(b==null)
+            {
+                throw new ApiException("No brand exist with current details");
+            }
+            if(!pojo.getBarcode().equals(productForm.getBarcode()))
+            {
+                inventoryService.updateWithProduct(pojo.getBarcode(),productForm.getBarcode());
+            }
+            return convert(service.update(productForm,id,b.getId()));
+        } catch (ApiException e)
         {
-            throw new ApiException("No brand exist with current details");
+            throw new ApiException(e.getMessage());
         }
 
-        if(!pojo.getBarcode().equals(p.getBarcode()))
-        {
-            inventoryService.updateWithProduct(pojo.getBarcode(),p.getBarcode());
-        }
-
-        return convert(service.update(p,id,b.getId()));
     }
 
-
-    @Transactional
-    ProductData convert(ProductPojo p) throws ApiException{
+    private ProductData convert(ProductPojo p) throws ApiException{
         BrandPojo b = brandService.get(p.getBrandId());
-
         ProductData d = new ProductData();
-
         d.setId(p.getId());
         d.setName(p.getName());
         d.setMrp(p.getMrp());
         d.setBrandName(b.getName());
         d.setBrandCategory(b.getCategory());
         d.setBarcode(p.getBarcode());
-
         return d;
     }
-
-
-    protected void normalizeProduct(ProductForm form){
-        form.setName(form.getName().toLowerCase().trim());
-        form.setBrandCategory(form.getBrandCategory().toLowerCase().trim());
-        form.setBrandName(form.getBrandName().toLowerCase().trim());
-    }
-
 }

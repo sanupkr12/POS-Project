@@ -1,38 +1,34 @@
 <!doctype html>
-
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-
 <head th:replace="snippets.html :: name_head"></head>
-
 <body>
-
-<nav th:replace="snippets.html :: name_app_navbar"></nav>
-
-<div class="container-fluid" style="padding:0rem 5rem;">
-
-    <h3 style="margin:1.5rem 0rem;">Sales Report</h3>
-    <form class="form" id="options-form">
-        <div class="row">
-                    <div class="col-5">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+    <nav th:replace="snippets.html :: name_app_navbar"></nav>
+    <div class="container-fluid" style="padding:0rem 5rem;">
+        <h3 style="margin:1.5rem 0rem;">Sales Report</h3>
+        <form class="form" id="options-form">
+            <div class="row">
+                <div class="col-5">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
                         <label class="form-label" style="margin-top:0.5rem" for="category">Start Date</label>
-                        <input type="date" class="form-control" id="start-date" style="width:70%" max="" placeholder="Start Date">
-                            </div>
+                        <input type="date" class="form-control" id="start-date" style="width:70%" max=""
+                            placeholder="Start Date">
                     </div>
-                    <div class="col-2"></div>
-                    <div class="col-5">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+                </div>
+                <div class="col-2"></div>
+                <div class="col-5">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
                         <label class="form-label" style="margin-top:0.5rem" for="category">End Date</label>
-                        <input type="date"  class="form-control" id="end-date" style="width:70%" max="" placeholder="End Date">
-                        </div>
+                        <input type="date" class="form-control" id="end-date" style="width:70%" max=""
+                            placeholder="End Date">
                     </div>
+                </div>
                 <div class="col-5">
                     <div style="display:flex;justify-content:space-between">
                         <label class="form-label" style="margin-top:0.5rem" for="category">Category</label>
-                        <select class="form-control form-select form-select-lg mb-3 append-category" id="category" style="
-    padding:0.3rem;margin-bottom:2rem;margin-left:2rem;width:70%"  aria-label=".form-select-lg example">
+                        <select class="form-control form-select form-select-lg mb-3 append-category" id="category"
+                            style="
+    padding:0.3rem;margin-bottom:2rem;margin-left:2rem;width:70%" aria-label=".form-select-lg example">
                             <option selected>Select Category</option>
-
                         </select>
                     </div>
                 </div>
@@ -43,51 +39,34 @@
                         <select class="form-control form-select form-select-lg mb-3 append-brand" id="brand" style="
     padding:0.3rem;margin-bottom:2rem;margin-left:2rem;width:70%" aria-label=".form-select-lg example">
                             <option selected>Select Brand</option>
-
-
                         </select>
                     </div>
                 </div>
-
             </div>
-
-
             <div class="col-12" style="display:flex;align-items:center;margin:1rem 0 2rem 0;padding:0rem;">
                 <button id="download-sales" class="btn btn-primary btn-md">Generate Report</button>
             </div>
-
-
-
-    </form>
-<div class="row">
-    <div class="col-12">
-        <table class="table table-striped" id="display-sales-table">
-            <thead class="thead-dark">
-            <tr class="sticky-top" style="top:78px;z-index:auto;">
-                <th scope="col">S No.</th>
-                <th scope="col">Brand Name</th>
-                <th scope="col">Category</th>
-                <th scope="col">Quantity</th>
-                <th scope="col" style="text-align:end">Total (in ₹)</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
-
-    </div>
-</div>
-
-
-
-
-
-</div> <!-- Container end-->
-
-<footer th:replace="snippets.html :: name_footer"></footer>
-
-<script th:src="@{/static/salesReport.js}"/></script>
+        </form>
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped" id="display-sales-table">
+                    <thead class="thead-dark">
+                        <tr class="sticky-top" style="top:78px;z-index:auto;">
+                            <th scope="col">S No.</th>
+                            <th scope="col">Brand Name</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col" style="text-align:end">Total (in ₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> <!-- Container end-->
+    <footer th:replace="snippets.html :: name_footer"></footer>
+    <script th:src="@{/static/js/salesReport.js}">
+    </script>
 </body>
-
 </html>

@@ -14,19 +14,16 @@ import io.swagger.annotations.ApiOperation;
 @Api
 @RestController
 public class AboutApiController {
-
 	@Autowired
 	private AboutAppService service;
 
 	@ApiOperation(value = "Gives application name and version")
 	@RequestMapping(path = "/api/about", method = RequestMethod.GET)
 	public AboutAppData getDetails() {
-		AboutAppData d = new AboutAppData();
-		d.setName(service.getName());
-		d.setVersion(service.getVersion());
-		return d;
+		AboutAppData data = new AboutAppData();
+		data.setName(service.getName());
+		data.setVersion(service.getVersion());
+		return data;
 	}
-
-
 
 }

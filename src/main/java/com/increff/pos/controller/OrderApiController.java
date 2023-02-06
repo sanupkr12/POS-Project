@@ -24,12 +24,8 @@ import static com.google.common.collect.Lists.reverse;
 @RestController
 @RequestMapping(value="/api/order")
 public class OrderApiController {
-
     @Autowired
     private OrderDto orderDto;
-
-    @Autowired
-    private OrderService service;
 
     @ApiOperation(value="creating an order")
     @RequestMapping(path="",method = RequestMethod.POST)

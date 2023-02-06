@@ -12,12 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
 	private static Logger logger = Logger.getLogger(SecurityConfig.class);
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-
+		//TODO add antMatchers in all uris
 		http//
 			// Match only these URLs
 				.requestMatchers()//

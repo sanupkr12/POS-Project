@@ -28,8 +28,6 @@ import static com.google.common.collect.Lists.reverse;
 public class BrandApiController {
 	@Autowired
 	private BrandDto brandDto;
-	@Autowired
-	private BrandService service;
 
 	@ApiOperation(value = "Adds an Brand")
 	@RequestMapping(path = "", method = RequestMethod.POST)
@@ -37,7 +35,6 @@ public class BrandApiController {
 		brandDto.add(form);
 	}
 
-	
 	@ApiOperation(value = "Deletes and Brand")
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	// /api/1
@@ -86,7 +83,5 @@ public class BrandApiController {
 	public List<String> getCategoryByBrand(@PathVariable String brand){
 		return brandDto.getCategoryByBrand(brand);
 	}
-
-
 
 }

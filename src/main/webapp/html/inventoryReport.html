@@ -1,83 +1,57 @@
 <!doctype html>
-
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-
 <head th:replace="snippets.html :: name_head"></head>
-
 <body>
-
-<nav th:replace="snippets.html :: name_app_navbar"></nav>
-
-<div class="container-fluid" style="padding:0rem 5rem;">
-
-    <h3 style="margin:1.5rem 0rem;">Inventory Report</h3>
-    <form id="options-form">
-        <div class="row">
-
-            <div class="col-5">
-                <div style="display:flex;justify-content:space-between">
-                    <label class="form-label" style="margin-top:0.5rem" for="category">Category</label>
-                    <select class="form-control form-select form-select-lg mb-3 append-category" id="category" style="
-    padding:0.3rem;margin-bottom:2rem;margin-left:2rem"  aria-label=".form-select-lg example">
-                        <option selected>Select Category</option>
-
-                    </select>
-                </div>
-            </div>
-            <div class="col-2"></div>
-            <div class="col-5">
-                <div style="display:flex;justify-content:space-between">
-                    <label class="form-label" style="margin-top:0.5rem" for="brand">Brand</label>
-                    <select class="form-control form-select form-select-lg mb-3 append-brand" id="brand" style="
+    <nav th:replace="snippets.html :: name_app_navbar"></nav>
+    <div class="container-fluid" style="padding:0rem 5rem;">
+        <h3 style="margin:1.5rem 0rem;">Inventory Report</h3>
+        <form id="options-form">
+            <div class="row">
+                <div class="col-5">
+                    <div style="display:flex;justify-content:space-between">
+                        <label class="form-label" style="margin-top:0.5rem" for="category">Category</label>
+                        <select class="form-control form-select form-select-lg mb-3 append-category" id="category"
+                            style="
     padding:0.3rem;margin-bottom:2rem;margin-left:2rem" aria-label=".form-select-lg example">
-                        <option selected>Select Brand</option>
-
-
-                    </select>
+                            <option selected>Select Category</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-5">
+                    <div style="display:flex;justify-content:space-between">
+                        <label class="form-label" style="margin-top:0.5rem" for="brand">Brand</label>
+                        <select class="form-control form-select form-select-lg mb-3 append-brand" id="brand" style="
+    padding:0.3rem;margin-bottom:2rem;margin-left:2rem" aria-label=".form-select-lg example">
+                            <option selected>Select Brand</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12" style="display:flex;align-items:center;margin:1rem 0 2rem 0;padding-left:1rem;">
+                    <button id="download-inventory" class="btn btn-primary btn-md">Generate Report</button>
                 </div>
             </div>
-
-
-
-
-
-            <div class="col-12" style="display:flex;align-items:center;margin:1rem 0 2rem 0;padding-left:1rem;" >
-                <button id="download-inventory" class="btn btn-primary btn-md">Generate Report</button>
+        </form>
+        <div class="row">
+            <!-- Table -->
+            <div class="col-12">
+                <table class="table table-striped" id="display-inventory-table">
+                    <thead class="thead-dark">
+                        <tr class="sticky-top" style="top:78px;z-index:auto;">
+                            <th scope="col">S No.</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Barcode</th>
+                            <th scope="col">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
-
-
         </div>
-    </form>
-
-    <div class="row">
-
-        <!-- Table -->
-        <div class="col-12">
-            <table class="table table-striped" id="display-inventory-table">
-                <thead class="thead-dark">
-                <tr class="sticky-top" style="top:78px;z-index:auto;">
-                    <th scope="col">S No.</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Barcode</th>
-                    <th scope="col">Quantity</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-
-        </div>
-    </div>
-
-
-
-
-</div> <!-- Container end-->
-
-<footer th:replace="snippets.html :: name_footer"></footer>
-
-<script th:src="@{/static/inventoryReport.js}"/></script>
+    </div> <!-- Container end-->
+    <footer th:replace="snippets.html :: name_footer"></footer>
+    <script th:src="@{/static/js/inventoryReport.js}" >
+    </script>
 </body>
-
 </html>

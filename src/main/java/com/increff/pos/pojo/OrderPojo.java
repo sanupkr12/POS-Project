@@ -1,46 +1,22 @@
 package com.increff.pos.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Date;
 
-
+@Getter
+@Setter
 @Entity
 public class OrderPojo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
-    Date date;
+    private int id;
+    private Date date;
+    private boolean invoiceGenerated;
 
-
-
-
-    boolean invoiceGenerated;
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public boolean getInvoiceGenerated() {
-        return invoiceGenerated;
-    }
-
-    public void setInvoiceGenerated(boolean invoiceGenerated) {
-        this.invoiceGenerated = invoiceGenerated;
-    }
 }

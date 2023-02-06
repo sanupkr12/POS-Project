@@ -22,11 +22,8 @@ import java.util.List;
 @RestController
 @RequestMapping(value="/api/report")
 public class ReportController {
-
     @Autowired
     private ReportDto reportDto;
-
-
 
     @ApiOperation(value="Generate Inventory Report")
     @RequestMapping(path = "/inventory",method = RequestMethod.POST)
@@ -41,7 +38,6 @@ public class ReportController {
         return reportDto.getBrand(brandReportForm);
     }
 
-
     @ApiOperation(value="Generate Sales Report")
     @RequestMapping(path = "/sales",method = RequestMethod.POST)
     public List<SalesReportData> generateSales(@RequestBody SalesReportForm salesReportForm) throws ApiException, FileNotFoundException {
@@ -53,9 +49,5 @@ public class ReportController {
     public List<DaySalesData> generateDaySales() throws ApiException, FileNotFoundException, ParseException {
         return reportDto.getDaySalesInfo();
     }
-
-
-
-
 
 }

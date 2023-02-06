@@ -72,15 +72,10 @@ public class SignupController {
         }
 
         UserPojo user = new UserPojo();
-
-
         user.setEmail(form.getEmail());
         user.setPassword(form.getPassword());
-
-
         String []admins = adminList.split(",");
         Boolean flag = false;
-
         for(String admin:admins)
         {
             if(admin.equals(form.getEmail()))
@@ -89,15 +84,12 @@ public class SignupController {
                 flag = true;
                 break;
             }
-
         }
 
         if(!flag)
         {
             user.setRole("operator");
         }
-
-
 
         service.add(user);
 
@@ -112,19 +104,17 @@ public class SignupController {
 
         return new ModelAndView("redirect:/ui/home");
 
-
-
     }
 
-    private static Authentication convert(UserPojo p) {
+    private static Authentication convert(UserPojo pojo) {
         // Create principal
         UserPrincipal principal = new UserPrincipal();
-        principal.setEmail(p.getEmail());
-        principal.setId(p.getId());
+        principal.setEmail(pojo.getEmail());
+        principal.setId(pojo.getId());
 
         // Create Authorities
         ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority(p.getRole()));
+        authorities.add(new SimpleGrantedAuthority(pojo.getRole()));
         // you can add more roles if required
 
         // Create Authentication

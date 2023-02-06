@@ -29,7 +29,6 @@ import io.swagger.annotations.ApiOperation;
 
 @Controller
 public class LoginController {
-
 	@Autowired
 	private UserService service;
 	@Autowired
@@ -37,17 +36,17 @@ public class LoginController {
 	
 	@ApiOperation(value = "Logs in a user")
 	@RequestMapping(path = "/session/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public ModelAndView login(HttpServletRequest req, LoginForm f) throws ApiException {
+	public ModelAndView login(HttpServletRequest req, LoginForm form) throws ApiException {
 		info.setMessage("");
-		UserPojo p = service.get(f.getEmail());
-		boolean authenticated = (p != null && Objects.equals(p.getPassword(), f.getPassword()));
+		UserPojo pojo = service.get(form.getEmail());
+		boolean authenticated = (pojo != null && Objects.equals(pojo.getPassword(), form.getPassword()));
 		if (!authenticated) {
 			info.setMessage("Invalid username or password");
 			return new ModelAndView("redirect:/site/login");
 		}
 
 		// Create authentication object
-		Authentication authentication = convert(p);
+		Authentication authentication = convert(pojo);
 		// Create new session
 		HttpSession session = req.getSession(true);
 		// Attach Spring SecurityContext to this new session
@@ -65,15 +64,15 @@ public class LoginController {
 		return new ModelAndView("redirect:/site/login");
 	}
 
-	private static Authentication convert(UserPojo p) {
+	private static Authentication convert(UserPojo pojo) {
 		// Create principal
 		UserPrincipal principal = new UserPrincipal();
-		principal.setEmail(p.getEmail());
-		principal.setId(p.getId());
+		principal.setEmail(pojo.getEmail());
+		principal.setId(pojo.getId());
 
 		// Create Authorities
 		ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		authorities.add(new SimpleGrantedAuthority(p.getRole()));
+		authorities.add(new SimpleGrantedAuthority(pojo.getRole()));
 		// you can add more roles if required
 
 		// Create Authentication

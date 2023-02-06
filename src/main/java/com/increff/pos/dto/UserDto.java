@@ -1,5 +1,4 @@
 package com.increff.pos.dto;
-
 import com.increff.pos.dao.UserDao;
 import com.increff.pos.model.AddUserForm;
 import com.increff.pos.model.UserData;
@@ -13,44 +12,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
-
+import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Service
 @PropertySource(value="file:./supervisor.properties")
 public class UserDto {
     @Autowired
     private UserService service;
-
     @Value("${adminList}")
     private String adminList;
 
-    @Transactional
     public void add(AddUserForm form) throws ApiException {
         if(form.getEmail().equals(""))
         {
             throw new ApiException("Email cannot be empty");
         }
-
         if(form.getPassword().equals(""))
         {
             throw new ApiException("Password cannot be empty");
         }
-
         if(!EmailValidator.getInstance().isValid(form.getEmail()))
         {
             throw new ApiException("Invalid Email Address");
         }
-
-
         UserPojo p = convert(form);
         normalize(p);
-
         String []admins = adminList.split(",");
         Boolean flag = false;
-
         for(String email:admins)
         {
             if(email.equals(p.getEmail()))
@@ -59,17 +50,13 @@ public class UserDto {
                 flag = true;
             }
         }
-
-
         if(!flag)
         {
             p.setRole("operator");
         }
-
         service.add(p);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
     public UserPojo get(String email) throws ApiException {
         return service.get(email);
     }
@@ -78,9 +65,7 @@ public class UserDto {
         return convert(service.getById(id));
     }
 
-    @Transactional
     public List<UserData> getAll() {
-
         List<UserPojo> list = service.getAll();
         List<UserData> list2 = new ArrayList<UserData>();
         for (UserPojo p : list) {
@@ -89,12 +74,10 @@ public class UserDto {
         return list2;
     }
 
-    @Transactional
     public void delete(int id) throws ApiException {
         service.delete(id);
     }
 
-    @Transactional
     public void update(int id,editUserForm form) throws ApiException {
         service.update(id,form.getEmail(),form.getRole());
     }

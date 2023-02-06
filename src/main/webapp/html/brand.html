@@ -1,157 +1,133 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <html lang="en">
-
 <head th:replace="snippets.html :: name_head"></head>
-
 <body>
-
-<nav th:replace="snippets.html :: name_app_navbar"></nav>
-
-<div class="container-fluid" style="padding:0rem 5rem;">
-
-<h3 style="margin:1.5rem 0rem;">Brand</h3>
-
-	<button type="button" class="btn btn-primary" th:if="${info.getRole() == 'supervisor'}" id="add-brand">Create</button>
-	&nbsp;&nbsp;
-	<button type="button" class="btn btn-primary" th:if="${info.getRole() == 'supervisor'}" id="upload-data">Upload</button>
-
-
-
-<!-- Create Modal-->
-	<div class="modal" tabindex="-1" role="dialog" id="create-brand-modal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Create Brand</h5>
-				</div>
-				<form class="" id="brand-form">
-				<div class="modal-body mt-3">
-
-						<div class="form-group">
-							<label for="inputName" class="col-sm-6 col-form-label">Brand Name</label>
-							<div class="col-sm-12">
-								<input type="text" id="inputName" required="required" class="form-control" name="name" placeholder="Enter Name">
+	<nav th:replace="snippets.html :: name_app_navbar"></nav>
+	<div class="container-fluid" style="padding:0rem 5rem;">
+		<h3 style="margin:1.5rem 0rem;">Brand</h3>
+		<button type="button" class="btn btn-primary" th:if="${info.getRole() == 'supervisor'}"
+			id="add-brand">Create</button>
+		&nbsp;&nbsp;
+		<button type="button" class="btn btn-primary" th:if="${info.getRole() == 'supervisor'}"
+			id="upload-data">Upload</button>
+		<!-- Create Modal-->
+		<div class="modal" tabindex="-1" role="dialog" id="create-brand-modal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Create Brand</h5>
+					</div>
+					<form class="" id="brand-form">
+						<div class="modal-body mt-3">
+							<div class="form-group">
+								<label for="inputName" class="col-sm-6 col-form-label">Brand Name</label>
+								<div class="col-sm-12">
+									<input type="text" id="inputName" required="required" class="form-control"
+										name="name" placeholder="Enter Name">
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label for="inputCategory" class="col-sm-6 col-form-label">Brand Category</label>
-							<div class="col-sm-12">
-								<input type="text" id="inputCategory" required="required" class="form-control" name="category" placeholder="Enter Category">
+							<div class="form-group">
+								<label for="inputCategory" class="col-sm-6 col-form-label">Brand Category</label>
+								<div class="col-sm-12">
+									<input type="text" id="inputCategory" required="required" class="form-control"
+										name="category" placeholder="Enter Category">
+								</div>
 							</div>
+							<input type="hidden" name="id">
 						</div>
-						<input type="hidden" name="id" >
-
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+							<button type="submit" class="btn btn-primary" id="create-brand">Create</button>
+						</div>
+					</form>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-					<button type="submit" class="btn btn-primary" id="create-brand">Create</button>
-				</div>
-				</form>
 			</div>
 		</div>
-	</div>
-
-
-<!-- Blank Row -->
-<div class="row">
-	&nbsp;
-</div>
-<div class="row">
-
- <!-- Table -->
- <div class="col-12">
-	<table class="table table-striped" id="Brand-table">
-	  <thead class="thead-dark">
-	    <tr class="sticky-top" style="top:78px;z-index:auto;">
-	      <th scope="col">S No.</th>
-	      <th scope="col">Name</th>
-	      <th scope="col">Category</th>
-	      <th scope="col" class="text-center" th:if="${role=='supervisor'}">Actions</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-
-	  </tbody>
-	</table>
-
-</div>
-</div>
-
-
-
-
-<!-- Employee Edit Modal -->
-<div class="modal" tabindex="-1" role="dialog" id="edit-brand-modal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Edit Brand</h5>
-      </div>
-		<form class="" id="brand-edit-form">
-      <div class="modal-bodym mt-3">
-
-			  <div class="form-group">
-			    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-			    <div class="col-sm-12">
-			      <input type="text" class="form-control" required="required" name="name" placeholder="Enter Name">
-			    </div>
-			  </div>
-			  <div class="form-group">
-			    <label for="inputCategory" class="col-sm-2 col-form-label">Category</label>
-			    <div class="col-sm-12 mb-4">
-			      <input type="text" class="form-control" required="required" name="category" placeholder="Enter Category">
-			    </div>
-			  </div>
- 	        <input type="hidden" name="id" >
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary" id="update-brand">Update</button>
-      </div>
-		</form>
-    </div>
-  </div>
-</div>
-
-
-<!-- Employee Edit Modal -->
-<div class="modal" tabindex="-1" role="dialog" id="upload-brand-modal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      
-      <div class="modal-header">
-        <h5 class="modal-title">Upload Brand</h5>
-      </div>
-      
-      <div class="modal-body mt-3">
-      	<div class="brand-file">
-		  <input type="file" class="custom-file-input" id="brandFile">
-		  <label class="custom-file-label" for="brandFile" id="brandFileName">Choose file</label>
+		<!-- Blank Row -->
+		<div class="row">
+			&nbsp;
 		</div>
-		<a th:href="@{/sample/dummyBrand.tsv}" target="_blank">Download Sample</a>
-		<br>
-		Rows: <span id="rowCount">0</span>, 
-		Processed: <span id="processCount">0</span>, 
-		Errors: <span id="errorCount">0</span>
-      </div>
-      
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="process-data">Upload</button>
-        <button type="button" class="btn btn-warning" id="download-errors">Download Errors</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div> <!-- Container end-->
-
-<footer th:replace="snippets.html :: name_footer"></footer>
-
-<script th:src="@{/static/brand.js}"/></script>
-
-</body>	
-
+		<div class="row">
+			<!-- Table -->
+			<div class="col-12">
+				<table class="table table-striped" id="Brand-table">
+					<thead class="thead-dark">
+						<tr class="sticky-top" style="top:78px;z-index:auto;">
+							<th scope="col">S No.</th>
+							<th scope="col">Name</th>
+							<th scope="col">Category</th>
+							<th scope="col" class="text-center" th:if="${role=='supervisor'}">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- Employee Edit Modal -->
+		<div class="modal" tabindex="-1" role="dialog" id="edit-brand-modal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Edit Brand</h5>
+					</div>
+					<form class="" id="brand-edit-form">
+						<div class="modal-bodym mt-3">
+							<div class="form-group">
+								<label for="inputName" class="col-sm-2 col-form-label">Name</label>
+								<div class="col-sm-12">
+									<input type="text" class="form-control" required="required" name="name"
+										placeholder="Enter Name">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputCategory" class="col-sm-2 col-form-label">Category</label>
+								<div class="col-sm-12 mb-4">
+									<input type="text" class="form-control" required="required" name="category"
+										placeholder="Enter Category">
+								</div>
+							</div>
+							<input type="hidden" name="id">
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+							<button type="submit" class="btn btn-primary" id="update-brand">Update</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Employee Edit Modal -->
+		<div class="modal" tabindex="-1" role="dialog" id="upload-brand-modal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Upload Brand</h5>
+					</div>
+					<div class="modal-body mt-3">
+						<div class="brand-file">
+							<input type="file" class="custom-file-input" id="brandFile">
+							<label class="custom-file-label" for="brandFile" id="brandFileName">Choose file</label>
+						</div>
+						<a th:href="@{/sample/dummyBrand.tsv}" target="_blank">Download Sample</a>
+						<br>
+						Rows: <span id="rowCount">0</span>,
+						Processed: <span id="processCount">0</span>,
+						Errors: <span id="errorCount">0</span>
+						<span>&nbsp;&nbsp; File Limit : 5000 Rows</span>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						<button type="button" class="btn btn-primary" id="process-data">Upload</button>
+						<button type="button" class="btn btn-warning" id="download-errors">Download Errors</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> <!-- Container end-->
+	<footer th:replace="snippets.html :: name_footer"></footer>
+	<script th:src="@{/static/js/brand.js}">
+	</script>
+</body>
 </html>

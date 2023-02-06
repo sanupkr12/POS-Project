@@ -13,94 +13,62 @@ import java.util.List;
 
 @Repository
 public class ProductDao extends AbstractDao{
+    private static final String SELECT_PRODUCT = "select p from ProductPojo p where barcode=:barcode";
+    private static final String SELECT_PRODUCT_BY_ID = "select p from ProductPojo p where id=:id";
+    private static final String SELECT_ALL = "select p from ProductPojo p";
+    private static final String DELETE_PRODUCT = "delete from ProductPojo p where barcode=:barcode";
+    private static final String DELETE_PRODUCT_BY_ID = "delete from ProductPojo p where id=:id";
+    private static final String CHECK_ANY = "select p from ProductPojo p where barcode=:barcode";
+    private static final String CHECK_ANY_BY_ID = "select p from ProductPojo p where id=:id";
+    private static final String SELECT_BY_BRAND_ID = "select p from ProductPojo p where brandId=:brandId";
 
-    @PersistenceContext
-    private EntityManager em;
-
-
-
-    private String select_product = "select p from ProductPojo p where barcode=:barcode";
-    private String select_product_by_id = "select p from ProductPojo p where id=:id";
-    private String select_all = "select p from ProductPojo p";
-    private String delete_product = "delete from ProductPojo p where barcode=:barcode";
-    private String delete_product_by_id = "delete from ProductPojo p where id=:id";
-    private String check_any = "select p from ProductPojo p where barcode=:barcode";
-    private String check_any_by_id = "select p from ProductPojo p where id=:id";
-    private String select_by_brandId = "select p from ProductPojo p where brandId=:brandId";
-
-    @Transactional
     public void insert(ProductPojo p){
         em.persist(p);
-
     }
 
     public ProductPojo select(String barcode){
-        TypedQuery<ProductPojo> query = getQuery(select_product,ProductPojo.class);
+        TypedQuery<ProductPojo> query = getQuery(SELECT_PRODUCT,ProductPojo.class);
         query.setParameter("barcode",barcode);
-        ProductPojo p = getSingle(query);
-        return p;
+        return getSingle(query);
     }
 
     public ProductPojo selectById(int id){
-        TypedQuery<ProductPojo> query = getQuery(select_product_by_id,ProductPojo.class);
+        TypedQuery<ProductPojo> query = getQuery(SELECT_PRODUCT_BY_ID,ProductPojo.class);
         query.setParameter("id",id);
         return query.getSingleResult();
     }
 
     public List<ProductPojo> selectAll(){
-        TypedQuery<ProductPojo> query = getQuery(select_all,ProductPojo.class);
+        TypedQuery<ProductPojo> query = getQuery(SELECT_ALL,ProductPojo.class);
         List<ProductPojo> list = query.getResultList();
         return list;
     }
 
-    @Transactional
-    public void deleteProduct(String barcode){
-        Query query = em.createQuery(delete_product);
-        query.setParameter("barcode",barcode);
-        query.executeUpdate();
-    }
-
-    @Transactional
     public void deleteProduct(int id){
-        Query query = em.createQuery(delete_product_by_id);
+        Query query = em.createQuery(DELETE_PRODUCT_BY_ID);
         query.setParameter("id",id);
         query.executeUpdate();
     }
 
-    public void updateProduct(ProductPojo p){
-
-    }
-
+    //TODO use correct names for function
     public boolean checkAny(String barcode)
     {
-        TypedQuery<ProductPojo> query = getQuery(check_any,ProductPojo.class);
+        TypedQuery<ProductPojo> query = getQuery(CHECK_ANY,ProductPojo.class);
         query.setParameter("barcode",barcode);
 
-        if(query.getResultList().size() == 0)
-        {
-            return false;
-        }
-
-        return true;
+        return !query.getResultList().isEmpty();
     }
 
     public List<ProductPojo> selectByBrandId(int brandId){
-        TypedQuery<ProductPojo> query = getQuery(select_by_brandId,ProductPojo.class);
+        TypedQuery<ProductPojo> query = getQuery(SELECT_BY_BRAND_ID,ProductPojo.class);
         query.setParameter("brandId",brandId);
         return query.getResultList();
     }
 
     public boolean checkAny(int id)
     {
-        TypedQuery<ProductPojo> query = getQuery(check_any_by_id,ProductPojo.class);
+        TypedQuery<ProductPojo> query = getQuery(CHECK_ANY_BY_ID,ProductPojo.class);
         query.setParameter("id",id);
-
-        if(query.getResultList().size() == 0)
-        {
-            return false;
-        }
-
-        return true;
+        return !query.getResultList().isEmpty();
     }
-
 }

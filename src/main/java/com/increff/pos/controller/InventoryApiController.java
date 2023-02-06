@@ -27,10 +27,7 @@ public class InventoryApiController {
     @RequestMapping(path="",method = RequestMethod.POST)
     public void updateInventory(@RequestBody InventoryForm form) throws ApiException {
         inventoryDto.update(form);
-
     }
-
-
 
     @ApiOperation(value="Get Inventory by barcode")
     @RequestMapping(path="/{barcode}",method=RequestMethod.GET)
@@ -49,9 +46,5 @@ public class InventoryApiController {
     public void update(@RequestBody InventoryForm form) throws ApiException{
         inventoryDto.replaceInventory(form);
     }
-
-
-
-
 
 }

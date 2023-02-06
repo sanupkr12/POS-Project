@@ -15,56 +15,46 @@ import com.increff.pos.pojo.BrandPojo;
 
 @Repository
 public class BrandDao extends AbstractDao {
+	private static final String DELETE_ID = "delete from BrandPojo p where id=:id";
+	private static final String SELECT_ID = "select p from BrandPojo p where id=:id";
+	private static final String SELECT_ALL = "select p from BrandPojo p";
+	private static final String SELECT_BY_BRAND_AND_CATEGORY = "select p from BrandPojo p where name=:name and category=:category";
+	private static final String SELECT_CATEGORY = "select distinct p.category from BrandPojo p";
+	private static final String SELECT_BRAND_LIST = "select distinct p.name from BrandPojo p";
+	private static final String SELECT_BRAND = "select p from BrandPojo p where name=:name";
+	private static final String SELECT_BY_CATEGORY = "select p from BrandPojo p where category=:category";
 
-	private static String delete_id = "delete from BrandPojo p where id=:id";
-	private static String select_id = "select p from BrandPojo p where id=:id";
-	private static String select_all = "select p from BrandPojo p";
-	private static String select_by_brand_and_category = "select p from BrandPojo p where name=:name and category=:category";
-	private static String select_category = "select distinct p.category from BrandPojo p";
-	private static String select_brand_list = "select distinct p.name from BrandPojo p";
-	private static String select_brand = "select p from BrandPojo p where name=:name";
-	private static String select_by_category = "select p from BrandPojo p where category=:category";
-	@PersistenceContext
-	private EntityManager em;
-
-	@Transactional
 	public void insert(BrandPojo p) {
 		em.persist(p);
 	}
 
 	public int delete(int id) {
-		Query query = em.createQuery(delete_id);
+		Query query = em.createQuery(DELETE_ID);
 		query.setParameter("id", id);
 		return query.executeUpdate();
 	}
 
 	public BrandPojo select(int id) {
-		TypedQuery<BrandPojo> query = getQuery(select_id, BrandPojo.class);
+		TypedQuery<BrandPojo> query = getQuery(SELECT_ID, BrandPojo.class);
 		query.setParameter("id", id);
 		return getSingle(query);
 	}
 
 	public Boolean selectAny(String name,String Category){
-		TypedQuery<BrandPojo> query = getQuery(select_by_brand_and_category,BrandPojo.class);
+		TypedQuery<BrandPojo> query = getQuery(SELECT_BY_BRAND_AND_CATEGORY,BrandPojo.class);
 		query.setParameter("name",name);
 		query.setParameter("category",Category);
-
-		if(query.getResultList().size() == 0)
-		{
-			return false;
-		}
-
-		return true;
+		return !query.getResultList().isEmpty();
 	}
 	public BrandPojo getBrand(String name,String Category){
-		TypedQuery<BrandPojo> query = getQuery(select_by_brand_and_category,BrandPojo.class);
+		TypedQuery<BrandPojo> query = getQuery(SELECT_BY_BRAND_AND_CATEGORY,BrandPojo.class);
 		query.setParameter("name",name);
 		query.setParameter("category",Category);
 		return getSingle(query);
 	}
 
 	public List<BrandPojo> selectAll() {
-		TypedQuery<BrandPojo> query = getQuery(select_all, BrandPojo.class);
+		TypedQuery<BrandPojo> query = getQuery(SELECT_ALL, BrandPojo.class);
 		return query.getResultList();
 	}
 
@@ -72,13 +62,13 @@ public class BrandDao extends AbstractDao {
 	}
 
 	public List<String> getCategory(){
-		TypedQuery<String> query =  getQuery(select_category, String.class);
+		TypedQuery<String> query =  getQuery(SELECT_CATEGORY, String.class);
 
 		return query.getResultList();
 	}
 
 	public List<String> getBrandList(){
-		TypedQuery<String> query = getQuery(select_brand_list,String.class);
+		TypedQuery<String> query = getQuery(SELECT_BRAND_LIST,String.class);
 		return query.getResultList();
 	}
 
@@ -88,7 +78,6 @@ public class BrandDao extends AbstractDao {
 		{
 			category = "all";
 		}
-
 		if(brand.length()==0)
 		{
 			brand = "all";
@@ -102,7 +91,7 @@ public class BrandDao extends AbstractDao {
 		else if(category.equals("all"))
 		{
 
-				TypedQuery<BrandPojo> query = getQuery(select_brand,BrandPojo.class);
+				TypedQuery<BrandPojo> query = getQuery(SELECT_BRAND,BrandPojo.class);
 				query.setParameter("name",brand);
 				return query.getResultList();
 
@@ -111,12 +100,12 @@ public class BrandDao extends AbstractDao {
 		{
 
 
-			TypedQuery<BrandPojo> query = getQuery(select_by_category,BrandPojo.class);
+			TypedQuery<BrandPojo> query = getQuery(SELECT_BY_CATEGORY,BrandPojo.class);
 			query.setParameter("category",category);
 			return query.getResultList();
 		}
 		else{
-			TypedQuery<BrandPojo> query = getQuery(select_by_brand_and_category,BrandPojo.class);
+			TypedQuery<BrandPojo> query = getQuery(SELECT_BY_BRAND_AND_CATEGORY,BrandPojo.class);
 			query.setParameter("category",category);
 			query.setParameter("name",brand);
 			return query.getResultList();

@@ -27,40 +27,38 @@ import static com.google.common.collect.Lists.reverse;
 @RestController
 @RequestMapping(value="/api/product")
 public class ProductApiController {
-
     @Autowired
     private ProductDto dto;
 
+    //TODO change the name of functions
     @ApiOperation(value = "Adds a Product")
     @RequestMapping(path = "", method = RequestMethod.POST)
-    public void add(@RequestBody ProductForm form) throws ApiException {
-        dto.add(form);
+    public void createProduct(@RequestBody ProductForm form) throws ApiException {
+        dto.addProduct(form);
     }
-
 
     @ApiOperation(value = "Deletes a Product")
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    // /api/1
-    public void delete(@PathVariable int id) throws ApiException {
-        dto.delete(id);
+    public void deleteProduct(@PathVariable int id) throws ApiException {
+        dto.deleteProduct(id);
     }
 
     @ApiOperation(value = "Gets a Product by Id")
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public ProductData get(@PathVariable int id) throws ApiException {
-        return dto.get(id);
+    public ProductData getProductById(@PathVariable int id) throws ApiException {
+        return dto.getProductById(id);
     }
 
     @ApiOperation(value = "Gets list of all Product")
     @RequestMapping(path = "", method = RequestMethod.GET)
-    public List<ProductData> getAll() throws ApiException{
-        return reverse(dto.get());
+    public List<ProductData> getAllProduct() throws ApiException{
+        return reverse(dto.getAllProduct());
     }
 
     @ApiOperation(value = "Updates an Product")
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-    public void update(@RequestBody ProductForm form,@PathVariable int id) throws ApiException {
-        dto.update(form,id);
+    public void updateProduct(@RequestBody ProductForm form,@PathVariable int id) throws ApiException {
+        dto.updateProduct(form,id);
     }
 
 

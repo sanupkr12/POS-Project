@@ -1,0 +1,5 @@
+barcode	quantity	error
+efgh1234	100	{"message":"No Product exists with current barcode"}
+abc123	85	{"message":"No Product exists with current barcode"}
+xyz123	abc	{"message":"quantity invalid"}
+pqrs123	100	{"message":"No Product exists with current barcode"}
