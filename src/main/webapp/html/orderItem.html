@@ -5,21 +5,21 @@
 <body>
   <nav th:replace="snippets.html :: name_app_navbar"></nav>
   <div class="container">
-    <h3 style="text-align:center;margin:2rem">Order Items</h3>
+    <h3 class="mt-5 mb-3 text-center">Order Items</h3>
     <!-- Blank Row -->
     <div class="row">
       <h4 class="ml-3">Order Id:<span id="orderId"></span></h4>
     </div>
     <div class="row">
       <!-- Table -->
-      <div class="col-12">
+      <div class="col-md-12">
         <table class="table table-striped" id="order-item-table">
           <thead class="thead-dark">
-            <tr class="sticky-top" style="top:78px;z-index:auto;">
+            <tr class="sticky-top table-position">
               <th scope="col">Barcode</th>
               <th scope="col">Product Name</th>
               <th scope="col">Quantity</th>
-              <th scope="col" style="text-align:end">Total cost (in ₹)</th>
+              <th scope="col" class="text-right">Total cost (in ₹)</th>
               <th scope="col">Order Date</th>
               <th scope="col">Actions</th>
             </tr>

@@ -1,11 +1,12 @@
+const inventoryTable = $("#display-inventory-table");
+
 $(document).ready(init);
+
 function init() {
-    $("#display-inventory-table").hide();
+    inventoryTable.hide();
     $("#download-inventory").click(downloadInventory);
     fillCategoryOption();
-    //    fillBrandOption();
     $("#category").on('change', getBrandByCategory);
-    //    $("#brand").on('change',getCategoryByBrand);
 }
 function getCurrentUrl() {
     let baseUrl = $("meta[name=baseUrl]").attr("content")
@@ -28,42 +29,32 @@ function downloadInventory(event) {
     details["category"] = category;
     details["brand"] = brand;
     let json = JSON.stringify(details);
-    $.ajax({
-        url: getCurrentUrl(),
-        type: "POST",
-        data: json,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        success: function (response) {
-            displayInventoryList(response);
-        },
-        error: handleAjaxError
-    });
+    let url = getCurrentUrl();
+    makeAjaxCall(url,'POST',json,(response)=>{
+         displayInventoryList(response);
+     },handleAjaxError);
     return false;
 }
 function displayInventoryList(data) {
     if (data.length === 0) {
         $('.notifyjs-wrapper').trigger('notify-hide');
         $.notify("No Results to display", "info");
-        $("#display-inventory-table").hide();
-        return;
+        inventoryTable.hide();
+        return; 
     }
-    $("#display-inventory-table").show();
-    let sno = 1;
-    let $tbody = $('#display-inventory-table').find('tbody');
+    inventoryTable.show();
+    let $tbody = inventoryTable.find('tbody');
     $tbody.empty();
     for (let i in data) {
         let e = data[i];
         let buttonHtml = ' <button class="btn btn-outline-dark" onclick="displayEditInventory(' + "'" + e.barcode + "'" + ')">edit</button>&nbsp;';
-        let row = '<tr>'
-            + '<td>' + sno + '</td>'
-            + '<td>' + e.name + '</td>'
-            + '<td>' + e.barcode + '</td>'
-            + '<td>' + numberWithCommas(e.quantity) + '</td>'
-            + '</tr>';
+        let row = `<tr>
+            <td>${parseInt(+i+1)}</td>
+            <td>${e.name}</td>
+            <td>${e.barcode}</td>
+            <td>${numberWithCommas(e.quantity)}</td>
+            </tr>`;
         $tbody.append(row);
-        sno += 1;
     }
 }
 function fillCategoryOptionUtil(data) {

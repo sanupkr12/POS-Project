@@ -1,4 +1,5 @@
 $(document).ready(init);
+
 function init() {
 	$("#report-link").addClass('active');
 }

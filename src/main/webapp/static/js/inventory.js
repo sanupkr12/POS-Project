@@ -3,12 +3,20 @@ let fileData = [];
 let errorData = [];
 let processCount = 0;
 
+//Global Variables
+const inventoryTable = $("#inventory-table");
+const $createInventoryForm = $("#inventory-create-form");
+const $editInventoryForm = $("#inventory-edit-form");
+const createInventoryModal = $("#create-inventory-modal");
+const uploadInventoryModal = $("#upload-inventory-modal");
+const editInventoryModal = $("#edit-inventory-modal");
+
 $(document).ready(init);
-//INITIALIZATION CODE
+
 function init(){
-$("#inventory-link").addClass('active');
-	$('#inventory-create-form').submit(addInventory);
-	$('#inventory-edit-form').submit(updateInventory);
+	$createInventoryForm.submit(addInventory);
+	$editInventoryForm.submit(updateInventory);
+	$("#inventory-link").addClass('active');
 	$('#refresh-data').click(getInventoryList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
@@ -17,41 +25,36 @@ $("#inventory-link").addClass('active');
     $("#create-inventory").click(createInventory);
     $('#download-errors').hide();
     $('#inventoryFile').on('change',function(){
-          let fileName = $(this).val();
-          fileName = fileName.split("\\").pop();
-          $("#inventoryFileName").html(fileName);
-      });
-	 getInventoryList();
+      let fileName = $(this).val();
+      fileName = fileName.split("\\").pop();
+      $("#inventoryFileName").html(fileName);
+    });
+	getInventoryList();
 }
 function getInventoryUrl(){
 	let baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/inventory";
 }
-//BUTTON ACTIONS
+
 function addInventory(event){
     event.preventDefault();
-	//Set the values to update
-	let $form = $("#inventory-create-form");
-	let json = toJson($form);
+	let json = toJson($createInventoryForm);
 	let url = getInventoryUrl();
 	makeAjaxCall(url,'POST',json,(response)=>{
-        $("#create-inventory-modal").modal('toggle');
+        createInventoryModal.modal('toggle');
         handleSuccessNotification("Inventory has been updated successfully");
         getInventoryList();
     },(response)=>{
         handleAjaxError(response);
-    })
+    });
 	return false;
 }
 function updateInventory(event){
     event.preventDefault();
-	$('#edit-inventory-modal').modal('toggle');
-	//Get the ID
-	let barcode = $("#inventory-edit-form input[name=barcode]").val();
+	editInventoryModal.modal('toggle');
+	let barcode = $editInventoryForm.find("input[name=barcode]").val();
 	let url = getInventoryUrl() + "/";
-	//Set the values to update
-	let $form = $("#inventory-edit-form");
-	let json = toJson($form);
+	let json = toJson($editInventoryForm);
 	makeAjaxCall(url,'PUT',json,(response)=>{
         handleSuccessNotification("Inventory has been updated successfully");
         getInventoryList();
@@ -123,11 +126,11 @@ function uploadRows(){
 	updateUploadDialog();
 	//If everything processed then return
 	if(processCount==fileData.length){
-	 getInventoryList();
+	    getInventoryList();
 		if(errorData.length==0)
         {
             handleSuccessNotification("Inventory File uploaded successfully");
-            $('#upload-inventory-modal').modal('toggle');
+            uploadInventoryModal.modal('toggle');
             return;
         }
         $("#download-errors").show();
@@ -150,23 +153,20 @@ function uploadRows(){
 function downloadErrors(){
 	writeFileData(errorData);
 }
-//UI DISPLAY METHODS
 function displayInventoryList(data){
-    let sno = 1;
-	let $tbody = $('#inventory-table').find('tbody');
+	let $tbody = inventoryTable.find('tbody');
 	$tbody.empty();
 	for(let i in data){
 		let e = data[i];
-		let buttonHtml = ' <button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
-		let row = '<tr>'
-		+ '<td>' + sno + '</td>'
-		+ '<td>' + e.barcode + '</td>'
-		+ '<td>' + e.name + '</td>'
-		+ '<td>'  + numberWithCommas(e.quantity) + '</td>'
-		+ '<td class="text-center supervisor-only">' + buttonHtml + '</td>'
-		+ '</tr>';
+		let buttonHtml = '<button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
+		let row = `<tr>
+		<td>${parseInt(+i+1)}</td>
+		<td>${e.barcode}</td>
+		<td>${e.name}</td>
+		<td>${numberWithCommas(e.quantity)}</td>
+		<td class="text-center supervisor-only">${buttonHtml}</td>
+		</tr>`;
         $tbody.append(row);
-        sno+=1;
 	}
 	if($("meta[name=role]").attr("content") === 'operator')
     {
@@ -181,11 +181,10 @@ function displayEditInventory(barcode){
 }
 
 function resetUploadDialog(){
-	//Reset file name
 	let $file = $('#inventoryFile');
 	$file.val('');
 	$('#inventoryFileName').html("Choose File");
-	//Reset letious counts
+	//reset process counts
 	processCount = 0;
 	fileData = [];
 	errorData = [];
@@ -205,15 +204,15 @@ function updateFileName(){
 function displayUploadData(){
  	resetUploadDialog();
  	$('#download-errors').hide();
-	$('#upload-inventory-modal').modal('toggle');
+	uploadInventoryModal.modal('toggle');
 }
 function displayInventory(data){
-	$("#inventory-edit-form input[name=barcode]").val(data.barcode);
-	$("#inventory-edit-form input[name=quantity]").val(data.quantity);
-	$('#edit-inventory-modal').modal('toggle');
+	$editInventoryForm.find("input[name=barcode]").val(data.barcode);
+	$editInventoryForm.find("input[name=quantity]").val(data.quantity);
+	editInventoryModal.modal('toggle');
 }
 function createInventory(){
-    $("#inventory-create-form input[name=barcode]").val("");
-    $("#inventory-create-form input[name=quantity]").val(0);
-    $("#create-inventory-modal").modal('toggle');
+    $createInventoryForm.find("input[name=barcode]").val("");
+    $createInventoryForm.find("input[name=quantity]").val(0);
+    createInventoryModal.modal('toggle');
 }

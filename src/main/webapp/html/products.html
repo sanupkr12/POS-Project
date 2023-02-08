@@ -4,8 +4,8 @@
 <head th:replace="snippets.html :: name_head"></head>
 <body>
     <nav th:replace="snippets.html :: name_app_navbar"></nav>
-    <div class="container-fluid" style="padding:0rem 5rem;">
-        <h3 style="margin:1.5rem 0rem;">Product</h3>
+    <div class="container-fluid px-5" >
+        <h3 class="mt-3">Product</h3>
         <button type="button" class="btn btn-primary" th:if="${info.getRole() == 'supervisor'}"
             id="create-product">Create</button>
         <button type="button" class="btn btn-primary ml-3" th:if="${info.getRole() == 'supervisor'}"
@@ -18,45 +18,42 @@
                     </div>
                     <form class="" id="product-create-form">
                         <div class="modal-body mt-3">
-                            <div class="form-group" style="margin-bottom:0.5rem;">
-                                <label for="inputName" class="col-sm-4 edit-form-label"
-                                    style="justify-content:left;">Name</label>
+                            <div class="form-group mb-1" >
+                                <label for="inputName" class="col-sm-4 edit-form-label justify-content-start"
+                                    >Name</label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" required="required" id="inputName"
                                         autocomplete="off" name="name" placeholder="Enter Name">
                                 </div>
                             </div>
-
-                            <div class="form-group" style="margin-bottom:0.5rem;">
-                                <label for="inputBarcode" class="col-sm-4  edit-form-label "
-                                    style="justify-content:left;">Barcode</label>
+                            <div class="form-group mb-1">
+                                <label for="inputBarcode" class="col-sm-4  edit-form-label justify-content-start"
+                                    >Barcode</label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" required="required" id="inputBarcode"
                                         autocomplete="off" name="barcode" placeholder="Enter Barcode">
                                 </div>
                             </div>
-                            <div class="form-group" style="margin-bottom:0.5rem;">
-                                <label for="inputMrp" class="col-sm-4  edit-form-label"
-                                    style="justify-content:left;">MRP</label>
+                            <div class="form-group mb-1">
+                                <label for="inputMrp" class="col-sm-4  edit-form-label justify-content-start"
+                                    >MRP</label>
                                 <div class="col-sm-12">
                                     <input type="number" class="form-control num-input" required="required" step="0.01"
                                         min="1" id="inputMrp" autocomplete="off" name="mrp"
                                         placeholder="Enter Mrp (in ₹)">
                                 </div>
                             </div>
-
-                            <div class="form-group" style="margin-bottom:0.5rem;">
-                                <label for="inputBrandName" class="col-sm-4  edit-form-label"
-                                    style="justify-content:left;">Brand Name</label>
+                            <div class="form-group mb-1">
+                                <label for="inputBrandName" class="col-sm-4  edit-form-label justify-content-start"
+                                    >Brand Name</label>
                                 <select name="brandName" class="append-brand col-sm-12 form-control form-select ml-3"
                                     id="inputBrandName" style=" width: 94%;" aria-label=".form-select-lg example">
                                     <option selected>Select Brand</option>
                                 </select>
                             </div>
-
-                            <div class="form-group" style="margin-bottom:0.5rem;">
-                                <label for="inputCategory" class="col-sm-4  edit-form-label"
-                                    style="justify-content:left;">Brand Category</label>
+                            <div class="form-group mb-1">
+                                <label for="inputCategory" class="col-sm-4  edit-form-label justify-content-start"
+                                    >Brand Category</label>
                                 <select name="brandCategory"
                                     class="col-sm-12 form-control form-select ml-3 append-category" id="inputCategory"
                                     style="width:94%" aria-label=".form-select-lg example">
@@ -74,16 +71,16 @@
         </div>
         <div class="row mt-3">
             <!-- Table -->
-            <div class="col-12">
+            <div class="col-md-12">
                 <table class="table table-striped" id="product-table">
                     <thead class="thead-dark">
-                        <tr class="sticky-top" style="top:78px;z-index:auto;">
+                        <tr class="sticky-top table-position">
                             <th scope="col">S No.</th>
                             <th scope="col">Name</th>
                             <th scope="col">Barcode</th>
                             <th scope="col">Brand Name</th>
                             <th scope="col">Category</th>
-                            <th scope="col" style="text-align:end">Mrp (in ₹)</th>
+                            <th scope="col" class="text-right">Mrp (in ₹)</th>
                             <th scope="col" class="text-center" th:if="${role=='supervisor'}">Actions</th>
                         </tr>
                     </thead>
@@ -101,51 +98,47 @@
                     </div>
                     <form class="" id="product-edit-form">
                         <div class="modal-body mt-3">
-                            <div class="form-group" style="margin-bottom:0.5rem;">
-                                <label for="editInputName" class="col-sm-4  edit-form-label"
-                                    style="justify-content:left;">Name</label>
+                            <div class="form-group mb-1">
+                                <label for="editInputName" class="col-sm-4 edit-form-label justify-content-start"
+                                    >Name</label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" required="required" id="editInputName"
                                         autocomplete="off" name="name" placeholder="enter name">
                                 </div>
                             </div>
-                            <br>
-                            <div class="form-group" style="margin-bottom:0.5rem;">
-                                <label for="editInputBarcode" class="col-sm-4  edit-form-label "
-                                    style="justify-content:left;">Barcode</label>
+                            <div class="form-group mb-1">
+                                <label for="editInputBarcode" class="col-sm-4  edit-form-label justify-content-start"
+                                    >Barcode</label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" required="required" id="editInputBarcode"
                                         autocomplete="off" name="barcode" placeholder="Enter Barcode">
                                 </div>
                             </div>
-                            <div class="form-group" style="margin-bottom:0.5rem;">
-                                <label for="editInputMrp" class="col-sm-4  edit-form-label"
-                                    style="justify-content:left;">MRP</label>
+                            <div class="form-group mb-1">
+                                <label for="editInputMrp" class="col-sm-4 edit-form-label justify-content-start"
+                                    >MRP</label>
                                 <div class="col-sm-12">
                                     <input type="number" step="0.01" class="form-control num-input" required="required"
                                         id="editInputMrp" min="1" autocomplete="off" name="mrp"
                                         placeholder="Enter Mrp (in ₹)">
                                 </div>
                             </div>
-                            <div class="form-group" style="margin-bottom:0.5rem;">
-                                <label for="editInputBrandName" class="col-sm-4  edit-form-label"
-                                    style="justify-content:left;">Brand Name</label>
+                            <div class="form-group mb-1">
+                                <label for="editInputBrandName" class="col-sm-4 edit-form-label justify-content-start"
+                                    >Brand Name</label>
                                 <select name="brandName" class="append-brand col-sm-12 form-control form-select ml-3"
-                                    id="editInputBrandName" style=" width: 94%;" aria-label=".form-select-lg example">
+                                    id="editInputBrandName" style="width: 94%;" aria-label=".form-select-lg example">
                                     <option selected>Select Brand</option>
                                 </select>
                             </div>
-                            <div class="form-group" style="margin-bottom:0.5rem;">
-                                <label for="editInputCategory" class="col-sm-4  edit-form-label"
-                                    style="justify-content:left;">Brand Category</label>
+                            <div class="form-group mb-1">
+                                <label for="editInputCategory" class="col-sm-4  edit-form-label justify-content-start"
+                                    >Brand Category</label>
                                 <select name="brandCategory"
                                     class="col-sm-12 form-control form-select ml-3 append-category"
                                     id="editInputCategory" style="width:94%" aria-label=".form-select-lg example">
                                     <option selected>Select Category</option>
                                 </select>
-                                <!--                            <div class="col-sm-12">-->
-                                <!--                                <input type="text" class="form-control" required="required" id="inputCategory" autocomplete="off" name="brandCategory"  placeholder="Enter Brand Category">-->
-                                <!--                            </div>-->
                             </div>
                         </div>
                         <div class="modal-footer">

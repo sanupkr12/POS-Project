@@ -4,18 +4,25 @@ let errorData = [];
 let processCount = 0;
 let updatedId;
 
+//Global variables
+const $brandEditForm = $('#brand-edit-form');
+const $brandForm = $("#brand-form");
+const brandTable = $("#Brand-table");
+const editBrandModal = $("#edit-brand-modal");
+const createBrandModal = $("#create-brand-modal");
+const uploadBrandModal = $("#upload-brand-modal");
+
 $(document).ready(init);
-//INITIALIZATION CODE
+
 function init() {
+	$brandEditForm.submit(updateBrand);
+	$brandForm.submit(addBrand);
 	$("#brand-link").addClass('active');
-	$('#brand-edit-form').submit(updateBrand);
 	$('#refresh-data').click(getBrandList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
-	$('#download-errors').click(downloadErrors);
-	$('#BrandFile').on('change', updateFileName);
+	$("#download-errors").click(downloadErrors);
 	$('#add-brand').click(createBrand);
-	$('#brand-form').submit(addBrand);
 	$('#brandFile').on('change', function () {
 		let fileName = $(this).val();
 		fileName = fileName.split("\\").pop();
@@ -38,35 +45,32 @@ function getBrandList() {
 
 //UI DISPLAY METHODS
 function displayBrandList(data) {
-	let $tbody = $('#Brand-table').find('tbody');
+	let $tbody = brandTable.find('tbody');
 	$tbody.empty();
-	let j = 1;
 	for (let i in data) {
 		let e = data[i];
-		let buttonHtml = ' <button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;"  title="Edit"  onclick="displayEditBrand(' + e.id + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
-		let row = '<tr>'
-			+ '<td>' + j + '</td>'
-			+ '<td>' + e.name + '</td>'
-			+ '<td>' + e.category + '</td>'
-			+ '<td class="text-center supervisor-only">' + buttonHtml + '</td>'
-			+ '</tr>';
+		let buttonHtml = ' <button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;"  title="Edit"  onclick="displayEditBrand('
+		+ e.id +
+		')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
+		let row = `<tr>
+        			<td> ${parseInt(+i+1)}</td>
+        			<td>${e.name}</td>
+        			<td>${e.category}</td>
+        			<td class="text-center supervisor-only">${buttonHtml}</td>
+        			</tr>`;
 		$tbody.append(row);
-		j += 1;
 	}
 	if ($("meta[name=role]").attr("content") === 'operator') {
 		$(".supervisor-only").hide();
 	}
 }
 
-//BUTTON ACTIONS
 function addBrand(event) {
 	event.preventDefault();
-	//Set the values to update
-	let $form = $("#brand-form");
-	let json = toJson($form);
+	let json = toJson($brandForm);
 	let url = getBrandUrl();
 	makeAjaxCall(url,'POST',json,(response)=> {
-        $('#create-brand-modal').modal('toggle');
+        createBrandModal.modal('toggle');
         handleSuccessNotification("Brand has been added successfully");
         getBrandList();
     },(response)=> {
@@ -77,14 +81,10 @@ function addBrand(event) {
 
 function updateBrand(event) {
 	event.preventDefault();
-	$('#edit-Brand-modal').modal('toggle');
-	//Get the ID
 	let url = getBrandUrl() + "/" + updatedId;
-	//Set the values to update
-	let $form = $("#brand-edit-form");
-	let json = toJson($form);
+	let json = toJson($brandEditForm);
 	makeAjaxCall(url,'PUT',json,(response)=> {
-        $('#edit-brand-modal').modal('toggle');
+        editBrandModal.modal('toggle');
         handleSuccessNotification("Brand Edited Successfully");
         getBrandList();
     },handleAjaxError);
@@ -149,10 +149,10 @@ function uploadRows() {
 		getBrandList();
 		if (errorData.length === 0) {
 			$.notify("Brand File uploaded successfully", "success");
-			$('#upload-brand-modal').modal('toggle');
+			uploadBrandModal.modal('toggle');
 			return;
 		}
-		$("#download-errors").show();
+		downloadErrors.show();
 		return;
 	}
 	//Process next row
@@ -188,15 +188,11 @@ function displayEditBrand(id) {
 }
 
 function resetUploadDialog() {
-	//Reset file name
-	let $file = $('#BrandFile');
-	$file.val('');
+	$('#brandFile').val('');
 	$('#BrandFileName').html("Choose File");
-	//Reset various counts
 	processCount = 0;
 	fileData = [];
 	errorData = [];
-	//Update counts	
 	updateUploadDialog();
 }
 
@@ -206,29 +202,22 @@ function updateUploadDialog() {
 	$('#errorCount').html("" + errorData.length);
 }
 
-function updateFileName() {
-	let $file = $('#BrandFile');
-	let fileName = $file.val();
-	fileName = fileName.split("\\").pop();
-	$('#BrandFileName').html(fileName);
-}
-
 function displayUploadData() {
 	resetUploadDialog();
-	$('#download-errors').hide();
-	$('#upload-brand-modal').modal('toggle');
+	$("#download-errors").hide();
+	uploadBrandModal.modal('toggle');
 }
 
 function displayBrand(data) {
-	$("#brand-edit-form input[name=name]").val(data.name);
-	$("#brand-edit-form input[name=category]").val(data.category);
-	$('#edit-brand-modal').modal('toggle');
+    $brandEditForm.find("input[name=name]").val(data.name);
+    $brandEditForm.find("input[name=category]").val(data.category);
+	editBrandModal.modal('toggle');
 }
 
 function createBrand() {
-	$("#brand-form input[name=name]").val('');
-	$("#brand-form input[name=category]").val('');
-	$('#create-brand-modal').modal('toggle');
+	$brandForm.find("input[name=name]").val('');
+	$brandForm.find("input[name=category]").val('');
+	createBrandModal.modal('toggle');
 }
 
 

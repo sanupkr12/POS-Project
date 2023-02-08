@@ -1,7 +1,9 @@
+const brandTable = $("#display-brand-table");
+
 $(document).ready(init);
 
 function init() {
-    $("#display-brand-table").hide();
+    brandTable.hide();
     $("#download-brand").click(downloadBrand);
     fillCategoryOption();
     $("#category").on('change', getBrandByCategory);
@@ -26,19 +28,10 @@ function downloadBrand(event) {
     details["category"] = category;
     details["brand"] = brand;
     let json = JSON.stringify(details);
-    $.ajax({
-        url: getCurrentUrl(),
-        type: "POST",
-        data: json,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        success: function (response) {
-            displayBrandList(response);
-        },
-        error: handleAjaxError
-
-    });
+    let url = getCurrentUrl();
+    makeAjaxCall(url,'POST',json,(response)=> {
+         displayBrandList(response);
+    },handleAjaxError);
     return false;
 }
 
@@ -46,23 +39,35 @@ function displayBrandList(data) {
     if (data.length === 0) {
         $('.notifyjs-wrapper').trigger('notify-hide');
         $.notify("No Results to display", "info");
-        $("#display-brand-table").hide();
+        brandTable.hide();
         return;
     }
-    $("#display-brand-table").show();
-    let $tbody = $('#display-brand-table').find('tbody');
+    brandTable.show();
+    let $tbody = brandTable.find('tbody');
     $tbody.empty();
-    let j = 1;
     for (let i in data) {
         let e = data[i];
-        let row = '<tr>'
-            + '<td>' + j + '</td>'
-            + '<td>' + e.name + '</td>'
-            + '<td>' + e.category + '</td>'
-            + '</tr>';
+        let row = `<tr>
+            <td>${parseInt(+i+1)}</td>
+            <td>${e.name}</td>
+            <td>${e.category}</td>
+            </tr>`;
         $tbody.append(row);
-        j += 1;
     }
+}
+
+function getBrandByCategory(event) {
+    let category = event.target.value;
+    let url = $("meta[name=baseUrl]").attr("content") + "/api/brand/category/" + category;
+    makeAjaxCall(url,'GET',{},(data)=>{
+      let brandOption = $(".append-brand");
+      brandOption[0].innerHTML = "";
+      data.sort();
+      brandOption.append(`<option selected>Select Brand</option>`);
+      for (let i = 0; i < data.length; i++) {
+          brandOption.append(`<option val="${data[i]}">${data[i]}</option>`);
+      }
+    },handleAjaxError);
 }
 
 function fillCategoryOptionUtil(data) {
@@ -79,16 +84,10 @@ function fillCategoryOptionUtil(data) {
 
 
 function fillCategoryOption() {
-    $.ajax({
-        url: $("meta[name=baseUrl]").attr("content") + "/api/brand/category",
-        type: 'GET',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        success: function (data) {
-            fillCategoryOptionUtil(data);
-        }
-    })
+    let url = $("meta[name=baseUrl]").attr("content") + "/api/brand/category"
+    makeAjaxCall(url,'GET',{},(data)=> {
+      fillCategoryOptionUtil(data);
+    },handleAjaxError);
 }
 
 function fillBrandOptionUtil(data) {
@@ -103,35 +102,11 @@ function fillBrandOptionUtil(data) {
 }
 
 function fillBrandOption() {
-    $.ajax({
-        url: $("meta[name=baseUrl]").attr("content") + "/api/brand/list",
-        type: 'GET',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        success: function (data) {
-            fillBrandOptionUtil(data);
-        }
-    })
+    let url = $("meta[name=baseUrl]").attr("content") + "/api/brand/list";
+    makeAjaxCall(url,'GET',{},(data)=>{
+      fillBrandOptionUtil(data);
+    },handleAjaxError);
 }
 
-function getBrandByCategory(event) {
-    let category = event.target.value;
-    $.ajax({
-        url: $("meta[name=baseUrl]").attr("content") + "/api/brand/category/" + category,
-        type: 'GET',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        success: function (data) {
-            let brandOption = $(".append-brand");
-            brandOption[0].innerHTML = "";
-            data.sort();
-            brandOption.append(`<option selected>Select Brand</option>`);
-            for (let i = 0; i < data.length; i++) {
-                brandOption.append(`<option val="${data[i]}">${data[i]}</option>`);
-            }
-        }
-    })
-}
+
 

@@ -1,4 +1,5 @@
 $(document).ready(init);
+
 function init(){
     $("#home-link").addClass('active');
     $("#report-link").hide();

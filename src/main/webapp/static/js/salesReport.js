@@ -1,11 +1,15 @@
+const displaySalesTable =  $('#display-sales-table');
+
+$(document).ready(init);
+
 function init() {
     addCalendarValidation();
-    $('#display-sales-table').hide();
+    displaySalesTable.hide();
     $("#download-sales").click(downloadSales);
     fillCategoryOption();
     $("#category").on('change', getBrandByCategory);
 }
-$(document).ready(init);
+
 function getCurrentUrl() {
     let baseUrl = $("meta[name=baseUrl]").attr("content")
     return baseUrl + "/api/report/sales";
@@ -32,32 +36,23 @@ function downloadSales(event) {
     details["startDate"] = startDate;
     details["endDate"] = endDate;
     let json = JSON.stringify(details);
-    $.ajax({
-        url: getCurrentUrl(),
-        type: "POST",
-        data: json,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        success: function (response) {
-            displaySalesList(response);
-        },
-        error: handleAjaxError
-    });
+    let url = getCurrentUrl();
+    makeAjaxCall(url,'POST',json,(response)=>{
+         displaySalesList(response);
+    },handleAjaxError);
     return false;
 }
 function displaySalesList(data) {
     if (data.length === 0) {
         $('.notifyjs-wrapper').trigger('notify-hide');
         $.notify("No Results to display", "info");
-        let $tbody = $('#display-sales-table').find('tbody');
+        let $tbody = displaySalesTable.find('tbody');
         $tbody.empty();
-        $('#display-sales-table').hide();
+        displaySalesTable.hide();
         return;
     }
-    $('#display-sales-table').show();
-    let sno = 1;
-    let $tbody = $('#display-sales-table').find('tbody');
+    displaySalesTable.show();
+    let $tbody = displaySalesTable.find('tbody');
     $tbody.empty();
     for (let i in data) {
         let e = data[i];
@@ -67,15 +62,14 @@ function displaySalesList(data) {
         let dateIST = new Date(dateUTC);
         dateIST.setHours(dateIST.getHours() + 5);
         dateIST.setMinutes(dateIST.getMinutes() + 30);
-        let row = '<tr>'
-            + '<td>' + sno + '</td>'
-            + '<td>' + e.brand + '</td>'
-            + '<td>' + e.category + '</td>'
-            + '<td>' + numberWithCommas(e.quantity) + '</td>'
-            + '<td style="text-align:end">' + numberWithCommas(e.total.toFixed(2)) + '</td>'
-            + '</tr>';
+        let row = `<tr>
+            <td>${parseInt(+i+1)}</td>
+            <td>${e.brand}</td>
+            <td>${e.category}</td>
+            <td>${numberWithCommas(e.quantity)}</td>
+            <td style="text-align:end">${numberWithCommas(e.total.toFixed(2))}</td>
+            </tr>`;
         $tbody.append(row);
-        sno += 1;
     }
 }
 function fillCategoryOptionUtil(data) {
@@ -87,16 +81,10 @@ function fillCategoryOptionUtil(data) {
     }
 }
 function fillCategoryOption() {
-    $.ajax({
-        url: $("meta[name=baseUrl]").attr("content") + "/api/brand/category",
-        type: 'GET',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        success: function (data) {
-            fillCategoryOptionUtil(data);
-        }
-    })
+    let url = $("meta[name=baseUrl]").attr("content") + "/api/brand/category";
+    makeAjaxCall(url,'GET',{},(data)=>{
+      fillCategoryOptionUtil(data);
+    },handleAjaxError);
 }
 function fillBrandOptionUtil(data) {
     let brandOption = $(".append-brand");
@@ -106,35 +94,23 @@ function fillBrandOptionUtil(data) {
     brandOption.append(`<option val="all">all</option>`);
 }
 function fillBrandOption() {
-    $.ajax({
-        url: $("meta[name=baseUrl]").attr("content") + "/api/brand/list",
-        type: 'GET',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        success: function (data) {
-            fillBrandOptionUtil(data);
-        }
-    })
+    let url = $("meta[name=baseUrl]").attr("content") + "/api/brand/list";
+    makeAjaxCall(url,'GET',{},(data)=>{
+      fillBrandOptionUtil(data);
+    },handleAjaxError);
 }
 function getBrandByCategory(event) {
     let category = event.target.value;
-    $.ajax({
-        url: $("meta[name=baseUrl]").attr("content") + "/api/brand/category/" + category,
-        type: 'GET',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        success: function (data) {
-            let brandOption = $(".append-brand");
-            brandOption[0].innerHTML = "";
-            data.sort();
-            brandOption.append(`<option selected>Select Brand</option>`);
-            for (let i = 0; i < data.length; i++) {
-                brandOption.append(`<option val="${data[i]}">${data[i]}</option>`);
-            }
-        }
-    })
+    let url = $("meta[name=baseUrl]").attr("content") + "/api/brand/category/" + category;
+    makeAjaxCall(url,'GET',{},(data)=>{
+      let brandOption = $(".append-brand");
+      brandOption[0].innerHTML = "";
+      data.sort();
+      brandOption.append(`<option selected>Select Brand</option>`);
+      for (let i = 0; i < data.length; i++) {
+          brandOption.append(`<option val="${data[i]}">${data[i]}</option>`);
+      }
+    },handleAjaxError);
 }
 function getCategoryByBrand(event) {
     let brand = event.target.value;
@@ -147,21 +123,15 @@ function getCategoryByBrand(event) {
     if (category != 'Select Category') {
         return;
     }
-    $.ajax({
-        url: $("meta[name=baseUrl]").attr("content") + "/api/brand/list/" + brand,
-        type: 'GET',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        success: function (data) {
-            let categoryOption = $(".append-category");
-            categoryOption[0].innerHTML = "";
-            categoryOption.append(`<option selected>Select Category</option>`);
-            for (let i = 0; i < data.length; i++) {
-                categoryOption.append(`<option val="${data[i]}">${data[i]}</option>`);
-            }
-        }
-    })
+    let url = $("meta[name=baseUrl]").attr("content") + "/api/brand/list/" + brand;
+    makeAjaxCall(url,'GET',{},(data)=>{
+      let categoryOption = $(".append-category");
+      categoryOption[0].innerHTML = "";
+      categoryOption.append(`<option selected>Select Category</option>`);
+      for (let i = 0; i < data.length; i++) {
+          categoryOption.append(`<option val="${data[i]}">${data[i]}</option>`);
+      }
+    },handleAjaxError);
 }
 function addCalendarValidation() {
     let dtToday = new Date();

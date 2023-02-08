@@ -1,6 +1,12 @@
 let index = 1;
-let orderForm = document.querySelector("#inputOrder");
+
+//Global Variables
+const orderTable = $('#order-table');
+const createOrderModal = $("#create-order-modal");
+const $createOrderForm = $("order-create-form");
+
 $(document).ready(init);
+
 function init() {
     $("#order-link").addClass('active');
     $("#add-order").click(addOrder);
@@ -48,26 +54,15 @@ function addOrder(event) {
     }
     let json = JSON.stringify(orderItems);
     let url = getOrderUrl();
-    $.ajax({
-        url: url,
-        type: 'POST',
-        data: json,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        success: function (response) {
-            $('#create-order-modal').modal('toggle');
-            handleSuccessNotification("Order Placed Successfully");
-            getOrder();
-        },
-        error: function (response) {
-            handleAjaxError(response);
-        }
-    });
+    makeAjaxCall(url,'POST',json,(response)=>{
+     createOrderModal.modal('toggle');
+     handleSuccessNotification("Order Placed Successfully");
+     getOrder();
+    },handleAjaxError);
     return false;
 }
 function displayOrders(data) {
-    let $tbody = $('#order-table').find('tbody');
+    let $tbody = orderTable.find('tbody');
     $tbody.empty();
     for (let i in data) {
         let e = data[i];
@@ -88,36 +83,28 @@ function displayOrders(data) {
 }
 function getOrder() {
     let url = getOrderUrl();
-    $.ajax({
-        url: url,
-        type: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        success: function (data) {
-            displayOrders(data);
-        },
-        error: handleAjaxError
-    })
+    makeAjaxCall(url,'GET',{},(data)=>{
+      displayOrders(data);
+    },handleAjaxError);
 }
 function createOrder() {
-    $('#order-create-form input[name=barcode]').val("");
-    $('#order-create-form input[name=quantity]').val("");
-    $('#create-order-modal').modal('toggle');
+    $createOrderForm.find('input[name=barcode]').val("");
+    $createOrderForm.find('input[name=quantity]').val("");
+    createOrderModal.modal('toggle');
 }
 function displayOrderItems() {
     let $tbody = $('#orderItemTable').find('tbody');
     $tbody.empty();
     for (let i = 0; i < OrderItems.length; i++) {
         let e = data[i];
-        let buttonHtml = ' <button class="btn btn-outline-dark" onclick="displayEditInventory(' + "'" + e.barcode + "'" + ')">edit</button>&nbsp;';
+        let buttonHtml = '<button class="btn btn-outline-dark" onclick="displayEditInventory(' + "'" + e.barcode + "'" + ')">edit</button>&nbsp;';
         buttonHtml += '<button class="btn btn-outline-danger" onclick="deleteInventory(' + "'" + e.barcode + "'" + ')">delete</button>'
-        let row = '<tr>'
-            + '<td>' + e.barcode + '</td>'
-            + '<td>' + e.name + '</td>'
-            + '<td>' + e.quantity + '</td>'
-            + '<td>' + buttonHtml + '</td>'
-            + '</tr>';
+        let row = `<tr>
+            <td>${e.barcode}</td>
+            <td>${e.name}</td>
+            <td>${e.quantity}</td>
+            <td>${buttonHtml}</td>
+            </tr>`;
         $tbody.append(row);
     }
 }
@@ -149,7 +136,7 @@ function addToOrderList(event) {
         let prevQuantity = parseInt(ele.value);
         ele.value = prevQuantity + parseInt(quantity);
     }
-    $('#order-create-form input[name=barcode]').val("");
-    $('#order-create-form input[name=quantity]').val("");
-    $('#order-create-form input[name=sellingPrice]').val("");
+    $createOrderForm.find('input[name=barcode]').val("");
+    $createOrderForm.find('input[name=quantity]').val("");
+    $createOrderForm.find('input[name=sellingPrice]').val("");
 }

@@ -69,3 +69,8 @@ th {
 .dropdown-toggle::after {
     vertical-align: 0.15em;
 }
+
+.table-position{
+    top:78px;
+    z-index:auto;
+}

@@ -19,7 +19,6 @@ function numberValidation() {
         }
     }
 }
-
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
@@ -66,7 +65,6 @@ function writeFileData(arr) {
         escapeChar: '',
         delimiter: "\t"
     };
-
     let data = Papa.unparse(arr, config);
     let blob = new Blob([data], { type: 'text/tsv;charset=utf-8;' });
     let fileUrl = null;
