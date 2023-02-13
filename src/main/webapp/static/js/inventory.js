@@ -10,6 +10,7 @@ const $editInventoryForm = $("#inventory-edit-form");
 const createInventoryModal = $("#create-inventory-modal");
 const uploadInventoryModal = $("#upload-inventory-modal");
 const editInventoryModal = $("#edit-inventory-modal");
+const downloadError = $("#download-errors");
 
 $(document).ready(init);
 
@@ -20,10 +21,10 @@ function init(){
 	$('#refresh-data').click(getInventoryList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
-	$('#download-errors').click(downloadErrors);
+	downloadError.click(downloadErrors);
     $('#employeeFile').on('change', updateFileName);
     $("#create-inventory").click(createInventory);
-    $('#download-errors').hide();
+    downloadError.hide();
     $('#inventoryFile').on('change',function(){
       let fileName = $(this).val();
       fileName = fileName.split("\\").pop();
@@ -101,7 +102,7 @@ function readFileDataCallback(results){
 	    let row = {};
 	    row.error = "Incorrect number of headers provided";
 	    errorData.push(row);
-	    $("#download-errors").show();
+	    downloadError.show();
 	    return;
 	}
 	else{
@@ -133,7 +134,7 @@ function uploadRows(){
             uploadInventoryModal.modal('toggle');
             return;
         }
-        $("#download-errors").show();
+        downloadError.show();
         return;
 	}
 	//Process next row
@@ -158,7 +159,7 @@ function displayInventoryList(data){
 	$tbody.empty();
 	for(let i in data){
 		let e = data[i];
-		let buttonHtml = '<button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditInventory('+  "'" + e.barcode + "'" + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
+		let buttonHtml = `<button class="mr-1" style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditInventory('${e.barcode}')"><i class="fa fa-edit fa-lg"></i></button>`;
 		let row = `<tr>
 		<td>${parseInt(+i+1)}</td>
 		<td>${e.barcode}</td>
@@ -203,7 +204,7 @@ function updateFileName(){
 }
 function displayUploadData(){
  	resetUploadDialog();
- 	$('#download-errors').hide();
+ 	downloadError.hide();
 	uploadInventoryModal.modal('toggle');
 }
 function displayInventory(data){

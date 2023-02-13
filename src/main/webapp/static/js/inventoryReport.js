@@ -47,7 +47,7 @@ function displayInventoryList(data) {
     $tbody.empty();
     for (let i in data) {
         let e = data[i];
-        let buttonHtml = ' <button class="btn btn-outline-dark" onclick="displayEditInventory(' + "'" + e.barcode + "'" + ')">edit</button>&nbsp;';
+        let buttonHtml = `<button class="btn btn-outline-dark" onclick="displayEditInventory('${e.barcode}')">edit</button>&nbsp;`;
         let row = `<tr>
             <td>${parseInt(+i+1)}</td>
             <td>${e.name}</td>

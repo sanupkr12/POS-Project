@@ -77,6 +77,7 @@ function writeFileData(arr) {
     tempLink.href = fileUrl;
     tempLink.setAttribute('download', 'download.tsv');
     tempLink.click();
+    tempLink.remove();
 }
 
 function makeAjaxCall(url,type,data,success,error){

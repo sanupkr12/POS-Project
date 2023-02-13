@@ -5,7 +5,7 @@
 <body>
     <nav th:replace="snippets.html :: name_app_navbar"></nav>
     <div class="container-fluid px-5" >
-        <h3 class="mt-3">Product</h3>
+        <h3 class="mt-3 mb-3">Product</h3>
         <button type="button" class="btn btn-primary" th:if="${info.getRole() == 'supervisor'}"
             id="create-product">Create</button>
         <button type="button" class="btn btn-primary ml-3" th:if="${info.getRole() == 'supervisor'}"
@@ -19,7 +19,7 @@
                     <form class="" id="product-create-form">
                         <div class="modal-body mt-3">
                             <div class="form-group mb-1" >
-                                <label for="inputName" class="col-sm-4 edit-form-label justify-content-start"
+                                <label for="inputName" class="col-sm-4  justify-content-start"
                                     >Name</label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" required="required" id="inputName"
@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                             <div class="form-group mb-1">
-                                <label for="inputBarcode" class="col-sm-4  edit-form-label justify-content-start"
+                                <label for="inputBarcode" class="col-sm-4   justify-content-start"
                                     >Barcode</label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" required="required" id="inputBarcode"
@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                             <div class="form-group mb-1">
-                                <label for="inputMrp" class="col-sm-4  edit-form-label justify-content-start"
+                                <label for="inputMrp" class="col-sm-4   justify-content-start"
                                     >MRP</label>
                                 <div class="col-sm-12">
                                     <input type="number" class="form-control num-input" required="required" step="0.01"
@@ -44,7 +44,7 @@
                                 </div>
                             </div>
                             <div class="form-group mb-1">
-                                <label for="inputBrandName" class="col-sm-4  edit-form-label justify-content-start"
+                                <label for="inputBrandName" class="col-sm-4   justify-content-start"
                                     >Brand Name</label>
                                 <select name="brandName" class="append-brand col-sm-12 form-control form-select ml-3"
                                     id="inputBrandName" style=" width: 94%;" aria-label=".form-select-lg example">
@@ -52,7 +52,7 @@
                                 </select>
                             </div>
                             <div class="form-group mb-1">
-                                <label for="inputCategory" class="col-sm-4  edit-form-label justify-content-start"
+                                <label for="inputCategory" class="col-sm-4   justify-content-start"
                                     >Brand Category</label>
                                 <select name="brandCategory"
                                     class="col-sm-12 form-control form-select ml-3 append-category" id="inputCategory"
@@ -99,7 +99,7 @@
                     <form class="" id="product-edit-form">
                         <div class="modal-body mt-3">
                             <div class="form-group mb-1">
-                                <label for="editInputName" class="col-sm-4 edit-form-label justify-content-start"
+                                <label for="editInputName" class="col-sm-4  justify-content-start"
                                     >Name</label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" required="required" id="editInputName"
@@ -107,7 +107,7 @@
                                 </div>
                             </div>
                             <div class="form-group mb-1">
-                                <label for="editInputBarcode" class="col-sm-4  edit-form-label justify-content-start"
+                                <label for="editInputBarcode" class="col-sm-4   justify-content-start"
                                     >Barcode</label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" required="required" id="editInputBarcode"
@@ -115,7 +115,7 @@
                                 </div>
                             </div>
                             <div class="form-group mb-1">
-                                <label for="editInputMrp" class="col-sm-4 edit-form-label justify-content-start"
+                                <label for="editInputMrp" class="col-sm-4  justify-content-start"
                                     >MRP</label>
                                 <div class="col-sm-12">
                                     <input type="number" step="0.01" class="form-control num-input" required="required"
@@ -124,7 +124,7 @@
                                 </div>
                             </div>
                             <div class="form-group mb-1">
-                                <label for="editInputBrandName" class="col-sm-4 edit-form-label justify-content-start"
+                                <label for="editInputBrandName" class="col-sm-4  justify-content-start"
                                     >Brand Name</label>
                                 <select name="brandName" class="append-brand col-sm-12 form-control form-select ml-3"
                                     id="editInputBrandName" style="width: 94%;" aria-label=".form-select-lg example">
@@ -132,7 +132,7 @@
                                 </select>
                             </div>
                             <div class="form-group mb-1">
-                                <label for="editInputCategory" class="col-sm-4  edit-form-label justify-content-start"
+                                <label for="editInputCategory" class="col-sm-4   justify-content-start"
                                     >Brand Category</label>
                                 <select name="brandCategory"
                                     class="col-sm-12 form-control form-select ml-3 append-category"

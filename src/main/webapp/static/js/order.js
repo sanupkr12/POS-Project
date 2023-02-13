@@ -123,7 +123,7 @@ function addToOrderList(event) {
     let ele = document.querySelector(`#barcode-${barcode}`);
     if (!ele) {
         let $tbody = $('#orderItemTable').find('tbody');
-        let buttonHtml = '<button style="border:0;background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Delete" onclick=removeFromModal(event)><i class="fa fa-trash fa-lg"></i></button>&nbsp;';
+        let buttonHtml = '<button class="mr-1" style="border:0;background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Delete" onclick=removeFromModal(event)><i class="fa fa-trash fa-lg"></i></button>';
         let row = '<tr class="items">'
             + '<td class="new-barcode">' + barcode + '</td>'
             + '<td><input type="number"  class="w-50 new-quantity" step="1" min="1" value="' + quantity + '" id="barcode-' + barcode + '"></td>'

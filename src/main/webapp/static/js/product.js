@@ -10,6 +10,7 @@ const productTable =  $('#product-table');
 const createProductModal = $('#create-product-modal');
 const uploadProductModal = $('#upload-product-modal');
 const editProductModal = $("#edit-product-modal");
+const downloadError = $("#download-errors");
 
 $(document).ready(init);
 //INITIALIZATION CODE
@@ -20,10 +21,10 @@ function init() {
 	$('#refresh-data').click(getProductList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
-	$('#download-errors').click(downloadErrors);
+	downloadError.click(downloadErrors);
 	$('#productFile').on('change', updateFileName);
 	$('#create-product').click(createProduct);
-	$('#download-errors').hide();
+	downloadError.hide();
 	$("#inputBrandName").on('change', displayCategory);
 	$("#editInputBrandName").on('change', displayEditCategory);
 	getProductList();
@@ -125,7 +126,7 @@ function readFileDataCallback(results) {
 		let row = {};
 		row.error = "Incorrect number of headers provided";
 		errorData.push(row);
-		$("#download-errors").show();
+		downloadError.show();
 		return;
 	}
 	else {
@@ -133,7 +134,7 @@ function readFileDataCallback(results) {
 			let row = {};
 			row.error = "Incorrect headers provided";
 			errorData.push(row);
-			$("#download-errors").show();
+			downloadError.show();
 			return;
 		}
 	}
@@ -154,7 +155,7 @@ function uploadRows() {
 			uploadProductModal.modal('toggle');
 			return;
 		}
-		$("#download-errors").show();
+		downloadError.show();
 		return;
 	}
 	//Process next row
@@ -180,7 +181,7 @@ function displayProductList(data) {
 	$tbody.empty();
 	for (let i in data) {
 		let e = data[i];
-		let buttonHtml = '<button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditProduct(' + e.id + ')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
+		let buttonHtml = `<button class="mr-1" style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Edit" onclick="displayEditProduct(${e.id})"><i class="fa fa-edit fa-lg"></i></button>`;
 		let row = `<tr>
 			<td>${parseInt(+i+1)}</td>
 			<td>${e.name}</td>
@@ -312,7 +313,7 @@ function displayEditCategory(event) {
 }
 function displayUploadData() {
 	resetUploadDialog();
-	$('#download-errors').hide();
+	downloadError.hide();
 	uploadProductModal.modal('toggle');
 }
 function displayProduct(data) {

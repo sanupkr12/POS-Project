@@ -50,7 +50,7 @@ function displayUserList(data) {
 	$tbody.empty();
 	for (let i in data) {
 		let e = data[i];
-		let buttonHtml = '<button style="border:0;background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Delete" onclick="deleteUser(' + e.id + ')"><i class="fa fa-trash fa-lg"></i></button>';
+		let buttonHtml = `<button style="border:0;background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" title="Delete" onclick="deleteUser(${e.id})"><i class="fa fa-trash fa-lg"></i></button>`;
 		let row = '<tr>'
 			+ '<td>' + parseInt(+i+1) + '</td>'
 			+ '<td>' + e.email + '</td>'

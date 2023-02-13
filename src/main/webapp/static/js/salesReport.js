@@ -9,7 +9,6 @@ function init() {
     fillCategoryOption();
     $("#category").on('change', getBrandByCategory);
 }
-
 function getCurrentUrl() {
     let baseUrl = $("meta[name=baseUrl]").attr("content")
     return baseUrl + "/api/report/sales";
@@ -56,7 +55,6 @@ function displaySalesList(data) {
     $tbody.empty();
     for (let i in data) {
         let e = data[i];
-        let buttonHtml = ' <button class="btn btn-outline-dark" onclick="displayEditInventory(' + "'" + e.barcode + "'" + ')">edit</button>&nbsp;';
         let dateUTC = new Date(e.date);
         dateUTC = dateUTC.getTime()
         let dateIST = new Date(dateUTC);

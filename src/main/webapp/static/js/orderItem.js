@@ -56,7 +56,7 @@ function displayOrders(data) {
         let dateIST = new Date(dateUTC);
         dateIST.setHours(dateIST.getHours() + 5);
         dateIST.setMinutes(dateIST.getMinutes() + 30);
-        let buttonHtml = '<button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" class="edit-btn" onclick="displayEditOrderItem(' + e.itemId + ')"><i class="fa fa-edit fa-lg"></i></button>'
+        let buttonHtml = `<button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;" class="edit-btn" onclick="displayEditOrderItem(${e.itemId})"><i class="fa fa-edit fa-lg"></i></button>`;
         let row = `<tr>
             <td>${e.barcode} </td>
             <td>${e.productName} </td>

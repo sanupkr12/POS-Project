@@ -7,10 +7,11 @@ let updatedId;
 //Global variables
 const $brandEditForm = $('#brand-edit-form');
 const $brandForm = $("#brand-form");
-const brandTable = $("#Brand-table");
+const brandTable = $("#brand-table");
 const editBrandModal = $("#edit-brand-modal");
 const createBrandModal = $("#create-brand-modal");
 const uploadBrandModal = $("#upload-brand-modal");
+const downloadError = $("#download-errors");
 
 $(document).ready(init);
 
@@ -21,7 +22,7 @@ function init() {
 	$('#refresh-data').click(getBrandList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
-	$("#download-errors").click(downloadErrors);
+	downloadError.click(downloadErrors);
 	$('#add-brand').click(createBrand);
 	$('#brandFile').on('change', function () {
 		let fileName = $(this).val();
@@ -31,10 +32,12 @@ function init() {
 	getBrandList();
 }
 
+//TODO add it in app.js
 function getBrandUrl() {
-	let baseUrl = $("meta[name=baseUrl]").attr("content")
+	let baseUrl = $("meta[name=baseUrl]").attr("content");
 	return baseUrl + "/api/brand";
 }
+//TODO make all get calls separate 
 function getBrandList() {
 	let url = getBrandUrl();
 	makeAjaxCall(url,'GET',{},(data)=>{
@@ -49,9 +52,7 @@ function displayBrandList(data) {
 	$tbody.empty();
 	for (let i in data) {
 		let e = data[i];
-		let buttonHtml = ' <button style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;"  title="Edit"  onclick="displayEditBrand('
-		+ e.id +
-		')"><i class="fa fa-edit fa-lg"></i></button>&nbsp;';
+		let buttonHtml = `<button class="mr-1" style="background-color:transparent;border:0;padding:0.5rem;border-radius:0.3rem;"  title="Edit"  onclick="displayEditBrand(${e.id})"><i class="fa fa-edit fa-lg"></i></button>`;
 		let row = `<tr>
         			<td> ${parseInt(+i+1)}</td>
         			<td>${e.name}</td>
@@ -122,7 +123,7 @@ function readFileDataCallback(results) {
 		let row = {};
 		row.error = "Incorrect fields provided";
 		errorData.push(row);
-		$("#download-errors").show();
+		downloadError.show();
 		return;
 	}
 	else {
@@ -130,10 +131,11 @@ function readFileDataCallback(results) {
 			let row = {};
 			row.error = "Incorrect headers provided";
 			errorData.push(row);
-			$("#download-errors").show();
+			downloadError.show();
 			return;
 		}
 	}
+	
 	if (fileData.length === 0) {
 		handleErrorNotification("Empty tsv");
 		return;
@@ -152,7 +154,7 @@ function uploadRows() {
 			uploadBrandModal.modal('toggle');
 			return;
 		}
-		downloadErrors.show();
+		downloadError.show();
 		return;
 	}
 	//Process next row
@@ -204,7 +206,7 @@ function updateUploadDialog() {
 
 function displayUploadData() {
 	resetUploadDialog();
-	$("#download-errors").hide();
+	downloadError.hide();
 	uploadBrandModal.modal('toggle');
 }
 
