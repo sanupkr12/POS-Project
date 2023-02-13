@@ -3,6 +3,7 @@ package com.increff.pos.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.increff.pos.dto.ProductDto;
 import com.increff.pos.model.*;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.ProductService;
@@ -20,46 +21,44 @@ import com.increff.pos.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import static com.google.common.collect.Lists.reverse;
+
 @Api
 @RestController
+@RequestMapping(value="/api/product")
 public class ProductApiController {
-
     @Autowired
-    private ProductService service;
+    private ProductDto dto;
 
+    //TODO change the name of functions
     @ApiOperation(value = "Adds a Product")
-    @RequestMapping(path = "/api/product", method = RequestMethod.POST)
-    public void add(@RequestBody ProductForm form) throws ApiException {
-
-        service.add(form);
+    @RequestMapping(path = "", method = RequestMethod.POST)
+    public void createProduct(@RequestBody ProductForm form) throws ApiException {
+        dto.addProduct(form);
     }
 
-
     @ApiOperation(value = "Deletes a Product")
-    @RequestMapping(path = "/api/product/{id}", method = RequestMethod.DELETE)
-    // /api/1
-    public void delete(@PathVariable int id) throws ApiException {
-        service.delete(id);
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    public void deleteProduct(@PathVariable int id) throws ApiException {
+        dto.deleteProduct(id);
     }
 
     @ApiOperation(value = "Gets a Product by Id")
-    @RequestMapping(path = "/api/product/{id}", method = RequestMethod.GET)
-    public ProductData get(@PathVariable int id) throws ApiException {
-
-        return service.get(id);
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    public ProductData getProductById(@PathVariable int id) throws ApiException {
+        return dto.getProductById(id);
     }
 
     @ApiOperation(value = "Gets list of all Product")
-    @RequestMapping(path = "/api/product", method = RequestMethod.GET)
-    public List<ProductData> getAll() throws ApiException{
-
-        return service.get();
+    @RequestMapping(path = "", method = RequestMethod.GET)
+    public List<ProductData> getAllProduct() throws ApiException{
+        return reverse(dto.getAllProduct());
     }
 
     @ApiOperation(value = "Updates an Product")
-    @RequestMapping(path = "/api/product/{id}", method = RequestMethod.PUT)
-    public void update(@RequestBody ProductForm f,@PathVariable int id) throws ApiException {
-        service.update(f,id);
+    @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
+    public void updateProduct(@RequestBody ProductForm form,@PathVariable int id) throws ApiException {
+        dto.updateProduct(form,id);
     }
 
 

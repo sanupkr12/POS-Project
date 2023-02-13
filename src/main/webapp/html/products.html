@@ -1,202 +1,186 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <html lang="en">
-
 <head th:replace="snippets.html :: name_head"></head>
-
 <body>
-
-<nav th:replace="snippets.html :: name_app_navbar"></nav>
-
-<div class="container">
-
-    <h3>Product</h3>
-
-    <!-- Top row with form-->
-    <div class="row">
-        <div class="col-12">
-            <form class="form-inline" id="product-form">
-                <div class="form-group">
-                    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" autocomplete="off" name="name" id="inputName" placeholder="enter Name">
+    <nav th:replace="snippets.html :: name_app_navbar"></nav>
+    <div class="container-fluid px-5" >
+        <h3 class="mt-3 mb-3">Product</h3>
+        <button type="button" class="btn btn-primary" th:if="${info.getRole() == 'supervisor'}"
+            id="create-product">Create</button>
+        <button type="button" class="btn btn-primary ml-3" th:if="${info.getRole() == 'supervisor'}"
+            id="upload-data">Upload</button>
+        <div class="modal" tabindex="-1" role="dialog" id="create-product-modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create Product</h5>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputBarcode" class="col-sm-2 col-form-label">Barcode</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" autocomplete="off" name="barcode" id="inputBarcode" placeholder="enter Barcode">
-                    </div>
-                </div>
-                <div class="form-group">
-                <label for="inputMrp" class="col-sm-2 col-form-label">MRP</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" autocomplete="off" name="mrp" id="inputMrp" placeholder="enter Mrp">
-                </div>
-                 </div>
-                <div class="form-group">
-                    <label for="inputBrandName" class="col-sm-2 col-form-label">Brand Name</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" autocomplete="off" name="brandName" id="inputBrandName" placeholder="enter Brand Name">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="inputCategory" class="col-sm-2 col-form-label">Brand Category</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" autocomplete="off" name="brandCategory" id="inputCategory" placeholder="enter Brand Category">
-                    </div>
-                </div>
-                <button type="button" class="btn btn-primary" id="add-product">Add</button>
-                &nbsp;
-                <button type="button" class="btn btn-primary" id="refresh-data">Refresh</button>
-                &nbsp;
-                <button type="button" class="btn btn-primary" id="upload-data">Upload</button>
-            </form>
-        </div>
-    </div>
-
-
-    <!-- Blank Row -->
-    <div class="row">
-        &nbsp;
-    </div>
-    <div class="row">
-
-        <!-- Table -->
-        <div class="col-12">
-            <table class="table table-striped" id="product-table">
-                <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Brand Name</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Mrp</th>
-                    <th scope="col">Barcode</th>
-
-                    <th scope="col">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Romil Jain</td>
-                    <td>30</td>
-                    <td>Edit | Delete</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Rajul Jain</td>
-                    <td>31</td>
-                    <td>Edit | Delete</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Anaisha Jain</td>
-                    <td>7</td>
-                    <td>Edit | Delete</td>
-                </tr>
-                </tbody>
-            </table>
-
-        </div>
-    </div>
-
-    <!-- Employee Edit Modal -->
-    <div class="modal" tabindex="-1" role="dialog" id="edit-product-modal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Product</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="form-inline" id="product-edit-form">
-                        <div class="form-group">
-                            <label for="editInputName" class="col-sm-2 col-form-label">Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="editInputName" autocomplete="off" name="name"  placeholder="enter name">
+                    <form class="" id="product-create-form">
+                        <div class="modal-body mt-3">
+                            <div class="form-group mb-1" >
+                                <label for="inputName" class="col-sm-4  justify-content-start"
+                                    >Name</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" required="required" id="inputName"
+                                        autocomplete="off" name="name" placeholder="Enter Name">
+                                </div>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label for="inputBarcode" class="col-sm-4   justify-content-start"
+                                    >Barcode</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" required="required" id="inputBarcode"
+                                        autocomplete="off" name="barcode" placeholder="Enter Barcode">
+                                </div>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label for="inputMrp" class="col-sm-4   justify-content-start"
+                                    >MRP</label>
+                                <div class="col-sm-12">
+                                    <input type="number" class="form-control num-input" required="required" step="0.01"
+                                        min="1" id="inputMrp" autocomplete="off" name="mrp"
+                                        placeholder="Enter Mrp (in ₹)">
+                                </div>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label for="inputBrandName" class="col-sm-4   justify-content-start"
+                                    >Brand Name</label>
+                                <select name="brandName" class="append-brand col-sm-12 form-control form-select ml-3"
+                                    id="inputBrandName" style=" width: 94%;" aria-label=".form-select-lg example">
+                                    <option selected>Select Brand</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label for="inputCategory" class="col-sm-4   justify-content-start"
+                                    >Brand Category</label>
+                                <select name="brandCategory"
+                                    class="col-sm-12 form-control form-select ml-3 append-category" id="inputCategory"
+                                    style="width:94%" aria-label=".form-select-lg example">
+                                    <option selected>Select Category</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="editInputBarcode" class="col-sm-2 col-form-label">Barcode</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="editInputBarcode" autocomplete="off" name="barcode" placeholder="enter Barcode">
-                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="add-product">Create</button>
                         </div>
-                        <div class="form-group">
-                            <label for="editInputMrp" class="col-sm-2 col-form-label">MRP</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="editInputMrp" autocomplete="off" name="mrp"  placeholder="enter Mrp">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="editInputBrandName" class="col-sm-2 col-form-label">Brand Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="editInputBrandName" autocomplete="off" name="brandName"  placeholder="enter Brand Name">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="editInputCategory" class="col-sm-2 col-form-label">Brand Category</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="editInputCategory" autocomplete="off" name="brandCategory"  placeholder="enter Brand Category">
-                            </div>
-                        </div>
-
-                        <input type="hidden" name="id" >
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="update-product">Update</button>
-                </div>
             </div>
         </div>
-    </div>
-
-
-    <!-- Employee Edit Modal -->
-    <div class="modal" tabindex="-1" role="dialog" id="upload-product-modal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload Employee</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="product-file">
-                        <input type="file" class="custom-file-input" id="productFile">
-                        <label class="custom-file-label" for="productFile" id="productFileName">Choose file</label>
+        <div class="row mt-3">
+            <!-- Table -->
+            <div class="col-md-12">
+                <table class="table table-striped" id="product-table">
+                    <thead class="thead-dark">
+                        <tr class="sticky-top table-position">
+                            <th scope="col">S No.</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Barcode</th>
+                            <th scope="col">Brand Name</th>
+                            <th scope="col">Category</th>
+                            <th scope="col" class="text-right">Mrp (in ₹)</th>
+                            <th scope="col" class="text-center" th:if="${role=='supervisor'}">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Employee Edit Modal -->
+        <div class="modal" tabindex="-1" role="dialog" id="edit-product-modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Product</h5>
                     </div>
-                    <a th:href="@{/sample/product.tsv}" target="_blank">Download Sample</a>
-                    <br>
-                    Rows: <span id="rowCount">0</span>,
-                    Processed: <span id="processCount">0</span>,
-                    Errors: <span id="errorCount">0</span>
+                    <form class="" id="product-edit-form">
+                        <div class="modal-body mt-3">
+                            <div class="form-group mb-1">
+                                <label for="editInputName" class="col-sm-4  justify-content-start"
+                                    >Name</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" required="required" id="editInputName"
+                                        autocomplete="off" name="name" placeholder="enter name">
+                                </div>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label for="editInputBarcode" class="col-sm-4   justify-content-start"
+                                    >Barcode</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" required="required" id="editInputBarcode"
+                                        autocomplete="off" name="barcode" placeholder="Enter Barcode">
+                                </div>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label for="editInputMrp" class="col-sm-4  justify-content-start"
+                                    >MRP</label>
+                                <div class="col-sm-12">
+                                    <input type="number" step="0.01" class="form-control num-input" required="required"
+                                        id="editInputMrp" min="1" autocomplete="off" name="mrp"
+                                        placeholder="Enter Mrp (in ₹)">
+                                </div>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label for="editInputBrandName" class="col-sm-4  justify-content-start"
+                                    >Brand Name</label>
+                                <select name="brandName" class="append-brand col-sm-12 form-control form-select ml-3"
+                                    id="editInputBrandName" style="width: 94%;" aria-label=".form-select-lg example">
+                                    <option selected>Select Brand</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label for="editInputCategory" class="col-sm-4   justify-content-start"
+                                    >Brand Category</label>
+                                <select name="brandCategory"
+                                    class="col-sm-12 form-control form-select ml-3 append-category"
+                                    id="editInputCategory" style="width:94%" aria-label=".form-select-lg example">
+                                    <option selected>Select Category</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="update-product">Update</button>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="process-data">Upload</button>
-                    <button type="button" class="btn btn-warning" id="download-errors">Download Errors</button>
+            </div>
+        </div>
+        <!-- Employee Edit Modal -->
+        <div class="modal" tabindex="-1" role="dialog" id="upload-product-modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Upload Product</h5>
+                    </div>
+                    <div class="modal-body mt-3">
+                        <div class="product-file">
+                            <input type="file" class="custom-file-input" id="productFile">
+                            <label class="custom-file-label" for="productFile" id="productFileName">Choose file</label>
+                        </div>
+                        <a th:href="@{/sample/sampleProduct.tsv}" target="_blank">Download Sample</a>
+                        <p>
+                        Rows: <span id="rowCount">0</span>,
+                        Processed: <span id="processCount">0</span>,
+                        Errors: <span id="errorCount">0</span>
+                        <span class="ml-3">File Limit : 5000 Rows</span>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="process-data">Upload</button>
+                        <button type="button" class="btn btn-warning" id="download-errors">Download Errors</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-</div> <!-- Container end-->
-
-<footer th:replace="snippets.html :: name_footer"></footer>
-
-<script th:src="@{/static/product.js}"/></script>
-
+    <!-- Container end-->
+    <footer th:replace="snippets.html :: name_footer"></footer>
+    <script th:src="@{/static/js/product.js}">
+    </script>
 </body>
-
 </html>

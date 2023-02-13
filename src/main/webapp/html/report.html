@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="snippets.html :: name_head"></head>
+<body>
+    <nav th:replace="snippets.html :: name_app_navbar"></nav>
+    <div class="container">
+        <h3 class="mt-5 mb-3">Report</h3>
+        <div class="row align-items-center d-flex justify-content-between pt-3">
+            <div class="col-md-3 icon text-center">
+                <a th:href="@{/ui/report/inventory}" title="Inventory" class="text-dark text-decoration-none"> <img
+                        class="h-100 pb-3 pt-3 w-50"
+                        th:src="@{/static/images/checklists.png}">
+                    <p class="text-center">Inventory</p>
+                </a>
+            </div>
+            <div class="col-md-3 icon text-center">
+                <a th:href="@{/ui/report/brand}" title="Brand" class="text-dark text-decoration-none"> <img
+                        class="h-100 pb-3 pt-3 w-50"
+                        th:src="@{/static/images/brandReport.png}">
+                    <p class="text-center">Brand</p>
+                </a>
+            </div>
+            <div class="col-md-3 icon text-center">
+                <a th:href="@{/ui/report/sales}" title="Sales" class="text-dark text-decoration-none"> <img
+                        class="h-100 pb-3 pt-3 w-50"
+                        th:src="@{/static/images/increase.png}">
+                    <p class="text-center">Sales</p>
+                </a>
+            </div>
+            <div class="col-md-3 icon text-center">
+                <a th:href="@{/ui/report/daySales}" title="Sales" class="text-dark text-decoration-none"> <img
+                        class="h-100 pb-3 pt-3 w-50"
+                        th:src="@{/static/images/calendar.png}">
+                    <p class="text-center">Day Sales</p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Container end-->
+    <footer th:replace="snippets.html :: name_footer"></footer>
+    <script th:src="@{/static/js/report.js}">
+    </script>
+</body>
+</html>
